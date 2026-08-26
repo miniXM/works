@@ -1,0 +1,21 @@
+.documents-view{padding:2px 0}
+.documents-head{align-items:center;margin-bottom:20px}
+.documents-head h2{font-size:26px;margin:5px 0}
+.document-create-actions{display:flex;gap:8px;align-items:center}
+.document-create-actions .primary-button{min-width:78px}
+.documents-toolbar{height:54px;margin-bottom:14px;padding:0 14px;background:#fff;border:1px solid #e4eaf2;border-radius:7px}
+.document-tabs{gap:8px}
+.document-tabs button{padding:0 14px}
+.document-list-head,.document-card{display:grid;grid-template-columns:minmax(280px,1fr) 120px 170px 80px 300px;gap:18px;align-items:center}
+.document-list-head{padding:0 18px 8px;color:#98a3b4;font-size:11px}
+.document-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.document-card{min-height:76px;padding:13px 18px;border-radius:7px}
+.document-file{display:grid;grid-template-columns:44px minmax(0,1fr);gap:13px;align-items:center;min-width:0}
+.document-card-icon{width:44px;height:44px}
+.type-docx{background:#eaf1ff;color:#2768d9}.type-xlsx{background:#e8f7ef;color:#138a52}.type-pptx{background:#fff0e8;color:#d8612a}.type-pdf{background:#fff0f1;color:#d74652}
+.document-card-body{min-width:0}.document-card h3{margin:0 0 5px;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.document-card-body small{display:inline-block;padding:2px 7px;background:#f3f6fa;border-radius:10px;color:#758197}
+.document-owner,.document-card time,.document-size{margin:0;color:#69778d;font-size:12px}
+.document-card-actions{display:flex;justify-content:flex-end;gap:6px}
+.document-card-actions button{height:30px;padding:0 9px;border:1px solid #dbe3ee;background:#fff;border-radius:5px;color:#526078;font-size:11px;white-space:nowrap;cursor:pointer}
+.document-card-actions .document-open{background:#2f6df6;color:#fff;border-color:#2f6df6}.document-card-actions .danger{color:#c94c57}.document-card-actions button:hover{border-color:#2f6df6}
+@media(max-width:1100px){.document-list-head{display:none}.document-card{grid-template-columns:minmax(240px,1fr) 100px 1fr}.document-card time,.document-size{display:none}}

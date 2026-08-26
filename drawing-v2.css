@@ -1,0 +1,78 @@
+.pdf-active .viewer{background:#dfe4ea}
+.pdf-active .viewer-toolbar{left:16px;top:14px;border:1px solid #d5dae1;background:rgba(255,255,255,.97);box-shadow:0 4px 14px rgba(30,42,55,.12);border-radius:7px}
+.pdf-active .viewer-toolbar button{color:#586575}
+.pdf-active .viewer-toolbar button:hover,.pdf-active .viewer-toolbar button.active{color:#126b88;border-color:#a9cfdb;background:#eaf6f9}
+.pdf-active .viewer-toolbar>i{background:#d9dee5}
+.pdf-active .viewer-status{background:#fff;border-top-color:#d6dce4;color:#687687}
+.pdf-active .viewer-status span:last-child{color:#176f8c}
+
+.pdf-active .fair-panel{width:430px!important;background:#f8fafb;border-left:1px solid #ccd3dc;color:#1d2935}
+.pdf-active .fair-head{height:58px;padding:9px 48px 9px 14px;background:#fff;border-bottom-color:#d7dde4}
+.pdf-active .fair-head span{color:#2b748b}
+.pdf-active .fair-head b{font-size:13px;color:#202c38}
+.pdf-active .fair-head em{color:#2b677b;background:#e9f2f4;border:1px solid #d1e2e6}
+.pdf-active .fair-head button{width:30px;height:30px;display:grid;place-items:center;border:1px solid #d9dee5;background:#fff;color:#647283;border-radius:5px}
+.pdf-active .fair-head button:hover,.pdf-active .fair-head button.active{color:#176f8c;border-color:#9ec7d3;background:#eff8fa}
+.pdf-active .fair-head button svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.pdf-active .panel-toggle{background:#fff;color:#607080;border-color:#d3dae2;box-shadow:0 3px 10px rgba(40,53,67,.12)}
+
+.drawing-link{flex:none;padding:11px 13px 12px;background:#f3f6f8;border-bottom:1px solid #d8dee5}
+.drawing-link.hidden{display:none}
+.drawing-link-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.drawing-link-top div{display:grid;gap:2px;min-width:0}
+.drawing-link-top small{font-size:9px;color:#7e8a97}
+.drawing-link-top b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:#263442}
+.drawing-link-top em{flex:none;font-style:normal;font-size:8px;color:#307488;background:#e1eef1;border:1px solid #c8dde2;border-radius:10px;padding:3px 7px}
+.drawing-link-control{display:grid;grid-template-columns:minmax(0,1fr) 92px;gap:7px;margin-top:9px}
+.drawing-link-control select,.drawing-link-control button{height:32px;border:1px solid #cfd6de;border-radius:5px;background:#fff;color:#344352;font-size:10px;outline:0}
+.drawing-link-control select{width:100%;padding:0 8px}
+.drawing-link-control select:focus{border-color:#5d9caf;box-shadow:0 0 0 2px rgba(41,126,151,.1)}
+.drawing-link-control button{display:flex;align-items:center;justify-content:center;gap:5px;cursor:pointer;color:#205e73}
+.drawing-link-control button:hover{border-color:#78aebe;background:#f2fafb}
+.drawing-link-control button:disabled{cursor:default;color:#a0a9b3;background:#f1f3f5}
+.drawing-link-control button svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round}
+.drawing-link-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px;font-size:8px;color:#7d8995}
+.drawing-link-meta strong{font:600 9px 'DM Mono';color:#485968;white-space:nowrap}
+
+.pdf-active .metadata{background:#f7f9fa;border-bottom-color:#d8dee5;color:#344250}
+.pdf-active .metadata label{color:#778493}
+.pdf-active .metadata input{background:#fff;border-color:#d6dce3;color:#2d3a47}
+.pdf-active .metadata input:focus{border-color:#5795a8}
+.pdf-active .sample-control{background:#fff;border-bottom:1px solid #d9dfe6;color:#657382}
+.pdf-active .sample-control button{border-color:#d5dbe2;background:#fff;color:#536271}
+.pdf-active .sample-control b{color:#23495a}
+.pdf-active .table-wrap{background:#f6f8fa}
+.pdf-active .empty-table{color:#87939f}
+.pdf-active .table-wrap table{background:#fff;border-color:#d8dee5}
+.pdf-active .table-wrap th{background:#e8edf1;color:#5e6c7a;border-bottom:1px solid #cfd6de}
+.pdf-active .table-wrap td{border-top-color:#e3e7eb;color:#64717e}
+.pdf-active .table-wrap tr.hovered{background:#eef7f9}
+.pdf-active .table-wrap input,.pdf-active .table-wrap select{background:#fff;border-color:#d6dce3;color:#334352}
+.pdf-active .fair-footer{background:#fff;border-top-color:#d5dce3}
+.pdf-active .fair-footer button{background:#236f85;border-color:#236f85}
+.pdf-active .fair-footer button:disabled{background:#e6e9ed;border-color:#d4d9df;color:#98a1aa}
+
+.tree-row .tree-file small{line-height:1.45}
+.drawing-progress{display:grid;grid-template-columns:1fr auto;align-items:center;gap:5px 8px;margin-top:9px;padding-top:9px;border-top:1px solid #293541;font-size:8px;color:#83919f}
+.drawing-progress b{font:600 9px 'DM Mono';color:#c5d1db}
+.drawing-progress i{grid-column:1/-1;height:3px;background:#283541;border-radius:3px;overflow:hidden}
+.drawing-progress i em{display:block;height:100%;background:#4f9bad;border-radius:3px}
+
+.drawing-picker{position:fixed;inset:0;z-index:200;display:grid;place-items:center}
+.drawing-picker-backdrop{position:absolute;inset:0;border:0;background:rgba(15,22,29,.48);backdrop-filter:blur(2px)}
+.drawing-picker>section{position:relative;width:min(560px,calc(100vw - 40px));max-height:min(620px,calc(100vh - 50px));display:flex;flex-direction:column;background:#f8fafb;border:1px solid #cfd6dd;border-radius:9px;box-shadow:0 24px 70px rgba(13,24,34,.3);overflow:hidden;color:#1f2d39}
+.drawing-picker header{display:flex;align-items:flex-start;justify-content:space-between;padding:18px 20px 15px;background:#fff;border-bottom:1px solid #d9dfe5}
+.drawing-picker header small{font:600 8px 'DM Mono';letter-spacing:.12em;color:#397b90}
+.drawing-picker header h2{margin:5px 0 3px;font-size:16px}
+.drawing-picker header p{margin:0;color:#7b8793;font-size:10px}
+.drawing-picker-close{border:0;background:none;color:#7f8b96;font-size:22px;cursor:pointer}
+.drawing-picker-list{overflow:auto;padding:10px}
+.drawing-picker-list>button{width:100%;display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;gap:10px;border:1px solid #dde2e7;background:#fff;border-radius:6px;padding:10px;text-align:left;color:#2b3946;cursor:pointer;margin-bottom:7px}
+.drawing-picker-list>button:hover{border-color:#83adba;background:#f4fafb}
+.drawing-picker-list>button>span{width:36px;height:30px;display:grid;place-items:center;background:#f4e7e9;color:#a43d4c;border-radius:4px;font:600 8px 'DM Mono'}
+.drawing-picker-list>button>div{display:grid;gap:3px;min-width:0}
+.drawing-picker-list b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}
+.drawing-picker-list small{font-size:8px;color:#7b8792}
+.drawing-picker-list em{font-style:normal;font-size:9px;color:#2b7287}
+
+@media(max-width:1100px){.pdf-active .fair-panel{width:380px!important}}

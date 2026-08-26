@@ -1,0 +1,199 @@
+/* Product surface v3: align the shell with the reference industrial workstation. */
+.landing{background:#101216;min-height:100%;color:#e7ebef}
+.landing header{height:58px;padding:0 30px;background:#15171d;border-bottom:1px solid #272b33}
+.landing header p{font-size:10px;color:#77808b}
+.landing main{max-width:920px;margin:4vh auto 0;display:grid;grid-template-columns:1fr;gap:0;align-items:start}
+.landing .hero{text-align:center}
+.landing .hero>span{color:#72839a;font-size:9px;letter-spacing:.16em}
+.landing .hero h1{margin:15px 0 9px;font-size:38px;letter-spacing:-.04em;background:linear-gradient(90deg,#9b7cff,#46c7ee);-webkit-background-clip:text;background-clip:text;color:transparent}
+.landing .hero p{max-width:620px;margin:0 auto;color:#98a1ac;font-size:13px;line-height:1.75}
+.process-visual{height:156px;margin:24px auto 18px;display:flex;align-items:center;justify-content:center;gap:22px;color:#8090a0}
+.process-node{width:122px;display:grid;justify-items:center;gap:5px}
+.process-node svg{width:88px;height:70px;fill:none;stroke:#6da9c2;stroke-width:1.3;stroke-linejoin:round;stroke-linecap:round;filter:drop-shadow(0 0 9px rgba(73,161,198,.16))}
+.process-node.data-shape svg{stroke:#947ce1}.process-node.sheet-shape svg{stroke:#72b595}
+.process-node span{font:600 8px 'DM Mono';letter-spacing:.08em;color:#7d8997}
+.process-visual>i{width:74px;height:32px;display:flex;align-items:center;justify-content:center;gap:6px;position:relative;border-top:1px solid #3e5966}
+.process-visual>i:after{content:'';position:absolute;right:0;top:-5px;border-left:8px solid #6596a8;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.process-visual>i b{width:3px;height:3px;border-radius:50%;background:#6faec1;animation:signalPulse 1.6s ease-in-out infinite}.process-visual>i b:nth-child(2){animation-delay:.25s}.process-visual>i b:nth-child(3){animation-delay:.5s}
+.process-visual>i em{position:absolute;top:8px;left:50%;transform:translateX(-50%);font-style:normal;font-size:8px;color:#64717f;white-space:nowrap}
+@keyframes signalPulse{0%,100%{opacity:.25}50%{opacity:1}}
+.landing .workflow-choices{display:none}
+.landing .drop{width:620px;max-width:calc(100vw - 40px);height:230px;margin:0 auto;border:1px dashed #4a5663;border-radius:10px;background:#171b21;box-shadow:none}
+.landing .drop:hover,.landing .drop.drag{border-color:#6f9eaf;background:#1a2127}
+.landing .drop>strong{width:54px;height:54px;display:grid;place-items:center;border-radius:9px;background:#242035;color:#a788f4;font-size:28px}
+.landing .drop div{gap:6px}.landing .drop b{font-size:16px}.landing .drop small{font:600 9px 'DM Mono';letter-spacing:.08em;color:#778491}.landing .drop em{font-style:normal;color:#8581b7;font-size:9px}
+
+.cad-active .viewer-panel,.cad-active .viewer,.cad-active .cad-root{background:#0b0e13}
+.cad-active .cad-root canvas{cursor:grab}.cad-active .cad-root canvas:active{cursor:grabbing}
+.cad-active .cad-specs{top:82px;left:18px;width:300px;background:#141a22;border-color:#2d3d4a;box-shadow:0 15px 40px rgba(0,0,0,.34)}
+.cad-active .cad-partbar{top:14px;left:18px;right:18px}.cad-active .part-dims{background:#161d25;border-color:#34434f}.cad-active .part-dims div b{max-width:175px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cad-active .file-panel{background:#151a21;border-left-color:#29343e}.cad-active .file-panel .file-upload{padding:12px 14px;display:flex;flex-direction:column;gap:9px}.cad-active .file-panel .file-upload label{height:104px;border:1px solid #2c3541;border-radius:10px;background:#171c23;display:flex;flex-direction:column;justify-content:center;gap:7px}.cad-active .file-panel .file-upload label:before{width:39px;height:39px;border-radius:8px}.cad-active .file-panel .file-upload button{height:33px}
+.cad-active .file-panel .tree-file>span{background:#f3f5f6;color:#4e6470;border-radius:7px}.cad-active .file-panel .tree-file>span.pdf{background:#3b2635;color:#eaa0b3}.cad-active .file-panel .tree-row.active .tree-file{background:#28213c;border-color:#694db2}
+.cad-active .project-summary{background:#151f27;border-color:#2b414e}
+.orientation-gizmo{position:absolute;right:46px;top:70px;width:72px;height:72px;border-radius:50%;pointer-events:none;opacity:.95}
+.orientation-gizmo i{position:absolute;left:34px;top:34px;width:6px;height:6px;border-radius:50%;background:#dfe5ea;box-shadow:0 0 0 2px #303b46}
+.orientation-gizmo span{position:absolute;font:600 10px 'DM Mono';text-shadow:0 1px 4px #000}.orientation-gizmo .axis-y{left:31px;top:1px;color:#39c47c}.orientation-gizmo .axis-x{right:0;top:31px;color:#ef5d64}.orientation-gizmo .axis-z{left:30px;bottom:0;color:#5da7ef}
+
+/* The reference keeps the 2D inspector and the project rail visible together. */
+.pdf-active .file-panel{display:flex!important;position:static;width:318px;box-shadow:none}
+.pdf-active .fair-panel{width:min(46vw,570px)!important;max-width:calc(100vw - 318px);background:#101827;border-left-color:#2a3c55}
+.pdf-active .viewer-panel{background:#0a0f1b}.pdf-active .viewer{background:#0a0f1b;background-image:radial-gradient(rgba(114,139,180,.13) .7px,transparent .7px);background-size:18px 18px}
+.pdf-active .stage{box-shadow:0 5px 18px rgba(0,0,0,.38)}
+.pdf-active .fair-head{background:#101827;border-bottom-color:#2a3c55}.pdf-active .drawing-link{padding:8px 13px;background:#111d2c;border-bottom-color:#2a3c55}.pdf-active .drawing-link-top b{color:#e4edf3}.pdf-active .drawing-link-top small,.pdf-active .drawing-link-meta{color:#8194a9}.pdf-active .drawing-link-top em{background:#18394b;border-color:#2f6076;color:#8bd2e8}.pdf-active .drawing-link-control{margin-top:6px}.pdf-active .drawing-link-control select,.pdf-active .drawing-link-control button{height:29px;background:#0c1422;border-color:#31455e;color:#c7d5e0}.pdf-active .drawing-link-meta{margin-top:5px}.pdf-active .drawing-link-meta strong{color:#a9d4e5}
+.pdf-active .metadata{background:#111c31;border-bottom-color:#263a57}.pdf-active .metadata label{color:#8da0b6}.pdf-active .metadata input{background:#070e1d;border-color:#293d59;color:#e2ebf3}.pdf-active .sample-control{background:#101827;border-bottom-color:#2a3c55}.pdf-active .table-wrap{background:#101827}.pdf-active .table-wrap table{background:#0c1422;border-color:#2a3c55}.pdf-active .table-wrap th{background:#1b2b40;color:#a5b8cc}.pdf-active .table-wrap td{border-top-color:#22344b;color:#90a2b4}.pdf-active .table-wrap input,.pdf-active .table-wrap select{background:#09111f;border-color:#2d425b;color:#d0dce7}.pdf-active .fair-footer{background:#101827;border-top-color:#2a3c55}.pdf-active .fair-footer button{background:#176f58;border-color:#278066}
+.pdf-active .project-summary{display:none}.pdf-active .file-panel .file-upload label{height:120px}.pdf-active .tree-file{background:#171f2b;border-color:#2b3a4c}.pdf-active .tree-row.active .tree-file{background:#241d3b;border-color:#7554db}.pdf-active .file-panel .side-actions{background:#151d2a}
+
+/* Quote configuration and delivery workspace */
+.open-project-quote{width:100%;height:34px;margin-top:10px;border:1px solid #36738d;border-radius:5px;background:#1b536b;color:#e9f8ff;font-size:8px;cursor:pointer}.open-project-quote:hover{background:#236782}
+.quote-editor:has(.quote-drawer-v2){width:382px;top:82px}.quote-drawer-v2{width:382px;max-height:calc(100vh - 100px);border-radius:8px;background:#151c24;border-color:#344554}.quote-drawer-v2 header{background:#18232c;border-color:#2c3b47}.quote-drawer-v2 .quote-form{gap:10px}.quote-price-mode{display:grid;grid-template-columns:1fr 1fr;gap:7px}.quote-price-mode button{height:52px;display:grid;align-content:center;gap:4px;text-align:left;padding:0 10px;border:1px solid #33414d;border-radius:5px;background:#111820;color:#8898a5;cursor:pointer}.quote-price-mode button b{font-size:9px;color:#cad6de}.quote-price-mode button span{font-size:7px}.quote-price-mode button.active{border-color:#3981a0;background:#18384a}.quote-price-mode button.active b{color:#e8f8ff}.cost-breakdown{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:10px;border:1px solid #2c3b46;border-radius:6px;background:#111820}.cost-breakdown .cost-heading{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}.cost-heading span{font-size:9px;color:#d6e2e8}.cost-heading em{font:500 7px 'DM Mono';font-style:normal;color:#6faac4}.cost-breakdown>.quote-pair{grid-column:1/-1}.manual-price input:disabled{color:#7c8992;background:#10161c}.quote-subtotal-v2{height:56px;border-radius:6px;background:#142a35;border-color:#2f6175}.quote-subtotal-v2 div{display:grid;gap:4px}.quote-subtotal-v2 small{font-size:7px;color:#718d9c}.quote-subtotal-v2 b{font-size:17px;color:#dff7ff}
+.project-quote{position:fixed;inset:0;z-index:120;display:grid;place-items:center;padding:22px}.project-quote-backdrop{position:absolute;inset:0;border:0;background:rgba(5,9,13,.76);backdrop-filter:blur(4px)}.project-quote-sheet{position:relative;width:min(1560px,calc(100vw - 44px));height:min(900px,calc(100vh - 44px));display:flex;flex-direction:column;overflow:hidden;border:1px solid #344653;border-radius:8px;background:#131a21;color:#dce7ed;box-shadow:0 24px 70px rgba(0,0,0,.48)}.project-quote-head{height:76px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 22px;border-bottom:1px solid #2c3944;background:#17212a}.project-quote-head small{font:600 8px 'DM Mono';letter-spacing:.12em;color:#65a9c7}.project-quote-head h2{margin:5px 0 2px;font-size:18px}.project-quote-head p{margin:0;font-size:8px;color:#7f909d}.project-quote-head>div:last-child{display:flex;gap:7px}.project-quote-head button{height:32px;padding:0 12px;border:1px solid #3b4c58;border-radius:4px;background:#1a252e;color:#acbbc5;font-size:8px;cursor:pointer}.project-quote-head button.primary{border-color:#367996;background:#1c627e;color:#effbff}.project-quote-body{flex:1;min-height:0;display:flex;flex-direction:column;padding:14px 18px 16px;gap:12px}.quote-meta-grid{display:grid;grid-template-columns:1.1fr 1.4fr 1.2fr .7fr 1fr .65fr .75fr 1.8fr;gap:7px;padding:10px;border:1px solid #2b3944;border-radius:6px;background:#161f27}.quote-meta-grid label{display:grid;gap:5px;color:#83939f;font-size:7px}.quote-meta-grid input,.quote-meta-grid textarea{height:30px;min-width:0;border:1px solid #334550;border-radius:4px;background:#0f161c;color:#dde8ed;padding:0 8px;font-size:9px;outline:0}.quote-meta-grid input:focus,.quote-meta-grid textarea:focus{border-color:#3d839f}.quote-meta-notes{grid-column:1/-1}.quote-meta-grid textarea{height:42px;padding:7px;resize:none}.bom-actions{height:38px;display:flex;align-items:center;gap:7px}.bom-actions>span{margin-right:auto;color:#81919d;font-size:8px}.bom-actions select,.bom-actions input,.bom-actions button{height:30px;border:1px solid #344650;border-radius:4px;background:#111920;color:#b9c8d0;padding:0 8px;font-size:8px}.bom-actions input{width:84px}.bom-actions button{background:#1c556d;border-color:#36738b;color:#edfaff;cursor:pointer}.bom-scroll{flex:1;min-height:0;overflow:auto;border:1px solid #2c3a44;border-radius:6px;background:#10171d}.project-bom-table{width:100%;min-width:1370px;border-collapse:collapse;font-size:8px}.project-bom-table th{position:sticky;top:0;z-index:2;height:36px;background:#202d36;color:#9db0bc;font-weight:600;white-space:nowrap;border-bottom:1px solid #3a4d5a}.project-bom-table td{height:54px;padding:6px 8px;border-bottom:1px solid #27343d;color:#aab8c1;text-align:right;white-space:nowrap}.project-bom-table tbody tr:hover{background:#16252e}.project-bom-table th:nth-child(2),.project-bom-table th:nth-child(3),.project-bom-table td:nth-child(2),.project-bom-table td:nth-child(3){text-align:left}.project-bom-table td:first-child,.project-bom-table th:first-child{text-align:center}.project-bom-table td b,.project-bom-table td span,.project-bom-table td small{display:block}.project-bom-table td b{color:#e1ebef;font-size:9px}.project-bom-table td small{margin-top:4px;color:#6f818d;font-size:7px}.project-bom-table input[type=number]{width:55px;height:27px;border:1px solid #3a4b55;border-radius:4px;background:#0e151a;color:#e2edf1;text-align:center}.project-bom-table button{height:26px;border:1px solid #3c6071;border-radius:4px;background:#172d38;color:#9bc9dc;font-size:7px;cursor:pointer}.quote-totals{display:flex;justify-content:flex-end;align-items:stretch;gap:1px;flex:none}.quote-totals>div{width:150px;display:grid;align-content:center;gap:3px;padding:8px 12px;background:#18232b;border:1px solid #293a45}.quote-totals span{font-size:7px;color:#7f929e}.quote-totals b{font:600 13px 'DM Mono';color:#d7e5eb}.quote-totals .grand{width:210px;background:#173344;border-color:#32657a}.quote-totals .grand b{font-size:19px;color:#effbff}.quote-totals .grand small{font-size:7px;color:#7fa9bc}
+@media(max-width:1180px){.project-quote{padding:10px}.project-quote-sheet{width:calc(100vw - 20px);height:calc(100vh - 20px)}.quote-meta-grid{grid-template-columns:repeat(4,1fr)}.quote-meta-notes{grid-column:1/-1}.project-quote-head p{display:none}.bom-actions>span{display:none}}
+.quote-editor:has(.quote-drawer-v2){z-index:145}
+.pdf-active .panel-toggle{background:#1b2c42;color:#bcd0df;border-color:#344d68}.pdf-active .fair-head button{background:#162437;border-color:#344d68;color:#a9bdd0}
+@media(max-width:1100px){.pdf-active .fair-panel{width:44vw!important}.pdf-active .file-panel{width:260px}.pdf-active .fair-panel{max-width:calc(100vw - 260px)}.orientation-gizmo{right:18px}}
+@media(max-width:780px){.landing .hero h1{font-size:30px}.process-visual{gap:4px;transform:scale(.82)}.landing .drop{width:calc(100vw - 28px)}.pdf-active .file-panel{display:none!important}.pdf-active .fair-panel{width:390px!important;max-width:72vw}}
+
+/* 2D inspection flow: surface one next action and keep project management secondary. */
+.pdf-active .fair-panel{width:min(440px,38vw)!important;min-width:360px;max-width:none;background:#101827}
+.pdf-active .inspection-flow{height:62px;display:flex;align-items:center;padding:8px 13px;border-bottom:1px solid #2a3c55;background:#111c31}
+.pdf-active .inspection-flow .flow-step{display:flex;align-items:center;gap:6px;min-width:0;opacity:.46}
+.pdf-active .inspection-flow .flow-step>span{width:22px;height:22px;display:grid;place-items:center;flex:none;border-radius:50%;background:#253247;color:#8b9ab0;font:600 9px 'DM Mono'}
+.pdf-active .inspection-flow .flow-step>div{display:grid;gap:1px;min-width:0}
+.pdf-active .inspection-flow b{font-size:9px;color:#aebccc;white-space:nowrap}
+.pdf-active .inspection-flow small{font-size:7px;color:#6f8299;white-space:nowrap}
+.pdf-active .inspection-flow>i{height:1px;flex:1;min-width:8px;margin:0 6px;background:#304159}
+.pdf-active .inspection-flow .flow-step.active{opacity:1}
+.pdf-active .inspection-flow .flow-step.active>span{background:#1b7896;color:#fff;box-shadow:0 0 0 3px rgba(50,167,205,.15)}
+.pdf-active .inspection-flow .flow-step.active b{color:#a9e9ff}
+.pdf-active .inspection-flow .flow-step.done{opacity:1}
+.pdf-active .inspection-flow .flow-step.done>span{background:#163e35;color:#82d8b5;font-size:0}
+.pdf-active .inspection-flow .flow-step.done>span::before{content:'✓';font-size:10px}
+.pdf-active .inspection-flow .flow-step.done b{color:#8dcbb4}
+.pdf-active .inspection-flow .flow-step.optional{opacity:.62}
+.pdf-active .inspection-cta{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 13px;border-bottom:1px solid #2a3c55;background:#13263a}
+.pdf-active .inspection-cta>div{display:grid;gap:2px;min-width:0}
+.pdf-active .inspection-cta small{font-size:8px;color:#77a2b7}
+.pdf-active .inspection-cta b{font-size:10px;color:#d9edf5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pdf-active .inspection-cta button{height:30px;flex:none;padding:0 12px;border:1px solid #2789aa;border-radius:5px;background:#1b7896;color:#fff;font-size:9px;font-weight:600;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.18)}
+.pdf-active .inspection-cta button:hover{background:#2389aa}
+.pdf-active .drawing-link{padding:9px 13px 10px;background:#111d2c}
+.pdf-active .drawing-link-top b{font-size:11px}
+.pdf-active .drawing-link-control{margin-top:7px}
+.pdf-active .sample-control.hidden{display:none}
+.pdf-active .sample-control{height:42px}
+.pdf-active .table-wrap{display:flex;flex-direction:column;overflow:hidden}
+.pdf-active .table-wrap>.empty-table{flex:1}
+.pdf-active .marker-list{flex:none;max-height:min(30vh,230px);overflow:auto;padding-right:3px}
+.pdf-active .marker-editor{flex:1;min-height:245px;overflow:auto;margin-top:8px}
+.pdf-active .fair-footer span{font-size:8px}
+.pdf-active .fair-footer button{font-weight:600}
+.pdf-active .file-panel .side-actions{display:none}
+.pdf-active .file-panel{display:none!important}
+.pdf-active #projectToggle{display:none!important}
+.pdf-active .file-panel .file-upload label{height:76px;gap:4px;border-radius:10px}
+.pdf-active .file-panel .file-upload label::before{width:34px;height:34px;font-size:18px;border-radius:8px}
+.pdf-active .file-panel .file-upload label::after{font-size:7px}
+.pdf-active.files-open .fair-panel{margin-right:0;max-width:none}
+.pdf-active.files-open .file-panel{z-index:60;box-shadow:-16px 0 42px rgba(0,0,0,.38)}
+@media(max-width:1100px){.pdf-active .fair-panel{width:390px!important;min-width:340px;max-width:48vw}.pdf-active .inspection-flow{padding-left:9px;padding-right:9px}.pdf-active .inspection-flow>i{margin:0 3px}.pdf-active .inspection-flow small{display:none}}
+@media(max-width:760px){.pdf-active .fair-panel{position:absolute;right:0;top:0;bottom:0;z-index:42;width:min(390px,92vw)!important;min-width:0;max-width:92vw;box-shadow:-14px 0 36px rgba(0,0,0,.34)}.pdf-active .viewer-panel{width:100%}.pdf-active .panel-toggle{left:-42px}.pdf-active .file-panel{display:none!important}.pdf-active #projectToggle{display:none}}
+.pdf-active .fair-panel.closed{width:0!important;min-width:0;box-shadow:none}
+
+/* 2D inspector refinement: compact progress, professional panel handle and typed characteristics. */
+.pdf-active .panel-toggle{left:-30px;top:14px;width:30px;height:44px;display:grid;place-items:center;padding:0;border:1px solid #34434f;border-right:0;border-radius:8px 0 0 8px;background:#171e26;color:#91a1ad;box-shadow:-7px 3px 16px rgba(0,0,0,.22)}
+.pdf-active .panel-toggle:hover{color:#e5f3f8;background:#20303b;border-color:#4b7286}
+.pdf-active .panel-toggle svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .18s ease}
+.pdf-active .fair-panel.closed .panel-toggle svg{transform:rotate(180deg)}
+.pdf-active .fair-panel.closed .panel-toggle{border-right:1px solid #34434f;border-radius:8px 0 0 8px}
+.pdf-active .fair-head{height:54px;padding:8px 12px}
+.pdf-active .inspection-flow{height:36px;padding:0 13px;background:#121a23;border-bottom-color:#293641}
+.pdf-active .inspection-flow .flow-step{display:flex;align-items:center;gap:6px;opacity:.46;min-width:auto}
+.pdf-active .inspection-flow .flow-step>span{width:6px;height:6px;padding:0;border-radius:50%;background:#56636e;color:transparent;box-shadow:none}
+.pdf-active .inspection-flow .flow-step>span::before{content:none!important}
+.pdf-active .inspection-flow .flow-step>b{font-size:8px;font-weight:500;color:#7e8b96;white-space:nowrap}
+.pdf-active .inspection-flow .flow-step.active{opacity:1}
+.pdf-active .inspection-flow .flow-step.active>span{background:#38a7c9;box-shadow:0 0 0 3px rgba(56,167,201,.12)}
+.pdf-active .inspection-flow .flow-step.active>b{color:#d8eef5}
+.pdf-active .inspection-flow .flow-step.done{opacity:.86}
+.pdf-active .inspection-flow .flow-step.done>span{background:#4f9d7d}
+.pdf-active .inspection-flow .flow-step.done>b{color:#9eb9ad}
+.pdf-active .inspection-flow .flow-step.optional{opacity:.34}
+.pdf-active .inspection-flow>i{height:1px;max-width:42px;margin:0 9px;background:#30404c}
+.pdf-active .inspection-cta{min-height:48px;padding:7px 12px;background:#16232d;border-bottom-color:#2b3b47}
+.pdf-active .inspection-cta>div{display:flex;align-items:center;gap:8px;min-width:0}
+.pdf-active .inspection-cta>div>span{flex:none;padding:3px 6px;border:1px solid #366176;border-radius:4px;background:#183849;color:#9bd5e8;font:600 7px 'DM Mono';letter-spacing:.06em}
+.pdf-active .inspection-cta b{font-size:9px;font-weight:500;color:#cbd7de}
+.pdf-active .inspection-cta button{height:31px;display:flex;align-items:center;gap:6px;padding:0 10px;border-radius:4px;background:#176f8e;border-color:#3186a4;box-shadow:none;font-size:8px}
+.pdf-active .inspection-cta button svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.pdf-active .drawing-link{padding:8px 12px 9px;background:#121b24;border-bottom-color:#293741}
+.pdf-active .drawing-link-top small{font-size:7px}.pdf-active .drawing-link-top b{font-size:10px}
+.pdf-active .drawing-link-top em{padding:2px 6px;border-radius:4px;font-size:7px}
+.pdf-active .drawing-link-control{margin-top:6px;grid-template-columns:minmax(0,1fr) 82px}
+.pdf-active .drawing-link-control select,.pdf-active .drawing-link-control button{height:28px;font-size:8px}
+.pdf-active .drawing-link-meta{margin-top:5px;font-size:7px}
+.pdf-active .sample-control{height:38px}
+.pdf-active .marker-list{gap:4px}
+.pdf-active .marker-row{height:50px;grid-template-columns:34px minmax(0,1fr) auto;border-radius:5px;padding:6px 8px;background:#182129;border-color:#293640}
+.pdf-active .marker-row:hover,.pdf-active .marker-row.hovered{background:#1d2b35;border-color:#3c667a}
+.pdf-active .marker-row.selected{background:#213743;border-color:#4e8198}
+.pdf-active .marker-symbol{width:31px;height:31px;display:grid;place-items:center;border:1px solid #35566a;border-radius:5px;background:#162d3b;color:#a8e2f3;font:700 11px 'DM Mono'}
+.pdf-active .marker-copy b{font-size:10px}.pdf-active .marker-copy small{font-size:7px}
+.pdf-active .marker-state{border-radius:4px;font-size:7px}
+.pdf-active .marker-editor{border-radius:6px;background:#111820;border-color:#33434f}
+.pdf-active .editor-heading{height:45px;display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px;padding:0 10px;background:#18232c;border-color:#2d3c48}
+.pdf-active .editor-heading>div{min-width:0}.pdf-active .editor-heading>div b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pdf-active .recognition-badge{padding:3px 6px;border:1px solid #4d5d68;border-radius:4px;color:#a9b4bc;background:#202a32;font-size:7px;white-space:nowrap}
+.pdf-active .recognition-badge.confidence-high{border-color:#396856;color:#9fd2bb;background:#19362d}
+.pdf-active .recognition-badge.confidence-medium{border-color:#6b6040;color:#d5c58e;background:#342f1f}
+.pdf-active .recognition-badge.confidence-low{border-color:#6d4448;color:#d7a0a5;background:#342326}
+.pdf-active .characteristic-fields{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:8px;padding:10px}
+.pdf-active .characteristic-fields label{grid-column:auto!important}
+.pdf-active .type-select{height:30px;display:grid;grid-template-columns:34px minmax(0,1fr);overflow:hidden;border:1px solid #34434f;border-radius:4px;background:#0e151c}
+.pdf-active .type-select strong{display:grid;place-items:center;border-right:1px solid #34434f;color:#a8e2f3;font:700 11px 'DM Mono'}
+.pdf-active .type-select select{min-width:0;border:0;background:transparent;color:#d8e4ea;padding:0 6px;outline:0;font-size:8px}
+.pdf-active .characteristic-fields input{width:100%}
+.pdf-active .recognition-raw{margin:0 10px 10px;padding:7px 8px;border:1px solid #293944;border-radius:4px;background:#0d141a;display:grid;gap:3px}
+.pdf-active .recognition-raw span{color:#71818d;font-size:7px}.pdf-active .recognition-raw b{color:#9eafb9;font:500 8px 'DM Mono';line-height:1.45;overflow-wrap:anywhere}
+.pdf-active .empty-table{min-height:180px;border-radius:6px;padding:22px}.pdf-active .empty-table span{font-size:22px}
+.pdf-active .empty-table p{margin:8px 0 3px}.pdf-active .empty-table small{max-width:260px;color:#718492}
+@media(max-width:760px){.pdf-active .panel-toggle{left:-30px}.pdf-active .inspection-flow>i{margin:0 6px}.pdf-active .inspection-cta b{max-width:190px}.pdf-active .drawing-link-meta{display:none}}
+.pdf-active .inspection-flow{display:none!important}
+.pdf-active .inspection-cta{min-height:43px;justify-content:flex-end;background:#121a23}
+.pdf-active .inspection-cta>div{display:none}
+.pdf-active .inspection-cta button{width:100%;justify-content:center;height:30px}
+
+/* FAIR sheet layout: one persistent table, no card/editor detour. */
+.pdf-active #fairPanel.fair-panel{width:var(--fair-panel-width,clamp(460px,38vw,920px))!important;min-width:460px;max-width:min(920px,52vw);background:#101827}
+.pdf-active #fairPanel.fair-panel.resizing{transition:none}
+.pdf-active .fair-head{height:54px;padding:0 205px 0 14px;position:relative;background:#101827}
+.pdf-active .fair-head>div:first-child{min-width:0}.pdf-active .fair-head>div:first-child b{font-size:11px;white-space:nowrap}.pdf-active .fair-head>div:first-child em{border-radius:4px;padding:2px 5px}
+.pdf-active .inspector-actions{position:absolute;right:176px;top:12px}.pdf-active .inspector-actions #metaToggle{width:30px;height:30px}
+.pdf-active .drawing-link,.pdf-active .inspection-cta{display:none!important}
+.pdf-active .metadata{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 9px;padding:10px 12px 11px;background:#111a2c;border-bottom:1px solid #2a3a52}
+.pdf-active .metadata.hidden{display:none!important}.pdf-active .meta-heading{display:none}
+.pdf-active .metadata label{font-size:8px;line-height:1.2;color:#8495aa}.pdf-active .metadata input{height:28px;margin-top:4px;padding:0 8px;border-radius:4px;font-size:9px}
+.pdf-active .sample-control,.pdf-active .sample-control.hidden{position:absolute;right:12px;top:11px;z-index:45;width:154px;height:32px;display:flex!important;align-items:center;justify-content:flex-end;gap:7px;padding:0 6px;border:1px solid #2d3d55;border-radius:4px;background:#0b1323;color:#8e9db0}
+.pdf-active .sample-control>span{margin-right:auto;font-size:8px;white-space:nowrap}.pdf-active .sample-control>div{display:flex;align-items:center;gap:2px}.pdf-active .sample-control button{width:23px;height:23px;padding:0;border:0;background:transparent;color:#22b8ee;font-size:13px}.pdf-active .sample-control b{min-width:22px;color:#24c2f2;font:600 9px 'DM Mono';text-align:center}
+.pdf-active .table-wrap{display:block!important;overflow:hidden;padding:0;background:#101827}
+.fair-table-shell{width:100%;height:100%;overflow:auto;background:#101827;scrollbar-color:#43566d #111a2a}
+.fair-data-table{width:100%;min-width:820px;border-collapse:separate;border-spacing:0;table-layout:fixed;font-size:8px;color:#aab8ca}
+.fair-data-table th{position:sticky;top:0;z-index:3;height:34px;padding:0 6px;text-align:left;border-top:1px solid #273750;border-bottom:1px solid #33445c;background:#1a2639;color:#8c9bb0;font-size:8px;font-weight:600;white-space:nowrap}
+.fair-data-table td{height:39px;padding:4px;border-bottom:1px solid #26344a;background:#101827}
+.fair-data-row:hover td,.fair-data-row.hovered td{background:#142238}.fair-data-row.selected td{background:#162942}
+.fair-data-table .row-no{width:42px;text-align:center;color:#71839a;font:600 8px 'DM Mono'}
+.fair-data-table .symbol-cell{width:62px}.fair-data-table .nominal-cell{width:160px}.fair-data-table .tolerance-cell{width:94px}.fair-data-table .sample-col,.fair-data-table .sample-cell{width:68px}.fair-data-table th.sample-col{text-align:center;color:#24c2f2}.fair-data-table .tool-cell{width:124px}.fair-data-table .row-action{width:44px;text-align:center}
+.fair-data-table input,.fair-data-table select{width:100%;height:27px;min-width:0;padding:0 7px;border:1px solid #2d3d56;border-radius:4px;background:#0b1425;color:#d7e3f1;outline:0;font:500 8px 'DM Mono'}
+.fair-data-table input:focus,.fair-data-table select:focus{border-color:#238ab4;box-shadow:0 0 0 2px rgba(35,138,180,.12)}
+.fair-data-table .symbol-cell select{text-align:center;color:#e7c77c;padding-left:3px}.fair-data-table .nominal-cell input{color:#d9f0ff;font-weight:600}.fair-data-table .tolerance-cell input{text-align:center}.fair-data-table .sample-cell input{text-align:center;color:#72cbb1}.fair-data-table .tool-cell select{font-family:'Noto Sans SC',sans-serif;color:#c2cfde}
+.fair-data-table .row-action button{width:25px;height:25px;display:grid;place-items:center;margin:auto;border:0;background:transparent;color:#61738b;cursor:pointer}.fair-data-table .row-action button:hover{color:#ee8290}.fair-data-table .row-action svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.fair-empty-row td{height:135px;text-align:center;color:#65768d}.fair-empty-row td b,.fair-empty-row td span{display:block}.fair-empty-row td b{color:#9aabbd;font-size:9px}.fair-empty-row td span{margin-top:5px;font-size:8px}
+.pdf-active .fair-footer{height:46px}.pdf-active .fair-footer button{height:30px;padding:0 11px}
+@media(max-width:1100px){.pdf-active #fairPanel.fair-panel{width:var(--fair-panel-width,46vw)!important;min-width:420px;max-width:54vw}.pdf-active .fair-head{padding-right:195px}.fair-data-table{min-width:800px}}
+@media(max-width:760px){.pdf-active #fairPanel.fair-panel{width:min(var(--fair-panel-width,calc(100vw - 30px)),calc(100vw - 30px))!important;max-width:none;min-width:0}.pdf-active .fair-head{padding-left:10px}.pdf-active .metadata{padding-left:9px;padding-right:9px}.pdf-active .sample-control,.pdf-active .sample-control.hidden{right:8px;width:148px}}
+
+/* Keep each drawing-toolbar control to one icon.  Earlier workspace styles
+   used text pseudo-elements; the current controls carry SVGs in the markup. */
+.pdf-active .viewer-toolbar button{display:inline-flex;align-items:center;justify-content:center}
+.pdf-active .viewer-toolbar #fitView::before,
+.pdf-active .viewer-toolbar #toggleBubbles::before,
+.pdf-active .viewer-toolbar #zoomOut::after{content:none}

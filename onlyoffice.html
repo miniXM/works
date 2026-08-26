@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>制表中心 · ONLYOFFICE 工作台</title>
+  <link rel="stylesheet" href="./onlyoffice.css" />
+  <style>
+    body.embedded .oo-topbar { display: none; }
+    body.embedded .oo-main { height: 100vh; padding: 0; }
+    body.embedded .oo-setup { border: 0; border-radius: 0; box-shadow: none; }
+  </style>
+</head>
+<body>
+  <header class="oo-topbar">
+    <a class="oo-back" href="./index.html">‹ 返回项目系统</a>
+    <div class="oo-title"><span class="oo-mark">▦</span><div><b>制表中心</b><small>ONLYOFFICE 独立工作台</small></div></div>
+    <div class="oo-actions"><button id="openFile">打开文件</button><button id="downloadFile">下载</button></div>
+  </header>
+  <main class="oo-main">
+    <section id="ooSetup" class="oo-setup">
+      <div class="oo-setup-icon">▦</div>
+      <h1>在线表格工作台</h1>
+      <p>此页面已预留 ONLYOFFICE Docs 编辑器容器。配置文档服务地址和文件配置后，即可直接加载在线 Excel。</p>
+      <div class="oo-setup-grid"><div><span>文档服务</span><b id="serverState">未配置</b></div><div><span>当前文件</span><b id="fileState">报价模板.xlsx</b></div><div><span>编辑模式</span><b>独立工作台</b></div></div>
+      <p class="oo-hint">部署 ONLYOFFICE 后，可通过 URL 参数传入 <code>documentServer</code> 和 <code>configUrl</code>，此页面无需改动。</p>
+    </section>
+    <div id="ooEditor" class="oo-editor hidden"></div>
+  </main>
+  <input id="fileInput" type="file" accept=".xlsx,.xls,.csv" hidden />
+  <script type="module" src="./onlyoffice.js"></script>
+</body>
+</html>

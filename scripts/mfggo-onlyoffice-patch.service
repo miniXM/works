@@ -1,0 +1,12 @@
+[Unit]
+Description=Apply MFGGO compatibility patch to ONLYOFFICE Docs
+After=docker.service network-online.target
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/onlyoffice/apply-mfggo-patch.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

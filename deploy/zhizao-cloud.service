@@ -1,0 +1,23 @@
+[Unit]
+Description=Zhizao Cloud SaaS
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=zhizao-cloud
+Group=zhizao-cloud
+WorkingDirectory=/opt/zhizao-cloud
+Environment=NODE_ENV=production
+EnvironmentFile=/etc/zhizao-cloud/zhizao-cloud.env
+ExecStart=/usr/bin/node /opt/zhizao-cloud/server/index.js
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/zhizao-cloud
+
+[Install]
+WantedBy=multi-user.target

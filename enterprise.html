@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>智造云 · 企业工作台</title>
+    <link rel="stylesheet" href="./cloud.css" />
+    <link rel="stylesheet" href="./document-center.css" />
+    <link rel="stylesheet" href="./task-detail.css" />
+  </head>
+  <body data-console-mode="enterprise">
+    <div id="loginView" class="login-view">
+      <div class="login-orbit orbit-one"></div>
+      <div class="login-orbit orbit-two"></div>
+      <section class="login-card">
+        <div class="login-brand"><span>T</span><b>智造云</b></div>
+        <p class="login-kicker">企业工作台 · 机加工协作平台</p>
+        <form id="loginForm" class="login-form">
+          <label
+            ><span><i>*</i> 用户名</span
+            ><input
+              id="loginUser"
+              value="admin"
+              autocomplete="username"
+              required /></label
+          ><label
+            ><span><i>*</i> 密码</span>
+            <div class="password-wrap">
+              <input
+                id="loginPassword"
+                type="password"
+                autocomplete="current-password"
+                required
+              /><button type="button" id="togglePassword" aria-label="显示密码">
+                ◉
+              </button>
+            </div></label
+          >
+          <p id="loginError" class="login-error" role="alert"></p>
+          <button class="login-button" type="submit">登 录</button>
+        </form>
+        <p class="login-hint">使用管理员分配的账号登录</p>
+      </section>
+    </div>
+    <div id="shellView" class="cloud-shell hidden">
+      <aside class="cloud-sidebar">
+        <div class="cloud-logo"><span>T</span><b>智造云</b></div>
+        <nav id="cloudNav" class="cloud-nav" aria-label="企业工作台导航"></nav>
+        <div class="sidebar-footer">
+          <div class="user-chip">
+            <span>A</span>
+            <div><b id="cloudUserName">admin</b><small>在线</small></div>
+          </div>
+          <button id="logoutButton" class="logout-button">退出</button>
+        </div>
+      </aside>
+      <main class="cloud-main">
+        <header class="cloud-topbar">
+          <div class="topbar-title">
+            <h1 id="pageTitle">项目管理</h1>
+            <div class="global-search">
+              <span>⌕</span
+              ><input
+                id="globalSearch"
+                placeholder="搜索任务 / 项目 / 负责人"
+                aria-label="全局搜索"
+              /><kbd>⌘ K</kbd>
+            </div>
+          </div>
+          <div class="topbar-actions">
+            <button id="enterpriseMenu" class="enterprise-button" title="打开企业成员管理" aria-label="打开企业成员管理">
+              企业管理⌄</button
+            ><button class="top-user">
+              <span>A</span><b>admin</b><i>⌄</i>
+            </button>
+          </div>
+        </header>
+        <div id="cloudContent" class="cloud-content"></div>
+      </main>
+    </div>
+    <div id="cloudToast" class="cloud-toast" role="status"></div>
+    <script type="module" src="./zhizao-app.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const i = document.querySelector("#loginPassword"),
+          b = document.querySelector("#togglePassword");
+        b?.addEventListener("click", () => {
+          i.type = i.type === "password" ? "text" : "password";
+          b.textContent = i.type === "password" ? "◉" : "◌";
+        });
+      });
+    </script>
+  </body>
+</html>

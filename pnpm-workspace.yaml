@@ -1,0 +1,8 @@
+allowBuilds:
+  core-js: false
+  esbuild: true
+  tesseract.js: true
+onlyBuiltDependencies:
+  - core-js
+  - esbuild
+  - tesseract.js
