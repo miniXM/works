@@ -497,10 +497,11 @@ export async function createApp({ dbPath = join(process.cwd(), 'data', 'machquot
     // selected conversation so attachment upload follows the same permission
     // and project-membership rules as sending its message.
     const conversationId = validString(ctx.get('x-conversation-id'), 120);
+    let pendingConversation = null;
     if (conversationId) {
-      const conversation = db.getConversation(session.organizationId, conversationId);
-      if (!conversation) return jsonError(ctx, 404, 'conversation_not_found', '会话不存在或无权访问');
-      if (!authorizeConversation(ctx, conversation, true)) return;
+      pendingConversation = db.getConversation(session.organizationId, conversationId);
+      if (!pendingConversation) return jsonError(ctx, 404, 'conversation_not_found', '会话不存在或无权访问');
+      if (!authorizeConversation(ctx, pendingConversation, true)) return;
     } else if (!authorize(ctx, 'chat.write', { moduleKey: 'chat' })) return;
     const name = chatFileName(ctx.get('x-file-name'));
     const extension = name.includes('.') ? name.split('.').pop().toLowerCase() : '';
@@ -516,11 +517,22 @@ export async function createApp({ dbPath = join(process.cwd(), 'data', 'machquot
     await mkdir(join(chatAttachmentRoot, session.organizationId), { recursive: true });
     const storageKey = join(session.organizationId, `${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`);
     await writeFile(join(chatAttachmentRoot, storageKey), Buffer.concat(chunks));
-    const attachment = db.createChatAttachment({ organizationId: session.organizationId, userId: session.userId, name, mimeType, sizeBytes: size, storageKey });
+    const attachment = db.createChatAttachment({ organizationId: session.organizationId, userId: session.userId, name, mimeType, sizeBytes: size, storageKey, pendingConversationId: pendingConversation?.id || null });
+    if (!attachment) {
+      await unlink(join(chatAttachmentRoot, storageKey)).catch(() => {});
+      return jsonError(ctx, 400, 'attachment_unavailable', '附件关联的会话不可用');
+    }
     ctx.status = 201; ctx.body = { attachment };
   });
   router.delete('/chat-attachments/:attachmentId', requireAuth, async ctx => {
     const session = ctx.state.session;
+    const pending = db.getPendingChatAttachmentStorage(session.organizationId, session.userId, ctx.params.attachmentId);
+    if (!pending) return jsonError(ctx, 404, 'chat_attachment_not_found', '待发送附件不存在或无权删除');
+    if (pending.pending_conversation_id) {
+      const conversation = db.getConversation(session.organizationId, pending.pending_conversation_id);
+      if (!conversation) return jsonError(ctx, 404, 'conversation_not_found', '会话不存在或无权访问');
+      if (!authorizeConversation(ctx, conversation, true)) return;
+    } else if (!authorize(ctx, 'chat.write', { moduleKey: 'chat' })) return;
     const row = db.deletePendingChatAttachment(session.organizationId, session.userId, ctx.params.attachmentId);
     if (!row) return jsonError(ctx, 404, 'chat_attachment_not_found', '待发送附件不存在或无权删除');
     await unlink(join(chatAttachmentRoot, row.storage_key)).catch(() => {});
@@ -530,10 +542,7 @@ export async function createApp({ dbPath = join(process.cwd(), 'data', 'machquot
     const session = ctx.state.session;
     const row = db.getChatAttachmentStorage(session.organizationId, ctx.params.attachmentId);
     if (!row || (!row.message_id && row.uploader_user_id !== session.userId)) return jsonError(ctx, 404, 'chat_attachment_not_found', '附件不存在或无权下载');
-    if (!row.message_id) {
-      // Pending files are visible only to their uploader.  They may have been
-      // uploaded for a project while the enterprise-chat module is disabled.
-    } else if (row.project_id) {
+    if (row.project_id) {
       if (!authorize(ctx, 'communication.read', { moduleKey: 'communication', projectId: row.project_id })) return;
     } else if (!authorize(ctx, 'chat.read', { moduleKey: 'chat' })) return;
     let file;

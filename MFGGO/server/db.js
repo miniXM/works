@@ -221,6 +221,7 @@ CREATE TABLE IF NOT EXISTS chat_attachments (
   id TEXT PRIMARY KEY,
   organization_id TEXT NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
   message_id TEXT REFERENCES messages(id) ON DELETE CASCADE,
+  pending_conversation_id TEXT REFERENCES conversations(id) ON DELETE SET NULL,
   uploader_user_id TEXT NOT NULL REFERENCES users(id),
   name TEXT NOT NULL,
   mime_type TEXT NOT NULL DEFAULT 'application/octet-stream',
@@ -319,7 +320,7 @@ function conversationFromRow(row) {
     createdAt: row.created_at
   } : null;
 }
-function attachmentFromRow(row) { return row ? { id: row.id, messageId: row.message_id || '', name: row.name, mimeType: row.mime_type || 'application/octet-stream', sizeBytes: Number(row.size_bytes || 0), createdAt: row.created_at } : null; }
+function attachmentFromRow(row) { return row ? { id: row.id, messageId: row.message_id || '', pendingConversationId: row.pending_conversation_id || '', name: row.name, mimeType: row.mime_type || 'application/octet-stream', sizeBytes: Number(row.size_bytes || 0), createdAt: row.created_at } : null; }
 function messageFromRow(row, attachments = []) { return row ? { id: row.id, organizationId: row.organization_id, conversationId: row.conversation_id, userId: row.user_id, username: row.username || '', displayName: row.display_name || row.username || '', body: row.body, attachments, createdAt: row.created_at } : null; }
 
 const conversationDetailsSql = `SELECT c.*, p.title AS project_title,
@@ -368,6 +369,7 @@ export async function createDatabase({ dbPath }) {
   try { db.exec('ALTER TABLE projects ADD COLUMN start_at TEXT'); } catch {}
   try { db.exec('ALTER TABLE projects ADD COLUMN due_at TEXT'); } catch {}
   try { db.exec('ALTER TABLE conversation_user_states ADD COLUMN last_read_message_rowid INTEGER'); } catch {}
+  try { db.exec('ALTER TABLE chat_attachments ADD COLUMN pending_conversation_id TEXT REFERENCES conversations(id) ON DELETE SET NULL'); } catch {}
   db.exec('UPDATE tasks SET updated_at = COALESCE(updated_at, created_at)');
   db.exec('CREATE INDEX IF NOT EXISTS idx_office_documents_project ON office_documents(organization_id, project_id)');
   db.exec('CREATE INDEX IF NOT EXISTS idx_project_members_user ON project_members(organization_id, user_id, project_id)');
@@ -376,6 +378,7 @@ export async function createDatabase({ dbPath }) {
   db.exec('CREATE INDEX IF NOT EXISTS idx_task_comments_task ON task_comments(organization_id, task_id)');
   db.exec('CREATE INDEX IF NOT EXISTS idx_conversation_user_states_user ON conversation_user_states(organization_id, user_id, saved_for_later)');
   db.exec('CREATE INDEX IF NOT EXISTS idx_chat_attachments_message ON chat_attachments(organization_id, message_id)');
+  db.exec('CREATE INDEX IF NOT EXISTS idx_chat_attachments_pending_conversation ON chat_attachments(organization_id, pending_conversation_id)');
   db.exec('CREATE INDEX IF NOT EXISTS idx_messages_conversation_created ON messages(organization_id, conversation_id, created_at)');
   db.prepare(`INSERT OR IGNORE INTO project_members(organization_id, project_id, user_id, project_role, created_by, created_at)
     SELECT organization_id, id, COALESCE(owner_user_id, created_by), 'owner', created_by, created_at
@@ -589,19 +592,28 @@ export async function createDatabase({ dbPath }) {
       return messagesFromRows(rows, organizationId);
     },
     createMessage({ organizationId, conversationId, userId, body, attachmentIds = [] }) {
+      const targetConversation = db.prepare('SELECT project_id FROM conversations WHERE organization_id = ? AND id = ?').get(organizationId, conversationId);
+      if (!targetConversation) return null;
       const uniqueAttachmentIds = [...new Set(attachmentIds)];
+      const allowsUnboundAttachments = targetConversation.project_id ? 0 : 1;
       if (uniqueAttachmentIds.length) {
         const placeholders = uniqueAttachmentIds.map(() => '?').join(',');
-        const available = db.prepare(`SELECT id FROM chat_attachments WHERE organization_id = ? AND uploader_user_id = ? AND message_id IS NULL AND id IN (${placeholders})`).all(organizationId, userId, ...uniqueAttachmentIds);
+        const available = db.prepare(`SELECT id FROM chat_attachments
+          WHERE organization_id = ? AND uploader_user_id = ? AND message_id IS NULL
+            AND (pending_conversation_id = ? OR (? = 1 AND pending_conversation_id IS NULL))
+            AND id IN (${placeholders})`).all(organizationId, userId, conversationId, allowsUnboundAttachments, ...uniqueAttachmentIds);
         if (available.length !== uniqueAttachmentIds.length) return null;
       }
       const message = { id: id('message'), organizationId, conversationId, userId, body, createdAt: now() };
       db.exec('BEGIN IMMEDIATE');
       try {
         db.prepare('INSERT INTO messages(id, organization_id, conversation_id, user_id, body, created_at) VALUES(?, ?, ?, ?, ?, ?)').run(message.id, organizationId, conversationId, userId, body, message.createdAt);
-        const attach = db.prepare('UPDATE chat_attachments SET message_id = ? WHERE organization_id = ? AND uploader_user_id = ? AND message_id IS NULL AND id = ?');
+        const attach = db.prepare(`UPDATE chat_attachments
+          SET message_id = ?, pending_conversation_id = NULL
+          WHERE organization_id = ? AND uploader_user_id = ? AND message_id IS NULL AND id = ?
+            AND (pending_conversation_id = ? OR (? = 1 AND pending_conversation_id IS NULL))`);
         for (const attachmentId of uniqueAttachmentIds) {
-          if (!attach.run(message.id, organizationId, userId, attachmentId).changes) throw new Error('chat_attachment_unavailable');
+          if (!attach.run(message.id, organizationId, userId, attachmentId, conversationId, allowsUnboundAttachments).changes) throw new Error('chat_attachment_unavailable');
         }
         db.exec('COMMIT');
       } catch (error) {
@@ -611,17 +623,22 @@ export async function createDatabase({ dbPath }) {
       const row = db.prepare('SELECT m.*, u.username, u.display_name FROM messages m LEFT JOIN users u ON u.id = m.user_id WHERE m.id = ?').get(message.id);
       return messagesFromRows([row], organizationId)[0];
     },
-    createChatAttachment({ organizationId, userId, name, mimeType, sizeBytes, storageKey }) {
+    createChatAttachment({ organizationId, userId, name, mimeType, sizeBytes, storageKey, pendingConversationId = null }) {
+      if (pendingConversationId && !db.prepare('SELECT 1 FROM conversations WHERE organization_id = ? AND id = ?').get(organizationId, pendingConversationId)) return null;
       const attachmentId = id('attachment'); const createdAt = now();
-      db.prepare('INSERT INTO chat_attachments(id, organization_id, message_id, uploader_user_id, name, mime_type, size_bytes, storage_key, created_at) VALUES(?, ?, NULL, ?, ?, ?, ?, ?, ?)').run(attachmentId, organizationId, userId, name, mimeType, sizeBytes, storageKey, createdAt);
+      db.prepare('INSERT INTO chat_attachments(id, organization_id, message_id, pending_conversation_id, uploader_user_id, name, mime_type, size_bytes, storage_key, created_at) VALUES(?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)').run(attachmentId, organizationId, pendingConversationId || null, userId, name, mimeType, sizeBytes, storageKey, createdAt);
       return attachmentFromRow(db.prepare('SELECT * FROM chat_attachments WHERE id = ?').get(attachmentId));
     },
     getChatAttachmentStorage(organizationId, attachmentId) {
-      return db.prepare(`SELECT a.*, c.project_id
+      return db.prepare(`SELECT a.*, COALESCE(sent_conversation.project_id, pending_conversation.project_id) AS project_id
         FROM chat_attachments a
         LEFT JOIN messages m ON m.organization_id = a.organization_id AND m.id = a.message_id
-        LEFT JOIN conversations c ON c.organization_id = m.organization_id AND c.id = m.conversation_id
+        LEFT JOIN conversations sent_conversation ON sent_conversation.organization_id = m.organization_id AND sent_conversation.id = m.conversation_id
+        LEFT JOIN conversations pending_conversation ON pending_conversation.organization_id = a.organization_id AND pending_conversation.id = a.pending_conversation_id
         WHERE a.organization_id = ? AND a.id = ?`).get(organizationId, attachmentId) || null;
+    },
+    getPendingChatAttachmentStorage(organizationId, userId, attachmentId) {
+      return db.prepare('SELECT * FROM chat_attachments WHERE organization_id = ? AND uploader_user_id = ? AND id = ? AND message_id IS NULL').get(organizationId, userId, attachmentId) || null;
     },
     deletePendingChatAttachment(organizationId, userId, attachmentId) {
       const row = db.prepare('SELECT * FROM chat_attachments WHERE organization_id = ? AND uploader_user_id = ? AND id = ? AND message_id IS NULL').get(organizationId, userId, attachmentId);

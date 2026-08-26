@@ -554,7 +554,7 @@ def build_report():
         ("代码快照", "2026-08-26；工作区无 Git 元数据，以当前文件为准"),
         ("版本基线", "package.json 1.1.0；Node.js ESM；Vite 多页面"),
         ("分析范围", "前端入口、云端工作台、Koa API、SQLite schema、CAD/FAIR/OCR、ONLYOFFICE、测试与部署"),
-        ("验证方式", "源码静态分析 + Node 内置测试；80 个测试用例全部通过"),
+        ("验证方式", "源码静态分析 + Node 内置测试；82 个测试用例全部通过"),
         ("读者对象", "架构师、后端/前端工程师、制造数字化负责人、部署与验收人员"),
     ]
     add_table(doc, ["项目", "说明"], meta_rows, [1700, 7660], font_size=9.6)
@@ -585,6 +585,7 @@ def build_report():
     add_heading(doc, "1  文档说明与结论", 1)
     add_heading(doc, "1.1 分析方法与证据等级", 2)
     add_body(doc, "本报告以工作区 2026-08-26 的源码快照为事实来源。由于目录没有 Git 元数据，文档不把提交历史、分支状态或未在文件中出现的外部服务视为已验证事实。结论分为三类：已实现表示可在代码或测试中直接定位；已声明表示 README/ARCHITECTURE.md 有明确说明但仍需部署条件；建议项表示为正式生产或规模化运行提出的改进，不代表当前已经存在。")
+    add_note(doc, "代码摘录说明", "代码块只摘取与分析结论直接相关的路径；其中的 `...` 表示省略非关键参数或上下文，括号内文件与行号仍可回到完整源码核对。", color="0F6B78", fill="EAF6F3")
     evidence_rows = [
         ("已实现", "Koa REST API、SQLite 持久化、组织隔离、角色/模块/项目成员授权、项目/零件/报价/FAIR/任务/沟通/文档/审计", "server/app.js; server/db.js; tests/saas-api.test.mjs"),
         ("已实现", "浏览器端 STEP/IGES/BREP 解析、Three.js 预览、PDF 框选、视觉符号识别、OCR、Excel/PDF 导出", "app.js; inspection-recognition.js; inspection-pipeline.js"),
@@ -1028,11 +1029,12 @@ config.token = jwt(configWithoutServer);""", "server/app.js:242-255（逻辑摘�
     # 12
     add_heading(doc, "12  测试与质量", 1, page_break=True)
     add_heading(doc, "12.1 本次实际验证结果", 2)
-    add_note(doc, "测试结果", "使用 Node.js v24.19.0 运行 `node --test tests/saas-api.test.mjs tests/zhizao-app.test.mjs tests/inspection-recognition.test.mjs`，共 80 个测试，80 通过，0 失败，0 跳过；总耗时约 6.6 秒。", color="0F6B78", fill="EAF6F3")
+    add_note(doc, "测试结果", "使用 Node.js v24.19.0 运行 `node --test tests/saas-api.test.mjs tests/zhizao-app.test.mjs tests/inspection-recognition.test.mjs`，共 82 个测试，82 通过，0 失败，0 跳过；总耗时约 8.2 秒。", color="0F6B78", fill="EAF6F3")
+    add_body(doc, "构建验证：`pnpm run build` 成功，Vite 7.1.1 转换 304 个模块；同时报告 workspace 产物约 1,997.55 kB、gzip 580.94 kB 的大 chunk 警告，后续应通过动态导入或 manualChunks 拆分 CAD、PDF/OCR 和导出能力。", after=6)
     add_table(doc, ["测试文件", "数量/范围", "验证内容"], [
-        ("tests/saas-api.test.mjs", "约 44 个", "临时 SQLite、登录、租户隔离、角色拒绝、模块关闭、项目成员、任务、文档、报价、FAIR、聊天附件、审计、workspace 聚合"),
-        ("tests/zhizao-app.test.mjs", "约 18 个", "store、导航、筛选、平台切换、移动端控制、文档入口、聊天状态、旧租户清理、异步竞态"),
-        ("tests/inspection-recognition.test.mjs", "约 38 个", "尺寸、公差、工程符号、OCR 证据、聚类、结构恢复、噪声抑制、历史数据迁移"),
+        ("tests/saas-api.test.mjs", "25 个", "临时 SQLite、登录、租户隔离、角色拒绝、模块关闭、项目成员、任务、文档、报价、FAIR、聊天附件、审计、workspace 聚合"),
+        ("tests/zhizao-app.test.mjs", "21 个", "store、导航、筛选、平台切换、移动端控制、文档入口、聊天状态、旧租户清理、异步竞态"),
+        ("tests/inspection-recognition.test.mjs", "36 个", "尺寸、公差、工程符号、OCR 证据、聚类、结构恢复、噪声抑制、历史数据迁移"),
     ], [2300, 1800, 5260], font_size=8.8)
     add_heading(doc, "12.2 测试设计的强项", 2)
     add_bullets(doc, [
@@ -1080,7 +1082,7 @@ config.token = jwt(configWithoutServer);""", "server/app.js:242-255（逻辑摘�
         ("可观测性", "console.error + audit_events", "结构化日志、request ID、指标、告警和审计归档"),
     ], [1800, 3900, 3660], font_size=8.7)
     add_heading(doc, "13.3 验收优先级建议", 2)
-    add_body(doc, "如果目标是继续内部验收，优先修复默认凭证、ONLYOFFICE 客户端 secret、报价/FAIR 关联归属和报价事务，然后补一套 Playwright 样例。若目标是正式公网客户，必须在此基础上完成 HTTPS、MFA/限流、对象存储、备份恢复和 PostgreSQL 迁移评估；不能因为 80/80 单测通过就把当前版本定义为生产 SaaS。")
+    add_body(doc, "如果目标是继续内部验收，优先修复默认凭证、ONLYOFFICE 客户端 secret、报价/FAIR 关联归属和报价事务，然后补一套 Playwright 样例。若目标是正式公网客户，必须在此基础上完成 HTTPS、MFA/限流、对象存储、备份恢复和 PostgreSQL 迁移评估；不能因为 82/82 单测通过就把当前版本定义为生产 SaaS。")
     add_note(doc, "最终判断", "当前版本适合“可运行的机加工报价协同基础”和“本地 CAD/FAIR 体验验证”，不适合未经整改直接承载正式客户的高敏感图纸、成本和报价审批。", color="9B1C1C", fill="FFF1F1")
 
     # 14

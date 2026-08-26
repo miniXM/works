@@ -196,8 +196,8 @@ function renderChat(store) {
     ['mentions', '@我的', allConversations.filter(item => item.mentionCount > 0).length],
     ['later', '稍后处理', allConversations.filter(item => item.savedForLater).length]
   ];
-  const listMarkup = conversations.length ? conversations.map(chat => `<button class="chat-list-item ${chat.id===selected?.id?'active':''} ${chat.unreadCount ? 'unread' : ''}" data-chat-id="${esc(chat.id)}"><span class="avatar ${chat.projectId ? 'orange' : 'blue'}">${esc(initials(chat.projectTitle || chat.title))}</span><div><b>${esc(chat.title)}</b><small><span>${esc(chat.projectTitle || store.organization?.name || '企业会话')}</span>${chat.preview ? ` · ${esc(chat.preview)}` : ' · 暂无消息'}</small></div><time>${esc(formatConversationTime(chat.lastMessageAt || chat.createdAt))}</time>${chat.unreadCount ? `<em title="${chat.unreadCount} 条未读">${chat.unreadCount > 99 ? '99+' : chat.unreadCount}</em>` : chat.savedForLater ? '<i title="稍后处理">稍后</i>' : ''}</button>`).join('') : `<div class="communication-list-empty"><b>${allConversations.length ? '没有匹配的会话' : '还没有会话'}</b><span>${allConversations.length ? '调整筛选条件或搜索关键词' : '发送第一条消息即可创建企业会话'}</span>${allConversations.length ? '<button class="small-outline" data-action="clear-chat-filters">清除筛选</button>' : '<button class="small-outline" data-action="focus-chat-input">新建企业会话</button>'}</div>`;
-  const messageMarkup = !selected ? '<div class="communication-detail-empty"><span>▣</span><b>开始企业会话</b><span>第一条消息会自动创建会话并持久化保存</span><button class="primary-button" data-action="focus-chat-input">开始聊天</button></div>'
+  const listMarkup = conversations.length ? conversations.map(chat => `<button class="chat-list-item ${chat.id===selected?.id?'active':''} ${chat.unreadCount ? 'unread' : ''}" data-chat-id="${esc(chat.id)}"><span class="avatar ${chat.projectId ? 'orange' : 'blue'}">${esc(initials(chat.projectTitle || chat.title))}</span><div><b>${esc(chat.title)}</b><small><span>${esc(chat.projectTitle || store.organization?.name || '企业会话')}</span>${chat.preview ? ` · ${esc(chat.preview)}` : ' · 暂无消息'}</small></div><time>${esc(formatConversationTime(chat.lastMessageAt || chat.createdAt))}</time>${chat.unreadCount ? `<em title="${chat.unreadCount} 条未读">${chat.unreadCount > 99 ? '99+' : chat.unreadCount}</em>` : chat.savedForLater ? '<i title="稍后处理">稍后</i>' : ''}</button>`).join('') : `<div class="communication-list-empty"><b>${allConversations.length ? '没有匹配的会话' : '还没有会话'}</b><span>${allConversations.length ? '调整筛选条件或搜索关键词' : '新建企业频道后，当前企业成员都可以查看和参与'}</span>${allConversations.length ? '<button class="small-outline" data-action="clear-chat-filters">清除筛选</button>' : '<button class="small-outline" data-action="create-chat-conversation">＋ 新建企业频道</button>'}</div>`;
+  const messageMarkup = !selected ? '<div class="communication-detail-empty"><span>▣</span><b>选择或新建企业频道</b><span>企业频道面向当前企业成员可见，创建后即可开始沟通</span><button class="primary-button" data-action="create-chat-conversation">＋ 新建企业频道</button></div>'
     : !Array.isArray(messages) ? '<div class="communication-loading">正在加载消息...</div>'
       : messages.length ? `<div class="chat-date">最近</div>${messages.map(message => {
         const mine = message.mine || message.userId === store.user?.id;
@@ -205,7 +205,7 @@ function renderChat(store) {
         return `<div class="message-row ${mine ? 'mine' : ''}"><span class="avatar ${mine ? 'blue' : 'gray'}">${esc(initials(message.displayName || message.username))}</span><div><small>${esc(message.displayName || message.username || '成员')} · ${esc(new Date(message.createdAt).toLocaleString('zh-CN'))}</small>${message.body ? `<p>${esc(message.body)}</p>` : ''}${attachments ? `<div class="chat-message-attachments">${attachments}</div>` : ''}</div></div>`;
       }).join('')}` : '<div class="communication-thread-empty"><b>还没有消息</b><span>写下第一条消息开始讨论</span></div>';
   const draftAttachments = (store.chatDraftAttachments || []).map(attachment => `<div class="chat-draft-attachment"><span>▱</span><b title="${esc(attachment.name)}">${esc(attachment.name)}</b><small>${esc(formatFileSize(attachment.sizeBytes))}</small><button data-action="remove-chat-attachment" data-chat-attachment-id="${esc(attachment.id)}" title="移除附件" aria-label="移除 ${esc(attachment.name)}">×</button></div>`).join('');
-  return `<section class="view chat-view"><input type="file" data-chat-attachment-input accept="${CHAT_ATTACHMENT_ACCEPT}" multiple hidden><div class="split-card chat-card"><aside class="chat-list"><div class="split-heading chat-heading"><div class="split-heading-top"><h2>聊天信息 <span>${allConversations.length}</span></h2></div><nav class="chat-filter-tabs" aria-label="会话状态筛选">${tabs.map(([id,label,count]) => `<button class="${store.chatFilter===id?'active':''}" data-chat-filter="${id}">${label}${count ? `<em>${count}</em>` : ''}</button>`).join('')}</nav><label class="communication-search chat-search"><span>⌕</span><input data-chat-search value="${esc(store.chatQuery || '')}" placeholder="搜索会话或消息"></label><select data-chat-scope aria-label="按企业或项目筛选"><option value="all" ${store.chatScope==='all'?'selected':''}>全部会话</option><option value="enterprise" ${store.chatScope==='enterprise'?'selected':''}>企业会话</option><option value="projects" ${store.chatScope==='projects'?'selected':''}>全部项目会话</option>${store.projects.map(project => `<option value="project:${esc(project.id)}" ${store.chatScope===`project:${project.id}`?'selected':''}>${esc(project.title)}</option>`).join('')}</select></div><div class="chat-list-body">${listMarkup}</div></aside><article class="chat-detail"><header>${selected ? `<div><h2>${esc(selected.title)}</h2><small>${esc(selected.projectTitle || store.organization?.name || '企业会话')}</small></div><button class="chat-later-button ${selected.savedForLater ? 'active' : ''}" data-action="toggle-chat-later" title="${selected.savedForLater ? '移出稍后处理' : '稍后处理'}" aria-label="${selected.savedForLater ? '移出稍后处理' : '稍后处理'}">⚑</button>` : '<h2>新建企业会话</h2>'}</header><div class="chat-messages" data-chat-messages>${messageMarkup}</div><footer class="chat-compose"><div class="chat-draft-attachments">${draftAttachments}</div><textarea id="chatInput" rows="2" maxlength="4000" placeholder="输入消息，Enter 发送 / Ctrl + Enter 换行">${esc(store.chatDraft || '')}</textarea><div class="chat-compose-actions"><div><button class="chat-tool-button" data-action="attach-chat-file" title="添加附件" aria-label="添加附件" ${store.chatUploading || store.chatDraftAttachments.length >= 5 ? 'disabled' : ''}>📎</button></div>${store.chatUploading ? '<span>上传中...</span>' : store.chatSending ? '<span>发送中...</span>' : ''}<button class="primary-button" data-action="send-chat" ${store.chatUploading || store.chatSending ? 'disabled' : ''}>发送</button></div></footer></article></div></section>`;
+  return `<section class="view chat-view"><input type="file" data-chat-attachment-input accept="${CHAT_ATTACHMENT_ACCEPT}" multiple hidden><div class="split-card chat-card"><aside class="chat-list"><div class="split-heading chat-heading"><div class="split-heading-top"><h2>聊天信息 <span>${allConversations.length}</span></h2><button type="button" class="small-outline" data-action="create-chat-conversation" aria-label="新建企业频道">＋ 新建</button></div><nav class="chat-filter-tabs" aria-label="会话状态筛选">${tabs.map(([id,label,count]) => `<button class="${store.chatFilter===id?'active':''}" data-chat-filter="${id}">${label}${count ? `<em>${count}</em>` : ''}</button>`).join('')}</nav><label class="communication-search chat-search"><span>⌕</span><input data-chat-search value="${esc(store.chatQuery || '')}" placeholder="搜索会话或消息"></label><select data-chat-scope aria-label="按企业或项目筛选"><option value="all" ${store.chatScope==='all'?'selected':''}>全部会话</option><option value="enterprise" ${store.chatScope==='enterprise'?'selected':''}>企业会话</option><option value="projects" ${store.chatScope==='projects'?'selected':''}>全部项目会话</option>${store.projects.map(project => `<option value="project:${esc(project.id)}" ${store.chatScope===`project:${project.id}`?'selected':''}>${esc(project.title)}</option>`).join('')}</select></div><div class="chat-list-body">${listMarkup}</div></aside><article class="chat-detail"><header>${selected ? `<div><h2>${esc(selected.title)}</h2><small>${esc(selected.projectTitle || store.organization?.name || '企业会话')}</small></div><button class="chat-later-button ${selected.savedForLater ? 'active' : ''}" data-action="toggle-chat-later" title="${selected.savedForLater ? '移出稍后处理' : '稍后处理'}" aria-label="${selected.savedForLater ? '移出稍后处理' : '稍后处理'}">⚑</button>` : '<h2>企业频道</h2>'}</header><div class="chat-messages" data-chat-messages>${messageMarkup}</div><footer class="chat-compose"><div class="chat-draft-attachments">${draftAttachments}</div><textarea id="chatInput" rows="2" maxlength="4000" placeholder="${selected ? '输入消息，Enter 发送 / Ctrl + Enter 换行' : '请先新建或选择企业频道'}">${esc(store.chatDraft || '')}</textarea><div class="chat-compose-actions"><div><button class="chat-tool-button" data-action="attach-chat-file" title="添加附件" aria-label="添加附件" ${store.chatUploading || store.chatDraftAttachments.length >= 5 ? 'disabled' : ''}>📎</button></div>${store.chatUploading ? '<span>上传中...</span>' : store.chatSending ? '<span>发送中...</span>' : ''}<button class="primary-button" data-action="send-chat" ${store.chatUploading || store.chatSending ? 'disabled' : ''}>发送</button></div></footer></article></div></section>`;
 }
 
 function renderTasks(store) {
@@ -312,6 +312,33 @@ function openCommunicationDialog(store, submit, defaults = {}) {
     submit({ projectId: String(form.get('projectId') || ''), title: String(form.get('title') || '').trim(), body: String(form.get('body') || '').trim() });
     close();
   };
+  host.querySelector('input').focus();
+}
+
+function openChatConversationDialog(submit) {
+  document.querySelector('#chatConversationDialog')?.remove();
+  const host = document.createElement('div');
+  host.id = 'chatConversationDialog';
+  host.className = 'project-dialog-backdrop';
+  host.innerHTML = `<section class="project-dialog" role="dialog" aria-modal="true" aria-labelledby="chatConversationDialogTitle" aria-describedby="chatConversationVisibility"><header><div><small>ENTERPRISE CHANNEL</small><h2 id="chatConversationDialogTitle">新建企业频道</h2></div><button type="button" data-chat-conversation-dialog-close aria-label="关闭">×</button></header><form><label>频道名称<input name="title" maxlength="160" placeholder="例如：生产排期协同" required></label><p id="chatConversationVisibility" class="muted-note">频道创建后，当前企业的全部成员均可查看和参与。</p><footer><button type="button" class="outline-button" data-chat-conversation-dialog-close>取消</button><button type="submit" class="primary-button">创建频道</button></footer></form></section>`;
+  document.body.appendChild(host);
+  const close = () => host.remove();
+  host.querySelectorAll('[data-chat-conversation-dialog-close]').forEach(button => button.addEventListener('click', close));
+  host.addEventListener('click', event => { if (event.target === host) close(); });
+  host.querySelector('form').addEventListener('submit', async event => {
+    event.preventDefault();
+    const title = String(new FormData(event.currentTarget).get('title') || '').trim();
+    if (!title) return;
+    const submitButton = event.currentTarget.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+    try {
+      if (await submit(title)) close();
+      else submitButton.disabled = false;
+    } catch (error) {
+      submitButton.disabled = false;
+      showToast(error.message || '企业频道创建失败');
+    }
+  });
   host.querySelector('input').focus();
 }
 
@@ -1015,6 +1042,27 @@ function initCloudApp() {
     renderShell();
     content.querySelector('#chatInput')?.focus();
   };
+  const createEnterpriseConversation = async title => {
+    if (!store.apiToken) {
+      showToast('SaaS 服务未连接，请重新登录后再创建企业频道');
+      return false;
+    }
+    const result = await apiRequest('/api/conversations', { method: 'POST', body: JSON.stringify({ title }) }, store.apiToken);
+    if (!result.response?.ok) {
+      showToast(result.body.message || '企业频道创建失败');
+      return false;
+    }
+    const conversation = { unreadCount: 0, mentionCount: 0, savedForLater: false, ...result.body.conversation };
+    store.conversations = [conversation, ...store.conversations.filter(item => item.id !== conversation.id)];
+    delete store.messages[conversation.id];
+    store.chatFilter = 'all';
+    store.chatScope = 'enterprise';
+    store.chatQuery = '';
+    store.selectedChat = conversation.id;
+    renderShell();
+    showToast('企业频道已创建');
+    return true;
+  };
   const sendChatMessage = async () => {
     if (store.chatSending || store.chatUploading) return;
     const input = content.querySelector('#chatInput');
@@ -1022,19 +1070,18 @@ function initCloudApp() {
     const body = store.chatDraft.trim();
     const attachmentIds = (store.chatDraftAttachments || []).map(item => item.id);
     if (!body && !attachmentIds.length) return;
+    const selectedConversation = store.conversations.find(item => item.id === store.selectedChat);
+    if (!selectedConversation) {
+      openChatConversationDialog(createEnterpriseConversation);
+      return;
+    }
+    const incompatibleAttachment = (store.chatDraftAttachments || []).find(attachment => attachment.pendingConversationId
+      ? attachment.pendingConversationId !== selectedConversation?.id
+      : Boolean(selectedConversation?.projectId));
+    if (incompatibleAttachment) return showToast('附件与当前会话不匹配，请移除后重新添加');
     store.chatSending = true;
     renderShell();
-    let conversation = store.conversations.find(item => item.id === store.selectedChat);
-    if (!conversation) {
-      const conversationResult = await apiRequest('/api/conversations', { method: 'POST', body: JSON.stringify({ title: '企业沟通' }) }, store.apiToken);
-      if (!conversationResult.response?.ok) {
-        store.chatSending = false; renderShell();
-        return showToast(conversationResult.body.message || '会话创建失败');
-      }
-      conversation = { unreadCount: 0, mentionCount: 0, savedForLater: false, ...conversationResult.body.conversation };
-      store.conversations = [conversation, ...store.conversations];
-      store.selectedChat = conversation.id;
-    }
+    const conversation = selectedConversation;
     const result = await apiRequest(`/api/conversations/${encodeURIComponent(conversation.id)}/messages`, { method: 'POST', body: JSON.stringify({ body, attachmentIds }) }, store.apiToken);
     store.chatSending = false;
     if (!result.response?.ok) {
@@ -1292,8 +1339,8 @@ function initCloudApp() {
       renderShell();
       return;
     }
-    if (event.target.closest('[data-action="focus-chat-input"]')) {
-      content.querySelector('#chatInput')?.focus();
+    if (event.target.closest('[data-action="create-chat-conversation"]')) {
+      openChatConversationDialog(createEnterpriseConversation);
       return;
     }
     const projectCard = event.target.closest('[data-project-open]');

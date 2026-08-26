@@ -267,6 +267,7 @@ test('allows project-conversation attachments when enterprise chat is disabled a
   const suffix = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
   const project = (await request('/api/projects', { method: 'POST', headers, body: JSON.stringify({ title: `项目附件授权-${suffix}`, stage: '立项沟通' }) })).body.project;
   const conversation = (await request('/api/conversations', { method: 'POST', headers, body: JSON.stringify({ projectId: project.id, title: '项目文件确认' }) })).body.conversation;
+  const otherConversation = (await request('/api/conversations', { method: 'POST', headers, body: JSON.stringify({ projectId: project.id, title: '项目文件复核' }) })).body.conversation;
   const beforeModules = (await request('/api/me', { headers })).body.modules;
 
   try {
@@ -283,6 +284,15 @@ test('allows project-conversation attachments when enterprise chat is disabled a
       body: Buffer.from('ISO-10303-21; PROJECT CHAT ATTACHMENT; END-ISO-10303-21;')
     });
     assert.equal(attachment.response.status, 201);
+    assert.equal(attachment.body.attachment.pendingConversationId, conversation.id);
+
+    const wrongConversation = await request(`/api/conversations/${otherConversation.id}/messages`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ body: '不应跨会话挂载附件', attachmentIds: [attachment.body.attachment.id] })
+    });
+    assert.equal(wrongConversation.response.status, 400);
+    assert.equal(wrongConversation.body.error, 'attachment_unavailable');
 
     const sent = await request(`/api/conversations/${conversation.id}/messages`, {
       method: 'POST',

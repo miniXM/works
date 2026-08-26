@@ -1,11 +1,13 @@
-node_modules/
-tmp/
-data/*.sqlite
-data/office-documents/
+**/node_modules/
+**/tmp/
+**/__pycache__/
+**/data/*.sqlite
+**/data/office-documents/
+**/.vite/
 .env
 .env.*
 !.env.example
-dist/
+**/dist/
 
 # Local/customer documents and generated reports
 *.pdf
@@ -15,6 +17,6 @@ dist/
 eng.traineddata
 
 # Runtime templates are part of the application
-!templates/*.docx
-!templates/*.xlsx
-!templates/*.pptx
+!**/templates/*.docx
+!**/templates/*.xlsx
+!**/templates/*.pptx

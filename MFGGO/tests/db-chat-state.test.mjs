@@ -55,12 +55,25 @@ test('migrates existing conversation read states before using the message cursor
       updated_at TEXT NOT NULL,
       PRIMARY KEY(conversation_id, user_id)
     );`);
+    legacyDb.exec(`CREATE TABLE chat_attachments (
+      id TEXT PRIMARY KEY,
+      organization_id TEXT NOT NULL,
+      message_id TEXT,
+      uploader_user_id TEXT NOT NULL,
+      name TEXT NOT NULL,
+      mime_type TEXT NOT NULL DEFAULT 'application/octet-stream',
+      size_bytes INTEGER NOT NULL DEFAULT 0,
+      storage_key TEXT NOT NULL,
+      created_at TEXT NOT NULL
+    );`);
     legacyDb.close();
 
     db = await createDatabase({ dbPath });
     const conversation = db.createConversation({ organizationId: 'org_demo', title: '历史状态迁移校验' });
     const state = db.updateConversationUserState('org_demo', conversation.id, 'user_admin', { read: true });
     assert.equal(state.conversationId, conversation.id);
+    const attachment = db.createChatAttachment({ organizationId: 'org_demo', userId: 'user_admin', name: 'legacy-migration.step', mimeType: 'model/step', sizeBytes: 1, storageKey: 'legacy-migration.step', pendingConversationId: conversation.id });
+    assert.equal(attachment.pendingConversationId, conversation.id);
   } finally {
     db?.close();
     await rm(directory, { recursive: true, force: true });
