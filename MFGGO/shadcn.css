@@ -1,0 +1,121 @@
+/*
+ * shadcn/ui-compatible primitives for the vanilla Vite shell.
+ *
+ * The application is intentionally framework-free, so the official React
+ * component generator is not a suitable runtime dependency here. These
+ * tokens and primitives follow shadcn's semantic naming and interaction
+ * conventions while remaining usable from the existing HTML templates and
+ * string-rendered views.
+ */
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 47.4% 11.2%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 47.4% 11.2%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 47.4% 11.2%;
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 72.2% 50.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83.2% 53.3%;
+  --radius: .5rem;
+}
+
+.shadcn-card {
+  color: hsl(var(--card-foreground));
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  box-shadow: 0 1px 2px rgb(15 23 42 / .04);
+}
+
+.shadcn-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  min-height: 2.25rem;
+  padding: .5rem 1rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  color: hsl(var(--primary-foreground));
+  background: hsl(var(--primary));
+  font-size: .875rem;
+  font-weight: 500;
+  line-height: 1;
+  transition: background-color .15s, border-color .15s, box-shadow .15s, color .15s;
+}
+
+.shadcn-button:hover { background: hsl(221.2 83.2% 46%); }
+.shadcn-button:focus-visible,
+.shadcn-input:focus-visible,
+.shadcn-select:focus-visible,
+.shadcn-textarea:focus-visible {
+  outline: 2px solid hsl(var(--ring) / .35);
+  outline-offset: 2px;
+}
+.shadcn-button:disabled { cursor: not-allowed; opacity: .5; }
+.shadcn-button-secondary { color: hsl(var(--secondary-foreground)); background: hsl(var(--secondary)); }
+.shadcn-button-secondary:hover { background: hsl(210 40% 92%); }
+.shadcn-button-outline { color: hsl(var(--foreground)); background: hsl(var(--background)); border-color: hsl(var(--input)); }
+.shadcn-button-outline:hover { background: hsl(var(--accent)); }
+.shadcn-button-ghost { color: hsl(var(--foreground)); background: transparent; }
+.shadcn-button-ghost:hover { background: hsl(var(--accent)); }
+.shadcn-button-destructive { background: hsl(var(--destructive)); }
+.shadcn-button-destructive:hover { background: hsl(0 72.2% 44%); }
+
+.shadcn-input,
+.shadcn-select,
+.shadcn-textarea {
+  width: 100%;
+  border: 1px solid hsl(var(--input));
+  border-radius: calc(var(--radius) - 2px);
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
+  font-size: .875rem;
+  transition: border-color .15s, box-shadow .15s;
+}
+.shadcn-input, .shadcn-select { height: 2.25rem; padding: 0 .75rem; }
+.shadcn-textarea { min-height: 5rem; padding: .625rem .75rem; resize: vertical; }
+.shadcn-input::placeholder, .shadcn-textarea::placeholder { color: hsl(var(--muted-foreground)); }
+
+.shadcn-badge {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: .125rem .625rem;
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / .1);
+  font-size: .75rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+}
+
+/* Apply the primitives to the existing shell without requiring a markup rewrite. */
+.cloud-shell .primary-button,
+.cloud-shell .login-button,
+.cloud-shell .enterprise-button,
+.cloud-shell .small-outline,
+.cloud-shell .outline-button { border-radius: var(--radius); }
+.cloud-shell .primary-button { box-shadow: 0 1px 2px rgb(15 23 42 / .08); }
+.cloud-shell input:not([type="checkbox"]):not([type="radio"]),
+.cloud-shell select,
+.cloud-shell textarea { border-radius: calc(var(--radius) - 2px); }
+.cloud-shell .project-dialog,
+.cloud-shell .task-detail-panel,
+.cloud-shell .communication-card,
+.cloud-shell .chat-card,
+.cloud-shell .table-card { border-radius: var(--radius); }
+
+@media (prefers-reduced-motion: reduce) {
+  .shadcn-button, .shadcn-input, .shadcn-select, .shadcn-textarea { transition: none; }
+}

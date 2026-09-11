@@ -12,7 +12,7 @@ pnpm run build
 pnpm run server
 ```
 
-生产预览地址：`http://127.0.0.1:4310/`
+生产预览地址：`http://<本机局域网IP>:4310/`
 
 开发时执行一个命令即可同时启动 API 和 Vite 前端：
 
@@ -20,20 +20,40 @@ pnpm run server
 pnpm run dev
 ```
 
-需要分别调试时，可使用 `pnpm run dev:server` 和 `pnpm run dev:web`。
+需要分别调试时，可使用 `pnpm run dev:server` 和 `pnpm run dev:web`。这两个命令都默认监听 `0.0.0.0`，所以同一局域网内其他设备也能访问。
 
 登录账号：`admin` / `123456`。
 
-验收时可直接打开两个独立入口：
+## 聊天服务如何投入使用
 
-- 企业工作台：`http://127.0.0.1:4173/enterprise.html`
-- Admin 平台主后台：`http://127.0.0.1:4173/admin.html`
+聊天不再是页面内的示例数据：会话、消息、未读状态和附件都会写入当前企业的 SQLite 数据库。实际使用时按下面的顺序配置即可：
 
-根地址 `http://127.0.0.1:4173/` 是统一登录页；登录后按账号权限进入对应工作台。
+1. 用企业所有者账号进入“企业管理”，邀请需要协作的成员；企业频道对当前企业所有成员开放。
+2. 在“聊天信息”点“＋ 新建”，创建有业务名称的企业频道，例如“生产排期协同”；再在频道内发送文字或附件。
+3. 需要限定到项目的讨论，先创建项目并将成员加入项目，再在“项目沟通”发起主题并收发文字或附件。项目成员之外的账号不能查看、发送或下载该项目会话附件。
+4. 页面保持打开时会自动同步会话摘要和当前打开的讨论；未读、@我的和稍后处理均按当前账号独立保存。附件单条最多 50 MB、每条消息最多 5 个，支持图纸、Office、PDF、图片和压缩包等界面列出的格式。
 
-## ONLYOFFICE 文档中心
+运行维护要点：
 
-“制表中心”先展示当前用户可访问的 Word、Excel、PPT 和 PDF 文档，打开文档后再进入独立的 ONLYOFFICE 编辑器。后端负责文件下载、编辑配置与保存回调。
+- 用 `pnpm run build` 后再执行 `pnpm run server`，不要只启动静态前端；聊天 API、SQLite 和附件存储都由后端提供。
+- 健康检查：`Invoke-WebRequest -UseBasicParsing http://<本机局域网IP>:4310/api/health`。
+- 备份时要成对保存数据库（`DB_PATH`）和附件目录（`CHAT_ATTACHMENT_STORAGE_DIR`；本地默认是 `data/chat-attachments/`）；仅备份数据库会丢失已发送附件的实体文件。
+- 公网部署应把附件目录换成受备份、限额和病毒扫描保护的对象存储，并为待发送但未引用的附件设置定时清理任务。
+
+本地开发（`pnpm run dev`）使用 Vite 入口：
+
+- 前端统一端口：`7410`
+- API 统一端口：`4310`
+- 企业工作台：`http://<本机局域网IP>:7410/enterprise.html`
+- Admin 平台主后台：`http://<本机局域网IP>:7410/admin.html`
+
+本地开发和人工验收只使用 `7410` 前端端口。`pnpm run dev` 会同时启动 API `4310` 与 Vite 前端 `7410`；单独启动前端时使用 `pnpm run dev:web`。
+
+构建后以 `pnpm run server` 提供服务时，使用同样的路径但端口为 `4310`。根地址是统一登录页；登录后按账号权限进入对应工作台。
+
+## 制表中心
+
+“制表中心”是 CAD/PDF 项目清单导入入口：选择项目后上传 STEP、STP、IGES、BREP、PDF 或 ZIP，3D 零件在浏览器本地解析后会自动生成 BOM、制造数据和报价基础，并同步到对应项目根任务的“项目清单”与“关联内容”；2D 图纸直接进入气泡标注与 FAIR 检验流程。原 ONLYOFFICE 文档服务接口保留用于历史数据兼容，不再作为制表中心首页。
 
 服务端至少需要配置：
 
@@ -48,23 +68,22 @@ ONLYOFFICE_JWT_SECRET=replace-with-your-documentserver-secret
 
 ## 功能验收流程
 
-1. 登录后进入“项目管理”，查看按业务阶段排列的项目看板；点击项目卡进入项目工作台，刷新后仍会保留当前项目和标签页。
-2. 在项目工作台切换任务、零件/BOM、报价、图纸文档、质量、沟通动态、交付和统计；项目内新增的数据会自动归入当前项目。
-3. 点击“新建项目”，输入项目名，项目会通过 Koa API 写入 SQLite 并出现在看板中。
+1. 登录后进入“项目管理”，查看按业务阶段排列的项目看板；点击项目卡会直接打开该项目唯一根任务的详情弹窗。
+2. 在任务详情中编辑任务字段、执行者、时间、优先级和备注，并查看参与者、动态和评论。
+3. 点击“新建项目”，输入项目名；项目与其根任务会通过 Koa API 写入 SQLite 并出现在看板中。
 4. 进入“零件中心”，点击“新增”，选择项目并保存零件；刷新后零件仍会保留。
-5. 进入“制表中心”，创建或上传 Word、Excel、PPT 文档；打开后在线编辑，返回文档库后可下载、重命名、删除或从回收站恢复。
+5. 进入“制表中心”，选择项目并上传 STEP、PDF 或项目 ZIP；确认 CAD 在本地生成 B-Rep 制造数据与报价基础，PDF 可进入气泡标注和 FAIR 导出。
 6. 点击“管理 FAIR”，新增检验特性、名义值、公差并关联零件；保存后卡片会显示待复核数量。
 7. 刷新页面，登录会在当前浏览器会话内自动恢复，报价与 FAIR 数据也会从 SQLite 重新加载。
 8. 点击右上角企业名称查看当前企业成员与角色；点击“打开完整工作台”进入原有 CAD、图纸气泡标注与 FAIR 工作台。
 9. 切换到“平台主后台”，在“企业管理”中新建企业、配置模块，或进入另一企业空间；“平台审计”可查看跨企业操作记录。
-10. 在企业菜单中邀请成员、修改成员角色；在“我的任务”创建企业任务，在“聊天信息”发送企业会话消息，在“统计”查看当前企业实时汇总。
+10. 在企业菜单中邀请成员、修改成员角色；在“我的任务”创建或导入独立通用任务（项目卡只保留唯一根任务，不再创建项目子任务），在“聊天信息”发送企业会话消息，在“统计”查看当前企业实时汇总。
 11. 调用 `/api/audit`，确认登录、项目、零件、报价、FAIR、任务和成员操作均有审计记录。
 
 报价与 FAIR API：
 
 - `GET/POST /api/projects/:projectId/quotes`
 - `GET/POST /api/projects/:projectId/members`
-- `GET /api/projects/:projectId/workspace`
 - `GET /api/projects/:projectId/quotes/:quoteId`
 - `GET/POST /api/projects/:projectId/fair-items`
 - `PUT /api/projects/:projectId`
@@ -72,6 +91,8 @@ ONLYOFFICE_JWT_SECRET=replace-with-your-documentserver-secret
 - `PUT /api/projects/:projectId/fair-items/:itemId`
 - `PUT /api/parts/:partId`
 - `GET/POST /api/tasks`
+- `GET /api/tasks/:taskId/detail`
+- `POST /api/tasks/:taskId/comments`
 - `PUT /api/tasks/:taskId`
 - `GET/POST /api/conversations`
 - `GET/POST /api/conversations/:conversationId/messages`
@@ -84,7 +105,9 @@ ONLYOFFICE_JWT_SECRET=replace-with-your-documentserver-secret
 - `POST /api/platform/organizations/:organizationId/switch`
 - `GET /api/platform/audit`
 
-报价草稿保存 BOM 明细、数量、单价（分）和小计；FAIR 保存检验特性、名义值、公差和状态。业务 API 会按企业角色、模块开关和项目成员关系进行服务端校验；`owner/admin` 可管理项目成员，其他角色仅可访问被加入的项目及其获授权资源。
+报价草稿保存 BOM 明细、数量、单价（分）和小计；FAIR 保存检验特性、名义值、公差和状态。业务 API 按明确授权、模块开关和项目成员关系校验。企业身份为主管理 `owner`、副管理 `admin`、员工 `member`；工程师、质检员是职位，不赋予权限。主管理在“组织架构”管理部门、员工及副管理授权范围；副管理需获得员工/部门管理能力，并只能在允许范围内授予员工业务权限，不能修改本人或其他管理者。创建任务不自动授予管理权限，任务修改仍由当前执行者负责。
+
+右上角个人菜单可编辑企业内姓名、部门和职位，或切换本人已加入的企业。平台主管理通过该菜单的“平台管理员”任命副管理并逐项授权；新建企业必须选择企业主管理账号，平台操作者不会自动获得企业所有权。平台管理身份和企业身份分别保存，跨企业业务读取仍要求有效成员关系。
 
 ## 独立公网部署（端口 8320）
 
@@ -92,7 +115,7 @@ ONLYOFFICE_JWT_SECRET=replace-with-your-documentserver-secret
 
 ```bash
 sudo useradd --system --home /opt/zhizao-cloud --shell /usr/sbin/nologin zhizao-cloud
-sudo mkdir -p /opt/zhizao-cloud /var/lib/zhizao-cloud/office-documents /etc/zhizao-cloud
+sudo mkdir -p /opt/zhizao-cloud /var/lib/zhizao-cloud/office-documents /var/lib/zhizao-cloud/chat-attachments /etc/zhizao-cloud
 sudo chown -R zhizao-cloud:zhizao-cloud /opt/zhizao-cloud /var/lib/zhizao-cloud
 
 # 将项目发布到 /opt/zhizao-cloud 后执行

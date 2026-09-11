@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs';
 import { createApp } from './app.js';
 
 const root = process.cwd();
-const host = process.env.HOST || '127.0.0.1';
+const host = process.env.HOST || '0.0.0.0';
 const port = Number(process.env.PORT || 4310);
 const staticDir = join(root, 'dist');
 const dbPath = process.env.DB_PATH || join(root, 'data', 'machquote.sqlite');
@@ -12,7 +12,7 @@ if (!Number.isInteger(port) || port < 1 || port > 65535) {
   throw new Error(`Invalid PORT: ${process.env.PORT}`);
 }
 
-const publicHost = !['127.0.0.1', 'localhost', '::1'].includes(host);
+const publicHost = !['127.0.0.1', 'localhost', '::1', '0.0.0.0', '::'].includes(host);
 if (publicHost) {
   const missing = [];
   if (!process.env.PUBLIC_BASE_URL) missing.push('PUBLIC_BASE_URL');

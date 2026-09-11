@@ -3,10 +3,11 @@ import { join } from 'node:path';
 
 const root = process.cwd();
 const apiPort = process.env.PORT || '4310';
+const webPort = process.env.WEB_PORT || '7410';
 const webEnvironment = { ...process.env, VITE_API_TARGET: `http://127.0.0.1:${apiPort}` };
 const children = [
-  spawn(process.execPath, [join(root, 'server', 'index.js')], { cwd: root, env: process.env, stdio: 'inherit' }),
-  spawn(process.execPath, [join(root, 'node_modules', 'vite', 'bin', 'vite.js'), '--host', '127.0.0.1', '--port', '4173'], { cwd: root, env: webEnvironment, stdio: 'inherit' })
+  spawn(process.execPath, [join(root, 'server', 'index.js')], { cwd: root, env: { ...process.env, HOST: process.env.HOST || '0.0.0.0' }, stdio: 'inherit' }),
+  spawn(process.execPath, [join(root, 'node_modules', 'vite', 'bin', 'vite.js'), '--host', '0.0.0.0', '--port', webPort], { cwd: root, env: webEnvironment, stdio: 'inherit' })
 ];
 
 let shuttingDown = false;

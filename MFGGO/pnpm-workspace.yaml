@@ -1,6 +1,7 @@
 allowBuilds:
   core-js: false
   esbuild: true
+  protobufjs: set this to true or false
   tesseract.js: true
 onlyBuiltDependencies:
   - core-js

@@ -1,0 +1,105 @@
+.organization-backdrop{position:fixed;inset:0;z-index:260;display:grid;place-items:center;padding:20px;background:rgba(24,35,48,.38);letter-spacing:0}
+.organization-dialog,.organization-dialog *{box-sizing:border-box;letter-spacing:0}
+.organization-dialog{display:flex;flex-direction:column;width:min(1040px,100%);height:min(720px,calc(100dvh - 40px));min-height:0;overflow:hidden;border:1px solid #dce3eb;border-radius:8px;background:#fff;color:#344252;box-shadow:0 18px 60px rgba(22,35,50,.18);font:13px/1.5 "Microsoft YaHei",sans-serif;outline:none}
+.organization-heading{display:flex;flex:none;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px 12px;border-bottom:1px solid #e5eaf0}
+.organization-heading h2{margin:0;color:#263647;font-size:18px;font-weight:600}
+.organization-heading p{margin:3px 0 0;color:#83909e;font-size:12px;overflow-wrap:anywhere}
+.organization-dialog button{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:34px;padding:5px 11px;border:1px solid #d5dfe9;border-radius:4px;color:#456078;background:#fff;font:inherit;font-size:12px;line-height:1.5;cursor:pointer}
+.organization-dialog button:hover:not(:disabled){border-color:#9ec7ee;background:#f2f8fd;color:#137dc3}
+.organization-dialog button:focus-visible,.organization-dialog input:focus-visible,.organization-dialog select:focus-visible,.organization-table-scroll:focus-visible{outline:2px solid #7bb8e9;outline-offset:2px}
+.organization-dialog button:disabled,.organization-dialog input:disabled,.organization-dialog select:disabled{opacity:.55;cursor:default}
+.organization-dialog .org-icon-button{flex:none;width:34px;height:34px;padding:0;color:#798797;background:transparent;font-size:22px}
+.organization-dialog .org-primary-button{border-color:#2087d1;color:#fff;background:#2087d1}
+.organization-dialog .org-primary-button:hover:not(:disabled){border-color:#0c72bb;color:#fff;background:#0c72bb}
+.organization-dialog .org-danger-button{color:#b6353e;border-color:#e8bfc3}
+.organization-dialog .org-danger-button:hover:not(:disabled){color:#9b202d;background:#fff3f4;border-color:#d6949e}
+.organization-message{flex:none;min-height:26px;margin:0;padding:4px 22px;color:#427461;font-size:12px;overflow-wrap:anywhere}
+.organization-message.is-error{color:#b52d42}
+.organization-workspace{display:grid;grid-template-columns:210px minmax(0,1fr);flex:1;min-height:0;border-top:1px solid #edf0f3}
+.organization-departments{display:flex;flex-direction:column;min-width:0;min-height:0;padding:14px 10px;background:#f7f9fb;border-right:1px solid #e2e7ec}
+.organization-section-heading{display:flex;align-items:center;justify-content:space-between;flex:none;padding:0 2px 8px 8px}
+.organization-section-heading h3{margin:0;font-size:13px;font-weight:600}
+.organization-departments nav{min-height:0;overflow:auto;flex:1}
+.organization-dialog .organization-department{display:flex;justify-content:space-between;gap:5px;width:100%;min-width:0;min-height:36px;margin-bottom:3px;padding:7px 8px 7px calc(8px + var(--department-depth,0) * 12px);border-color:transparent;border-radius:3px;background:transparent;text-align:left}
+.organization-department span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.organization-department small{flex:none;min-width:18px;color:#8a96a3;text-align:right;font-variant-numeric:tabular-nums}
+.organization-dialog .organization-department.is-selected{color:#117dc8;background:#e8f3fd}
+.organization-department-actions{display:flex;flex-wrap:wrap;gap:6px;flex:none;padding-top:12px}
+.organization-department-actions:empty{display:none}
+.organization-department-actions button{flex:1;min-width:80px;padding-inline:7px;font-size:11px}
+.organization-content{display:flex;flex-direction:column;min-width:0;min-height:0;padding:18px 20px;overflow:auto}
+.organization-member-toolbar{display:flex;align-items:center;gap:10px;justify-content:space-between;flex:none}
+.organization-search{display:block;flex:1;max-width:330px;min-width:0}
+.organization-dialog input:not([type=checkbox]),.organization-dialog select{width:100%;min-width:0;height:36px;padding:6px 9px;border:1px solid #d6dfe7;border-radius:4px;background:#fff;color:#344252;font:inherit;font-size:13px}
+.organization-dialog input::placeholder{color:#8c98a5}
+.organization-member-toolbar>button{flex:none}
+.organization-member-count{flex:none;margin:13px 0 8px;color:#8a95a1;font-size:12px}
+.organization-table-scroll{min-width:0;min-height:0;overflow:auto;border-top:1px solid #e1e7ed;border-bottom:1px solid #e1e7ed}
+.organization-member-table{width:100%;min-width:580px;border-collapse:collapse;text-align:left;table-layout:fixed;font-size:12px}
+.organization-member-table th{padding:10px 8px;background:#f7f9fb;color:#7c8896;font-weight:500;white-space:nowrap}
+.organization-member-table th:nth-child(1){width:23%}.organization-member-table th:nth-child(2){width:17%}.organization-member-table th:nth-child(3){width:19%}.organization-member-table th:nth-child(4){width:29%}.organization-member-table th:nth-child(5){width:12%}
+.organization-member-table td{padding:12px 8px;border-top:1px solid #edf0f3;vertical-align:middle;overflow-wrap:anywhere}
+.organization-member-table td b{display:block;color:#344455;font-size:13px;font-weight:500}
+.organization-member-table td small{display:block;margin-top:2px;color:#8d97a3;font-size:11px}
+.organization-member-table td.organization-permission-summary{color:#6f7c8a;font-size:11px}
+.organization-member-table td button{min-height:30px;padding:4px 8px}
+.organization-empty{margin:0;padding:38px 12px!important;color:#85929e;text-align:center}
+.organization-empty p{margin:0 0 14px}
+.organization-editor-heading{display:flex;flex:none;align-items:center;gap:8px;margin:0 0 16px}
+.organization-editor-heading h3{min-width:0;margin:0;color:#344454;font-size:15px;font-weight:600;overflow-wrap:anywhere}
+.organization-editor{display:grid;gap:16px;width:100%;max-width:550px;margin:0;padding:0}
+.organization-editor>label,.organization-form-grid>label{display:grid;min-width:0;gap:6px;color:#74818f;font-size:12px}
+.organization-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.organization-member-account{margin:0;color:#7f8c9a;overflow-wrap:anywhere}
+.organization-permissions{display:grid;gap:12px;min-width:0;margin:2px 0 0;padding:14px 0 0;border:0;border-top:1px solid #e7ecf1}
+.organization-permissions legend{padding:0 9px 0 0;color:#687788;font-size:12px}
+.organization-permissions label{display:flex;align-items:flex-start;gap:9px;color:#41576a;line-height:1.5}
+.organization-permissions input{flex:none;width:16px;height:16px;margin:1px 0 0;accent-color:#1688d2}
+.organization-permissions span{min-width:0;overflow-wrap:anywhere}
+.organization-editor footer{display:flex;justify-content:flex-end;gap:8px;margin-top:8px;padding-top:16px;border-top:1px solid #e7ecf1}
+.organization-editor footer button{min-width:70px}
+.organization-delete-message{margin:0;color:#66798b;overflow-wrap:anywhere}
+.org-visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:760px){.organization-backdrop{padding:10px}.organization-dialog{height:calc(100dvh - 20px)}.organization-workspace{grid-template-columns:170px minmax(0,1fr)}.organization-content{padding:14px}.organization-heading{padding:14px 16px 10px}.organization-message{padding-inline:16px}}
+@media(max-width:560px){.organization-backdrop{padding:6px}.organization-dialog{height:calc(100dvh - 12px);border-radius:6px}.organization-workspace{display:flex;flex-direction:column}.organization-departments{flex:none;max-height:166px;padding:6px 10px;border-right:0;border-bottom:1px solid #e2e7ec}.organization-section-heading{padding-bottom:2px}.organization-section-heading .org-icon-button{height:28px;min-height:28px}.organization-departments nav{display:flex;align-items:center;gap:5px;flex:none;max-height:80px;overflow:auto}.organization-dialog .organization-department{flex:none;width:auto;max-width:180px;margin:0;padding:5px 8px;min-height:32px}.organization-department-actions{padding:6px 0 0}.organization-department-actions button{flex:0 1 auto;min-height:28px;font-size:11px}.organization-content{flex:1;padding:12px}.organization-member-toolbar{gap:7px}.organization-member-toolbar>button{padding-inline:8px}.organization-member-table{min-width:560px}.organization-form-grid{grid-template-columns:minmax(0,1fr)}.organization-editor{gap:12px}.organization-editor-heading{margin-bottom:12px}.organization-search{max-width:none}}
+@media(max-width:560px){.organization-member-table,.organization-member-table tbody{display:block;width:100%;min-width:0}.organization-member-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}.organization-member-table tr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1px 10px;padding:12px 3px;border-top:1px solid #e6ebf0}.organization-member-table tr:first-child{border-top:0}.organization-member-table td{display:block;padding:2px 0;border:0}.organization-member-table td:nth-child(1){grid-column:1;grid-row:1}.organization-member-table td:nth-child(2){grid-column:1;grid-row:2}.organization-member-table td:nth-child(2)::before{content:'企业角色：';color:#8a95a1}.organization-member-table td:nth-child(3){grid-column:1;grid-row:3}.organization-member-table td:nth-child(3)::before{content:'部门 / 职位：';color:#8a95a1}.organization-member-table td:nth-child(3) small{display:inline;margin:0 0 0 7px}.organization-member-table td:nth-child(4){grid-column:1 / -1;grid-row:4;margin-top:3px}.organization-member-table td:nth-child(4)::before{content:'已授予权限：';color:#8a95a1}.organization-member-table td:nth-child(5){grid-column:2;grid-row:1 / 3}.organization-member-table td.organization-empty{grid-column:1 / -1;grid-row:1}}
+.organization-backdrop [hidden] { display: none !important; }
+.organization-dialog-focused { width: min(560px, 100%); height: auto; max-height: calc(100dvh - 40px); }
+.organization-dialog-focused .organization-workspace { grid-template-columns: minmax(0, 1fr); }
+.organization-dialog-focused .organization-departments { display: none; }
+.organization-dialog-focused .organization-content { padding: 16px 22px 20px; }
+.organization-dialog-focused .organization-editor-heading { margin-bottom: 10px; }
+.organization-dialog-focused .organization-editor { max-width: none; gap: 13px; }
+.organization-dialog-focused .organization-member-account { font-size: 11px; color: #88929d; }
+.organization-dialog-focused .organization-management-permission { margin-top: 0; padding-top: 10px; }
+.organization-more-permissions { margin-top: 15px; border-top: 1px solid #e7ecf1; }
+.organization-more-permissions > summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 38px; padding: 8px 0; color: #677989; font-size: 12px; cursor: pointer; list-style: none; }
+.organization-more-permissions > summary::-webkit-details-marker { display: none; }
+.organization-more-permissions > summary svg { flex: none; }
+.organization-more-permissions[open] > summary svg { transform: rotate(180deg); }
+.organization-more-permissions > summary:focus-visible { outline: 2px solid #7bb8e9; outline-offset: 2px; }
+.organization-more-permissions .organization-permissions { margin-bottom: 16px; }
+@media (max-width: 560px) {
+  .organization-dialog-focused { height: auto; max-height: calc(100dvh - 12px); }
+  .organization-dialog-focused .organization-content { padding: 12px 16px 16px; }
+}
+.organization-permission-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 38px; }
+.organization-permissions .organization-permission-row > label { margin: 0; }
+.organization-delegation { color: #45615b; font-size: 12px; white-space: nowrap; }
+.access-dialog { width: min(720px, calc(100vw - 24px)); height: auto; min-height: 200px; max-height: calc(100dvh - 24px); }
+.platform-administrator-table th:nth-child(1) { width: 45%; }
+.platform-administrator-table th:nth-child(2) { width: 30%; }
+.platform-administrator-table th:nth-child(3) { width: 25%; }
+.access-content { overflow: auto; padding: 0 20px 20px; min-height: 0; }
+.access-content .organization-editor { padding: 8px 0; }
+.access-content small { font-size: 12px; font-weight: 400; color: #687174; }
+@media (max-width: 520px) {
+  .organization-permission-row { align-items: flex-start; gap: 6px; flex-direction: column; padding-block: 6px; }
+  .organization-delegation { padding-left: 24px; }
+  .access-content { padding: 0 12px 12px; }
+}
+@media (max-width: 560px) {
+  .platform-administrator-table td:nth-child(2)::before { content: '平台身份：'; }
+  .platform-administrator-table td:nth-child(3) { grid-column: 2; grid-row: 1 / 3; }
+  .platform-administrator-table td:nth-child(3)::before { content: none; }
+}

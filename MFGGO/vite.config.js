@@ -15,6 +15,7 @@ export default defineConfig({
         enterprise: resolve(import.meta.dirname, 'enterprise.html'),
         admin: resolve(import.meta.dirname, 'admin.html'),
         platform: resolve(import.meta.dirname, 'platform.html'),
+        bomSheet: resolve(import.meta.dirname, 'bom-sheet.html'),
         onlyoffice: resolve(import.meta.dirname, 'onlyoffice.html'),
         workspace: resolve(import.meta.dirname, 'workspace.html')
       }

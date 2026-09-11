@@ -5,8 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>智造云 · 企业工作台</title>
     <link rel="stylesheet" href="./cloud.css" />
-    <link rel="stylesheet" href="./document-center.css" />
-    <link rel="stylesheet" href="./task-detail.css" />
+    <link rel="stylesheet" href="./automation.css" />
+    <link rel="stylesheet" href="./shadcn.css" />
+    <link rel="stylesheet" href="./task-history.css?v=20260907-1" />
+    <link rel="stylesheet" href="./organization-ui.css?v=20260907-4" />
+    <link rel="stylesheet" href="./organization-chart.css" />
+    <link rel="stylesheet" href="./task-recycle.css?v=20260907-1" />
+    <link rel="stylesheet" href="./task-detail.css?v=20260910-responsible-label" />
+    <link rel="stylesheet" href="./project-lists.css?v=20260909-1" />
+    <link rel="stylesheet" href="./project-links.css?v=20260907-1" />
   </head>
   <body data-console-mode="enterprise">
     <div id="loginView" class="login-view">
@@ -68,7 +75,7 @@
             </div>
           </div>
           <div class="topbar-actions">
-            <button id="enterpriseMenu" class="enterprise-button" title="打开企业成员管理" aria-label="打开企业成员管理">
+            <button id="enterpriseMenu" class="enterprise-button" title="打开企业成员管理" aria-label="打开企业成员管理" hidden>
               企业管理⌄</button
             ><button class="top-user">
               <span>A</span><b>admin</b><i>⌄</i>
@@ -79,7 +86,7 @@
       </main>
     </div>
     <div id="cloudToast" class="cloud-toast" role="status"></div>
-    <script type="module" src="./zhizao-app.js"></script>
+    <script type="module" src="./zhizao-app.js?v=20260910-participant-policy-4"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const i = document.querySelector("#loginPassword"),

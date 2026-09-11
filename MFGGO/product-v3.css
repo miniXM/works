@@ -23,7 +23,7 @@
 .landing .drop>strong{width:54px;height:54px;display:grid;place-items:center;border-radius:9px;background:#242035;color:#a788f4;font-size:28px}
 .landing .drop div{gap:6px}.landing .drop b{font-size:16px}.landing .drop small{font:600 9px 'DM Mono';letter-spacing:.08em;color:#778491}.landing .drop em{font-style:normal;color:#8581b7;font-size:9px}
 
-.cad-active .viewer-panel,.cad-active .viewer,.cad-active .cad-root{background:#0b0e13}
+.cad-active .viewer-panel,.cad-active .viewer,.cad-active .cad-root{background:#f6f0e4}
 .cad-active .cad-root canvas{cursor:grab}.cad-active .cad-root canvas:active{cursor:grabbing}
 .cad-active .cad-specs{top:82px;left:18px;width:300px;background:#141a22;border-color:#2d3d4a;box-shadow:0 15px 40px rgba(0,0,0,.34)}
 .cad-active .cad-partbar{top:14px;left:18px;right:18px}.cad-active .part-dims{background:#161d25;border-color:#34434f}.cad-active .part-dims div b{max-width:175px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -197,3 +197,6 @@
 .pdf-active .viewer-toolbar #fitView::before,
 .pdf-active .viewer-toolbar #toggleBubbles::before,
 .pdf-active .viewer-toolbar #zoomOut::after{content:none}
+
+/* Neutral inspection backdrop for the CAD viewport. */
+.cad-active .viewer-panel,.cad-active .viewer,.cad-active .cad-root{background:#f6f0e4}

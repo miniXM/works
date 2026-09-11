@@ -1,0 +1,48 @@
+.project-links-section,.project-links-section *,.project-links-backdrop,.project-links-backdrop *{box-sizing:border-box;letter-spacing:0}
+.project-links-section{min-width:0;color:#354352}
+.project-links-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.project-links-heading h3{margin:0!important;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
+.project-links-heading h3 small{display:inline-grid;place-items:center;min-width:23px;height:23px;padding:0 5px;border-radius:50%;color:#8291a0;background:#f0f3f6;font-size:11px;font-weight:500;font-variant-numeric:tabular-nums}
+.project-links-list{display:grid;gap:9px;min-width:0}
+.project-links-row{display:flex;align-items:center;gap:4px;min-width:0;border:1px solid #e0e6ed;border-radius:6px;background:#fff}
+.project-links-open{display:flex;align-items:center;gap:12px;flex:1;min-width:0;min-height:66px;padding:11px 14px;border:0;border-radius:6px;color:#435362;background:transparent;font:inherit;text-align:left;cursor:pointer}
+.project-links-open:hover:not(:disabled){background:#f7fafd}
+.project-links-project-icon{display:grid;place-items:center;flex:none;width:34px;height:34px;border:1px solid #d1e0ef;border-radius:5px;background:#f0f6fc;color:#5e8cc3}
+.project-links-project-icon svg{width:19px;height:19px;stroke-width:1.6}
+.project-links-copy{display:grid;gap:4px;min-width:0;flex:1}
+.project-links-copy b{font-size:13px;font-weight:500;line-height:1.5;overflow-wrap:anywhere}
+.project-links-copy small{font-size:11px;color:#8a98a5;line-height:1.45;overflow-wrap:anywhere}
+.project-links-chevron{display:grid;place-items:center;flex:none;color:#93a1af}
+.project-links-chevron svg{width:17px;height:17px}
+.project-links-icon-button{display:grid;place-items:center;width:32px;height:32px;flex:none;padding:0;border:1px solid transparent;border-radius:4px;background:transparent;color:#778b9d;cursor:pointer}
+.project-links-icon-button svg{width:16px;height:16px;stroke-width:1.8}
+.project-links-icon-button:hover:not(:disabled){border-color:#d7e5f0;background:#eff6fc;color:#267cbd}
+.project-links-unlink{margin-right:9px}
+.project-links-unlink:hover:not(:disabled){border-color:#f0dce1;background:#fff6f7;color:#b44858}
+.project-links-message{margin:0;padding:15px 0;color:#91a0ac;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+.project-links-error{display:flex;align-items:center;gap:10px;color:#af4755;font-size:12px;line-height:1.6;margin-top:8px;min-width:0}
+.project-links-error>span{min-width:0;overflow-wrap:anywhere}
+.project-links-section button:disabled,.project-links-backdrop button:disabled,.project-links-backdrop input:disabled{opacity:.55;cursor:default}
+.project-links-section button:focus-visible,.project-links-backdrop button:focus-visible{outline:2px solid #8fbadd;outline-offset:2px}
+.project-links-section[hidden],.project-links-section [hidden],.project-links-backdrop [hidden]{display:none!important}
+.project-links-backdrop{position:fixed;inset:0;z-index:300;display:grid;place-items:center;padding:18px;background:rgba(24,35,48,.38)}
+.project-links-dialog{display:flex;flex-direction:column;min-width:0;width:min(580px,100%);max-height:calc(100dvh - 36px);overflow:hidden;border:1px solid #dce3e9;border-radius:8px;background:#fff;color:#425565;font:13px/1.5 "Microsoft YaHei",sans-serif;box-shadow:0 18px 60px rgba(22,35,50,.18)}
+.project-links-dialog>header{display:flex;align-items:center;justify-content:space-between;flex:none;gap:12px;padding:13px 18px;border-bottom:1px solid #e5eaee}
+.project-links-dialog h2{margin:0;font-size:16px;font-weight:600;overflow-wrap:anywhere}
+.project-links-dialog-body{display:flex;flex-direction:column;gap:14px;min-width:0;min-height:0;padding:16px 18px;overflow:auto;overscroll-behavior:contain}
+.project-links-search{display:flex;align-items:center;gap:8px;flex:none;min-width:0;padding:0 10px;border:1px solid #d8e2eb;border-radius:4px;color:#8c9aa8}
+.project-links-search svg{width:16px;height:16px;flex:none}
+.project-links-search input{min-width:0;width:100%;height:36px;padding:6px 0;border:0;outline:0;background:transparent;color:#425565;font:inherit}
+.project-links-search:focus-within{border-color:#86b5d9;outline:2px solid #eaf4fb}
+.project-links-candidates{min-height:80px;max-height:420px;overflow:auto;overscroll-behavior:contain}
+.project-links-candidate{display:flex;align-items:center;gap:12px;min-width:0;width:100%;min-height:65px;padding:10px 6px;border:0;border-bottom:1px solid #e9edf1;border-radius:0;background:#fff;color:#425565;text-align:left;font:inherit;cursor:pointer}
+.project-links-candidate:hover:not(:disabled){background:#f3f8fc}
+.project-links-candidate>svg{flex:none;width:16px;height:16px;color:#749abd}
+.project-links-dialog-error{flex:none;margin:0;padding:0 18px 14px;color:#af4755;font-size:12px;overflow-wrap:anywhere}
+.project-links-confirm-title{margin:0;padding:6px 0;font-size:14px;line-height:1.7;overflow-wrap:anywhere}
+.project-links-dialog>footer{display:flex;justify-content:flex-end;gap:8px;flex:none;padding:13px 18px;border-top:1px solid #e5eaee}
+.project-links-dialog>footer button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:70px;min-height:34px;padding:5px 12px;border:1px solid #d6e0e8;border-radius:4px;color:#5d7385;background:#fff;font:inherit;cursor:pointer}
+.project-links-dialog>footer button svg{width:15px;height:15px;flex:none}
+.project-links-dialog>footer button:hover:not(:disabled){background:#f6f9fc}
+.project-links-dialog>footer button.is-danger{border-color:#e4b9c0;color:#ae4253}
+@media(max-width:560px){.project-links-open{gap:9px;padding:10px;min-height:65px}.project-links-copy b{font-size:12px}.project-links-copy small{font-size:10px}.project-links-project-icon{width:30px;height:30px}.project-links-unlink{margin-right:5px}.project-links-backdrop{padding:8px}.project-links-dialog{max-height:calc(100dvh - 16px);border-radius:6px}.project-links-dialog>header{padding:12px 14px}.project-links-dialog-body{padding:14px}.project-links-dialog>footer{padding:12px 14px}}

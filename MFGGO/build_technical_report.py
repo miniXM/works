@@ -670,7 +670,7 @@ const server = app.listen(port, host, () => {
     add_body(doc, "server/index.js 在非回环地址启动时要求 PUBLIC_BASE_URL、ONLYOFFICE_JWT_SECRET，并在首次初始化时要求 INITIAL_ADMIN_PASSWORD。这是一个有价值的启动闸门，但 app.js 内部仍保留了本地默认 JWT secret，不能把启动闸门当作完整的密钥治理。", after=6)
     add_heading(doc, "4.2 开发、预览与公网模式", 2)
     add_table(doc, ["模式", "命令/入口", "端口与数据", "适用场景"], [
-        ("开发", "pnpm run dev", "API 4310 + Vite 4173；Vite 代理 /api", "联调、快速验收"),
+        ("开发", "pnpm run dev", "API 4310 + Vite 7410；Vite 代理 /api", "联调、快速验收"),
         ("分别调试", "pnpm run dev:server / pnpm run dev:web", "服务和前端独立启动", "排查 API 或 UI 问题"),
         ("本地预览", "pnpm run build; pnpm run server", "静态 dist 由 Koa 提供；默认 4310", "接近生产的单机验收"),
         ("独立公网", "systemd zhizao-cloud", "0.0.0.0:8320；DB_PATH=/var/lib/zhizao-cloud", "内网/受控公网；仍需 HTTPS/VPN"),
@@ -711,23 +711,9 @@ ReadWritePaths=/var/lib/zhizao-cloud""", "deploy/zhizao-cloud.service:6-19", lan
         ("chat", "聊天信息", "/api/conversations", "企业会话和附件按 chat 权限"),
         ("stats", "统计", "/api/stats", "当前组织聚合统计"),
     ], [1500, 1900, 2900, 3060], font_size=8.8)
-    add_heading(doc, "5.2 项目看板与资源聚合", 2)
+    add_heading(doc, "5.2 项目看板与根任务详情", 2)
     add_body(doc, "zhizao-app.js 将项目阶段规范化为十个看板列，例如“立项沟通、询盘发布、内部报价、对外报价、订单发布/待办、已排产/处理中、异常/优先处理、已到货/质检、发货、订单结束/已完成”。这套映射主要是前端展示语义；服务端 projects.stage 仍是可变字符串，因此后续若要驱动审批、排产或统计，必须把阶段变成受约束的状态字典而不是继续依赖正则归类。")
-    add_body(doc, "GET /api/projects/:projectId/workspace 是云端项目卡片的聚合接口。它先用 workspace 模块和 project.read 校验项目，再按 modules 与 roleCan 为 tasks、parts、quotes、fairItems、documents、conversations、comments、activities 分别决定是否返回。这个设计避免了前端并行请求时把不该看到的报价或审计数据混入统一响应。")
-    add_code(doc, """const modules = db.listOrganizationModules(session.organizationId);
-const canRead = (permission, moduleKey) =>
-  modules[moduleKey] && roleCan(session.role, permission);
-
-ctx.body = {
-  project,
-  tasks: canRead('task.read', 'tasks') ? db.listProjectTasks(...) : [],
-  parts: canRead('part.read', 'parts') ? db.listParts(...) : [],
-  quotes: canRead('quote.read', 'bom') ? db.listQuotes(...) : [],
-  fairItems: canRead('fair.read', 'parts') ? db.listFairItems(...) : [],
-  documents: canRead('document.read', 'workspace') ? db.listOfficeDocuments(...) : [],
-  conversations: canRead('communication.read', 'communication') ? db.listProjectConversations(...) : [],
-  activities: roleCan(session.role, 'audit.read') ? db.listProjectActivity(...) : []
-};""", "server/app.js:589-605", language="JavaScript")
+    add_body(doc, "项目管理首页只承担项目卡片和阶段看板；创建项目时会同时建立该项目唯一的根任务。点击项目卡片直接打开根任务详情弹窗，统一查看任务字段、执行者、时间、项目、备注、优先级，以及参与者、动态和评论。")
     add_heading(doc, "5.3 前端云端数据流", 2)
     add_code(doc, """const [projectsResult, partsResult, membersResult,
   tasksResult, conversationsResult, statsResult] = await Promise.all([
@@ -744,7 +730,7 @@ if (projectId) {
   store.quotes = (await apiRequest(`/api/projects/${projectId}/quotes`, ...)).body.quotes;
   store.fairItems = (await apiRequest(`/api/projects/${projectId}/fair-items`, ...)).body.items;
 }""", "zhizao-app.js:758-797", language="JavaScript")
-    add_body(doc, "这里有一个可预见的状态演进问题：首次 hydrate 只主动补充第一个项目的报价和 FAIR；其他项目依赖后续弹窗或工作台请求。如果把项目列表、报价和 FAIR 做成可切换的深层页面，建议统一改成按 projectId 缓存的 resource store，避免在项目切换时复用旧报价。")
+    add_body(doc, "这里有一个可预见的状态演进问题：首次 hydrate 只主动补充第一个项目的报价和 FAIR；其他项目需要按项目 ID 独立加载。项目卡片打开的根任务详情也应按任务 ID 刷新本地状态，避免在项目切换时复用旧报价或旧任务字段。")
 
     # 6
     add_heading(doc, "6  数据模型与持久化", 1, page_break=True)
@@ -755,7 +741,7 @@ if (projectId) {
         ("项目与制造资料", "projects, project_members, parts, files", "项目阶段、项目成员、零件元数据、通用文件"),
         ("Office 文档", "office_documents, office_document_permissions", "文档库、项目关联、权限、版本、回收站"),
         ("报价与质量", "quotes, quote_lines, fair_items", "报价头/行、分为单位的价格、FAIR 特性/名义值/公差/状态"),
-        ("任务与沟通", "tasks, task_subtasks, task_comments, project_comments", "任务、子任务、任务评论、项目评论"),
+        ("任务与沟通", "tasks, task_comments, project_comments", "项目根任务、任务评论、项目评论"),
         ("聊天与附件", "conversations, messages, conversation_user_states, chat_attachments", "企业/项目会话、消息、已读/稍后、附件"),
         ("审计", "audit_events", "企业范围和平台范围的操作事件"),
     ]
@@ -839,12 +825,12 @@ export function verifyPassword(password, encoded) {
     api_rows = [
         ("认证", "POST /auth/login; POST /auth/logout; GET /me", "session", "登录、注销、恢复组织上下文"),
         ("平台", "GET/POST /platform/organizations; PUT .../modules; POST .../switch", "platform_admin", "企业、模块和上下文切换"),
-        ("项目", "GET/POST /projects; PUT /projects/:id; GET /projects/:id/workspace", "project.* + projects", "项目、聚合工作台"),
+        ("项目", "GET/POST /projects; PUT /projects/:id", "project.* + projects", "项目卡片与项目属性"),
         ("项目成员", "GET/POST /projects/:id/members", "project.member.manage", "项目范围授权"),
         ("零件", "GET /parts; GET/POST /projects/:id/parts; PUT /parts/:id", "part.* + parts", "零件元数据"),
         ("报价", "GET/POST/PUT /projects/:id/quotes...", "quote.* + bom", "报价头、BOM 行、分为单位金额"),
         ("FAIR", "GET/POST/PUT /projects/:id/fair-items...", "fair.* + parts", "检验特性与状态"),
-        ("任务", "GET/POST/PUT /tasks...; subtasks/comments", "task.* + tasks", "任务、子任务、评论"),
+        ("任务", "GET/POST/PUT /tasks...; detail/comments", "task.* + tasks", "独立任务、项目根任务、评论与动态"),
         ("沟通", "GET/POST /conversations.../messages; PUT /state", "communication/chat", "项目会话、企业聊天、已读状态"),
         ("文件", "GET/POST /documents; upload; download; config", "document.* + workspace", "Office 文件库、回收站、编辑配置"),
         ("审计", "GET /audit; GET /platform/audit", "audit.read / platform_admin", "企业审计和平台审计"),
@@ -1032,7 +1018,7 @@ config.token = jwt(configWithoutServer);""", "server/app.js:242-255（逻辑摘�
     add_note(doc, "测试结果", "使用 Node.js v24.19.0 运行 `node --test tests/saas-api.test.mjs tests/zhizao-app.test.mjs tests/inspection-recognition.test.mjs`，共 82 个测试，82 通过，0 失败，0 跳过；总耗时约 8.2 秒。", color="0F6B78", fill="EAF6F3")
     add_body(doc, "构建验证：`pnpm run build` 成功，Vite 7.1.1 转换 304 个模块；同时报告 workspace 产物约 1,997.55 kB、gzip 580.94 kB 的大 chunk 警告，后续应通过动态导入或 manualChunks 拆分 CAD、PDF/OCR 和导出能力。", after=6)
     add_table(doc, ["测试文件", "数量/范围", "验证内容"], [
-        ("tests/saas-api.test.mjs", "25 个", "临时 SQLite、登录、租户隔离、角色拒绝、模块关闭、项目成员、任务、文档、报价、FAIR、聊天附件、审计、workspace 聚合"),
+        ("tests/saas-api.test.mjs", "25 个", "临时 SQLite、登录、租户隔离、角色拒绝、模块关闭、项目成员、项目根任务、评论、文档、报价、FAIR、聊天附件、审计、旧路由拒绝"),
         ("tests/zhizao-app.test.mjs", "21 个", "store、导航、筛选、平台切换、移动端控制、文档入口、聊天状态、旧租户清理、异步竞态"),
         ("tests/inspection-recognition.test.mjs", "36 个", "尺寸、公差、工程符号、OCR 证据、聚类、结构恢复、噪声抑制、历史数据迁移"),
     ], [2300, 1800, 5260], font_size=8.8)
@@ -1062,27 +1048,35 @@ config.token = jwt(configWithoutServer);""", "server/app.js:242-255（逻辑摘�
 
     # 13
     add_heading(doc, "13  风险、技术债与改进路线", 1, page_break=True)
-    add_heading(doc, "13.1 分阶段路线", 2)
+    add_heading(doc, "13.1 当前项目的功能闭环路线", 2)
     roadmap = [
-        ("P0 立即", "凭证与文件安全", "移除默认/客户端 secret；强制初始化改密；HTTPS/VPN；上传限流、大小、内容识别；callback 超时/来源/幂等"),
-        ("P1", "企业与成员生命周期", "organization status；invitation token；首次登录改密；成员停用/移除；密码重置；MFA；session revoke"),
-        ("P2", "可配置数据权限", "roles/permissions/role_permissions；项目角色；部门/本人范围；quote.read_cost；审批动作；外部协作者"),
-        ("P3", "制造业务闭环", "客户/供应商、询盘、订单、工艺路线、排产、交付、版本和归档；报价与 FAIR 版本化"),
-        ("P4", "规模化部署", "PostgreSQL、对象存储、队列、备份恢复、监控告警、数据保留、SSO、审计归档"),
+        ("P0", "项目与询盘入口", "在项目创建时补齐客户、联系人、数量、交期、材料、表面处理和报价截止日；项目阶段收敛为受约束状态"),
+        ("P1", "图纸/CAD 到零件 BOM", "上传图纸和 3D 文件，生成可追踪 part；保存文件哈希、几何指标、识别来源和人工复核状态；一键形成 BOM 草稿"),
+        ("P2", "报价审核与发送", "quote/quote_lines 增加版本、状态、成本快照、审批人和失效时间；从 BOM 计算报价，导出 PDF/XLSX，并记录发送与客户反馈"),
+        ("P3", "订单与生产执行", "接受报价后生成 order/order_parts；由订单生成工艺步骤和任务，记录负责人、计划/实际工时、异常、进度和完工状态"),
+        ("P4", "FAIR、交付与归档", "订单关联 FAIR 检验项、结果、返工/NCR 和附件；完成放行、发货、交付确认和项目归档，形成完整时间线"),
     ]
     add_table(doc, ["阶段", "主题", "交付"], roadmap, [1200, 2300, 5860], font_size=8.8)
-    add_heading(doc, "13.2 推荐的重构顺序", 2)
-    add_body(doc, "第一步不是重写前端，而是把认证、租户上下文、授权和资源归属检查抽成可测试的 policy/domain 层；第二步把 quote/fair/document 的版本、事务和审计补齐；第三步再拆分 Koa 路由和前端 store。这样可以先稳住安全和数据正确性，再降低单文件维护成本。")
-    add_table(doc, ["重构目标", "当前做法", "目标做法"], [
-        ("授权", "ROLE_PERMISSIONS 常量 + authorize", "Policy service + DB 配置 RBAC + resource scope"),
-        ("数据库访问", "db.js 一个对象承载所有域方法", "按域拆 repository/service；统一 tenantScope()"),
-        ("报价", "浏览器估算 + 云端草稿两套模型", "服务端成本参数、geometry snapshot、quote_version、approval"),
-        ("文件", "本地目录 storage_key", "对象存储版本对象 + 元数据事务 + signed URL exp"),
-        ("前端", "单文件 render/事件委托", "按域拆 store、纯函数、异步资源缓存和页面组件"),
-        ("可观测性", "console.error + audit_events", "结构化日志、request ID、指标、告警和审计归档"),
+    add_heading(doc, "13.2 建议的数据对象与状态机", 2)
+    add_body(doc, "功能闭环的关键不是继续增加导航项，而是让对象之间存在可追踪的转换关系：project -> part/file -> quote -> order -> process/task -> FAIR -> delivery。每次转换都应保留 source_id、操作者、时间、版本和状态变更原因，前端只展示服务端允许的下一步动作。")
+    add_table(doc, ["对象", "当前状态", "建议状态与转换"], [
+        ("Project", "stage 为可变字符串，主要用于看板展示", "inquiry -> quoting -> ordered -> producing -> quality -> shipping -> closed"),
+        ("Quote", "quote + quote_lines 草稿，无版本/审批", "draft -> internal_review -> approved -> sent -> accepted/rejected -> converted"),
+        ("Order", "尚未持久化", "pending -> planned -> in_progress -> quality_hold -> ready_to_ship -> completed"),
+        ("Process/Task", "已有任务，但未由订单自动生成", "按 order_part 生成步骤；todo -> doing -> blocked -> done，记录计划/实际工时"),
+        ("FAIR", "已有特性和识别证据，未绑定订单放行", "draft -> measuring -> review -> pass/rework/fail，并关联附件和复核人"),
+        ("Delivery", "尚未持久化", "待发货 -> 已发货 -> 客户签收 -> 归档，保存物流和交付证明"),
     ], [1800, 3900, 3660], font_size=8.7)
-    add_heading(doc, "13.3 验收优先级建议", 2)
-    add_body(doc, "如果目标是继续内部验收，优先修复默认凭证、ONLYOFFICE 客户端 secret、报价/FAIR 关联归属和报价事务，然后补一套 Playwright 样例。若目标是正式公网客户，必须在此基础上完成 HTTPS、MFA/限流、对象存储、备份恢复和 PostgreSQL 迁移评估；不能因为 82/82 单测通过就把当前版本定义为生产 SaaS。")
+    add_heading(doc, "13.3 当前版本的验收场景", 2)
+    add_numbered(doc, [
+        "创建一个项目并填写客户、零件数量、材料、交期和联系人。",
+        "上传 STEP/PDF，完成 CAD 指标和图纸识别；确认 part、文件、识别证据和人工复核状态可追溯。",
+        "从零件生成 BOM 和报价草稿，修改数量/单价，提交内部审核并导出报价 PDF/XLSX。",
+        "将已接受报价转换为订单，自动生成工艺步骤和任务；在任务中记录负责人、进度、异常和实际工时。",
+        "从图纸特性生成 FAIR 检验项，录入测量结果、附件和判定；不合格项可创建返工任务。",
+        "完成放行、发货和客户签收，项目状态进入 closed；项目时间线能回放上述全部节点。",
+    ])
+    add_note(doc, "当前迭代重点", "先把上述单项目、单零件、单订单场景跑通，再扩展客户主数据、供应商、复杂排产和规模化部署。安全修复、事务和资源归属校验属于这条闭环的基础质量门槛，但不应替代业务对象和状态流的实现。", color="0F6B78", fill="EAF6F3")
     add_note(doc, "最终判断", "当前版本适合“可运行的机加工报价协同基础”和“本地 CAD/FAIR 体验验证”，不适合未经整改直接承载正式客户的高敏感图纸、成本和报价审批。", color="9B1C1C", fill="FFF1F1")
 
     # 14
@@ -1122,11 +1116,10 @@ curl http://127.0.0.1:4310/api/health""", "README.md:7-32; 本次验证命令", 
         ("认证", "POST /api/auth/login", "用户名/密码 -> token"),
         ("当前上下文", "GET /api/me", "用户、组织、角色、模块、平台标志"),
         ("项目", "GET/POST /api/projects; PUT /api/projects/:projectId", "项目看板和项目更新"),
-        ("聚合", "GET /api/projects/:projectId/workspace", "按权限裁剪的项目资源"),
         ("零件", "GET /api/parts; POST /api/projects/:projectId/parts; PUT /api/parts/:partId", "零件元数据"),
         ("报价", "GET/POST/PUT /api/projects/:projectId/quotes", "报价头和 BOM 明细"),
         ("FAIR", "GET/POST/PUT /api/projects/:projectId/fair-items", "检验特性与状态"),
-        ("任务", "GET/POST/PUT /api/tasks; /detail; /subtasks; /comments", "任务协同"),
+        ("任务", "GET/POST/PUT /api/tasks; /detail; /comments", "独立任务、项目根任务与评论"),
         ("沟通", "GET/POST /api/conversations; /messages; PUT /state", "项目/企业聊天"),
         ("文档", "GET/POST /api/documents; /upload; /config; /download", "Office 文档中心"),
         ("审计", "GET /api/audit; GET /api/platform/audit", "企业/平台审计"),
@@ -1139,7 +1132,7 @@ curl http://127.0.0.1:4310/api/health""", "README.md:7-32; 本次验证命令", 
         ("FAIR", "First Article Inspection Report，首件检验/检验特性记录。"),
         ("B-Rep", "Boundary Representation，CAD 实体边界表示；本项目通过 OpenCascade WASM 读取并网格化。"),
         ("OCR evidence", "图像识别提供的符号/文字证据；在当前规则中不能覆盖完整 PDF 数字。"),
-        ("workspace aggregation", "项目工作台聚合接口；服务端按模块和权限裁剪子资源。"),
+        ("project root task", "每个项目创建时生成的唯一任务；项目卡片直接打开其详情弹窗。"),
         ("P0/P1/P2/P3/P4", "从权限收口、成员生命周期、数据权限、制造闭环到企业级部署的路线阶段。"),
     ]
     add_table(doc, ["术语", "定义"], glossary, [2200, 7160], font_size=9)
