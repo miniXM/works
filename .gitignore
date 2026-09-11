@@ -8,15 +8,12 @@
 .env.*
 !.env.example
 **/dist/
-
-# Local/customer documents and generated reports
 *.pdf
 *.xlsx
 *.zip
 *.docx
 eng.traineddata
-
-# Runtime templates are part of the application
 !**/templates/*.docx
 !**/templates/*.xlsx
 !**/templates/*.pptx
+.gateway-data/
