@@ -1,0 +1,16 @@
+{
+  "name": "极速混剪",
+  "nameEn": "JiSu VideoMix",
+  "slug": "VideoMix",
+  "displayName": "极速VideoMix",
+  "company": "极速互动",
+  "copyright": "Copyright © 2026 极速互动",
+  "installFolderName": "VideoMix",
+  "themeColor": "#2F6BFF",
+  "logo": "E:\\GPT Codex\\2026-09-15\\new-chat\\work\\rebrand\\assets\\icon-20260920.png",
+  "wordmark": "E:\\GPT Codex\\2026-09-15\\new-chat\\work\\rebrand\\assets\\wordmark.png",
+  "keepLogoImages": false,
+  "version": "1.0.2",
+  "asarVersion": "1.1.2",
+  "setupName": "JSVideoMix-Setup-1.0.2.exe"
+}

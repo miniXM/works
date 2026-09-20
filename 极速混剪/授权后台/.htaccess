@@ -1,0 +1,9 @@
+# 保护措施：万一有人把网站根目录指到了项目根（而不是 public），
+# 至少让这几个敏感目录没法从浏览器直接下载。
+# 正确做法仍然是把网站根目录指到 public，见「部署-宝塔PHP版.md」。
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(keys|data|lib|sql)/ - [F,L]
+    RewriteRule ^(config\.php|config\.sample\.php|README\.md|部署-宝塔PHP版\.md)$ - [F,L]
+</IfModule>

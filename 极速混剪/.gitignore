@@ -1,0 +1,31 @@
+# 本项目的敏感数据与生成物
+config.php
+keys/*.xml
+keys/*.pem
+keys/*.key
+data/backups/*
+!data/backups/.gitkeep
+data/updates/*
+!data/updates/.gitkeep
+*.db
+*.sqlite
+*.log
+__pycache__/
+*.pyc
+
+# 客户端本机构建和原始运行基座
+客户端/源码/build/
+客户端/源码/base/
+客户端/源码/probe/
+客户端/源码/test-demo/
+客户端/源码/ui-versions/
+客户端/源码/updtest/
+客户端/源码/verify/
+客户端/源码/mainui/data/
+客户端/源码/test-keys.local.json
+客户端/品牌素材/out/
+
+# 不提交完整安装包和大文件
+*.exe
+*.asar
+*.zip

@@ -1,0 +1,179 @@
+/* ==========================================================================
+   侧栏配色（按主题分开）
+   --------------------------------------------------------------------------
+   整层皮肤里侧栏只有一套"深色"配色，白天/暗黑都一样；这里把侧栏拆成两套：
+   白天模式用浅色（白）侧栏，暗黑模式保持原来的深藏青。
+   命名沿用外壳的 --sk-* 令牌；本文件在 make-shell-skin.py 里拼在最后，
+   所以同名 !important 规则会盖掉整层皮肤里的写死值。
+   ========================================================================== */
+
+/* ---------- 白天（含未指定主题时的默认）---------- */
+html:not([data-vm-theme='dark']) {
+  --sk-sidebar-bg: linear-gradient(180deg, #ffffff 0%, #f7f9fd 100%);
+  --sk-sidebar-border: rgba(15, 23, 42, 0.08);
+  --sk-sidebar-text: #4a5a76;
+  --sk-sidebar-text-hover: #0f172a;
+  --sk-sidebar-active-bg: linear-gradient(135deg, #2f6bff 0%, #4d8bff 100%);
+  --sk-sidebar-icon-bg: rgba(15, 23, 42, 0.05);
+  --sk-sidebar-hover-bg: rgba(15, 23, 42, 0.05);
+  --sk-sidebar-hover-icon-bg: rgba(15, 23, 42, 0.09);
+  --sk-sidebar-pill-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  --sk-sidebar-logo-border: rgba(15, 23, 42, 0.08);
+  --sk-sidebar-logo-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  --sk-sidebar-label: rgba(15, 23, 42, 0.45);
+  --sk-sidebar-icon: #3f4e6d;
+  --sk-sidebar-icon-hover: var(--sk-accent);
+}
+
+/* ---------- 暗黑：保持原来的深色侧栏 ---------- */
+html[data-vm-theme='dark'] {
+  --sk-sidebar-bg: linear-gradient(180deg, #121f38 0%, #0c1628 100%);
+  --sk-sidebar-border: rgba(255, 255, 255, 0.07);
+  --sk-sidebar-text: #a9b7d0;
+  --sk-sidebar-text-hover: #ffffff;
+  --sk-sidebar-active-bg: linear-gradient(135deg, #2f6bff 0%, #4d8bff 100%);
+  --sk-sidebar-icon-bg: rgba(255, 255, 255, 0.06);
+  --sk-sidebar-hover-bg: rgba(255, 255, 255, 0.07);
+  --sk-sidebar-hover-icon-bg: rgba(255, 255, 255, 0.14);
+  --sk-sidebar-pill-shadow: 0 18px 44px rgba(6, 12, 24, 0.42);
+  --sk-sidebar-logo-border: rgba(255, 255, 255, 0.5);
+  --sk-sidebar-logo-shadow: 0 10px 26px rgba(6, 12, 24, 0.32);
+  --sk-sidebar-label: rgba(255, 255, 255, 0.34);
+  --sk-sidebar-icon: #ffffff;
+  --sk-sidebar-icon-hover: #9cc0ff;
+}
+
+/* ---------- 把令牌接回具体元素（盖掉写死的白色/深色）---------- */
+.app-sidebar {
+  border-right-color: var(--sk-sidebar-border) !important;
+  background: var(--sk-sidebar-bg) !important;
+}
+
+.app-sidebar__pill {
+  border-color: var(--sk-sidebar-border) !important;
+  background: var(--sk-sidebar-bg) !important;
+  box-shadow: var(--sk-sidebar-pill-shadow) !important;
+}
+
+.app-sidebar__logo {
+  border-color: var(--sk-sidebar-logo-border) !important;
+  box-shadow: var(--sk-sidebar-logo-shadow), inset 0 1px rgba(255, 255, 255, 0.9) !important;
+}
+
+.app-sidebar__link {
+  color: var(--sk-sidebar-text) !important;
+}
+
+/* 分组小标题（创作 / 发布 / 系统）：原来写死白色透明，白侧栏上会看不见 */
+.vm-nav-label {
+  color: var(--sk-sidebar-label) !important;
+}
+
+/* 悬停只给"没选中"的行换浅色底。选中那行本来就是蓝底 + 白图标，
+   如果也套上浅色悬停底，白图标就糊在浅底上看不见了（就是"指向还是白色"的原因）。 */
+.app-sidebar__link:not(.app-sidebar__link--active):hover {
+  background: var(--sk-sidebar-hover-bg) !important;
+  color: var(--sk-sidebar-text-hover) !important;
+}
+
+.app-sidebar__icon-wrap {
+  color: var(--sk-sidebar-icon) !important;
+}
+
+.app-sidebar__link:not(.app-sidebar__link--active):hover .app-sidebar__icon-wrap {
+  background: var(--sk-sidebar-hover-icon-bg) !important;
+  color: var(--sk-sidebar-icon-hover) !important;
+}
+
+/* ---------- 白天：选中项 = 浅蓝底 + 蓝色图标/文字 ----------
+   整层皮肤里选中项的底色是"半透明蓝"，压在白色侧栏上只剩很浅的淡蓝，
+   而图标是写死的白色 —— 白图标糊在淡蓝上当然看不清（用户反馈的
+   "白天模式鼠标指过去 icon 还是白的"）。这里换成浅蓝底 + 主题蓝图标，
+   让图标颜色真的跟着白天主题走。 */
+html:not([data-vm-theme='dark']) .app-sidebar__link--active,
+html:not([data-vm-theme='dark']) .app-sidebar__link.router-link-exact-active {
+  background: linear-gradient(
+    135deg,
+    rgba(47, 107, 255, 0.18) 0%,
+    rgba(47, 107, 255, 0.08) 100%
+  ) !important;
+  box-shadow: 0 8px 20px rgba(47, 107, 255, 0.14) !important;
+}
+
+html:not([data-vm-theme='dark']) .app-sidebar__link--active .app-sidebar__icon-wrap,
+html:not([data-vm-theme='dark'])
+  .app-sidebar__link.router-link-exact-active
+  .app-sidebar__icon-wrap {
+  background: rgba(47, 107, 255, 0.14) !important;
+  color: var(--sk-accent) !important;
+}
+
+html:not([data-vm-theme='dark']) .app-sidebar__link--active .app-sidebar__label,
+html:not([data-vm-theme='dark'])
+  .app-sidebar__link.router-link-exact-active
+  .app-sidebar__label {
+  color: var(--sk-accent) !important;
+}
+
+/* 白天选中项悬停：稍微加深一点当反馈 */
+html:not([data-vm-theme='dark']) .app-sidebar__link--active:hover,
+html:not([data-vm-theme='dark'])
+  .app-sidebar__link.router-link-exact-active:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(47, 107, 255, 0.24) 0%,
+    rgba(47, 107, 255, 0.11) 100%
+  ) !important;
+}
+
+/* ---------- 暗黑：保持原来的深色侧栏，选中项是蓝底 + 白图标 ---------- */
+html[data-vm-theme='dark'] .app-sidebar__link--active,
+html[data-vm-theme='dark'] .app-sidebar__link.router-link-exact-active {
+  background: linear-gradient(
+    90deg,
+    rgba(47, 107, 255, 0.5) 0%,
+    rgba(47, 107, 255, 0.14) 100%
+  ) !important;
+}
+
+html[data-vm-theme='dark'] .app-sidebar__link--active:hover,
+html[data-vm-theme='dark'] .app-sidebar__link.router-link-exact-active:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(47, 107, 255, 0.62) 0%,
+    rgba(47, 107, 255, 0.24) 100%
+  ) !important;
+}
+
+html[data-vm-theme='dark'] .app-sidebar__link--active .app-sidebar__icon-wrap,
+html[data-vm-theme='dark']
+  .app-sidebar__link.router-link-exact-active
+  .app-sidebar__icon-wrap {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #fff !important;
+}
+
+.app-sidebar__toggle {
+  background: var(--sk-sidebar-icon-bg) !important;
+  color: var(--sk-sidebar-text) !important;
+}
+
+.app-sidebar__toggle:hover {
+  background: var(--sk-sidebar-hover-icon-bg) !important;
+  color: var(--sk-sidebar-text-hover) !important;
+}
+
+.app-sidebar__logout,
+.app-sidebar__link.app-sidebar__logout {
+  color: var(--sk-sidebar-icon) !important;
+}
+
+.app-sidebar__logout:hover {
+  background: var(--sk-sidebar-hover-bg) !important;
+  color: var(--sk-sidebar-icon-hover) !important;
+}
+
+/* 上面给"退出登录"设的是图标色，文字标签仍跟其他菜单项同色 */
+.app-sidebar__logout .app-sidebar__label {
+  color: var(--sk-sidebar-text) !important;
+}

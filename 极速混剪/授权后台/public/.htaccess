@@ -1,0 +1,22 @@
+# VideoMix 授权中心 · Apache 站点伪静态（宝塔 + Apache 时用得到）
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # 已经存在的文件/目录直接返回（就是后台的那些网页）
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # 其它请求全部交给 index.php
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header set Cache-Control "no-cache"
+</IfModule>
+
+<FilesMatch "\.(xml|sql|md|log|part)$">
+    Require all denied
+</FilesMatch>

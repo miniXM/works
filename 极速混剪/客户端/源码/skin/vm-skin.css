@@ -1,0 +1,1987 @@
+/* ---------- 1. 设计令牌 ---------- */
+:root {
+
+  /* 页面与容器 */
+  --sk-bg: #eceff7;
+  --sk-surface: #ffffff;
+  --sk-card-bg: #ffffff;
+  --sk-text: #0f172a;
+  --sk-text-secondary: #5a6780;
+  --sk-text-tertiary: #94a3b8;
+  --sk-border: rgba(15, 23, 42, 0.10);
+  --sk-border-light: rgba(15, 23, 42, 0.05);
+
+  /* 侧栏宽度 / 顶栏品牌位宽度。
+     放在 :root 上（不只是 .app-layout）是有原因的：主界面挂载的那一瞬间，
+     .app-layout 上的同名变量可能还没生效，顶栏的 margin-left:
+     calc(-1 * var(--sk-rail-w)) 会先被当成非法值算成 0，等变量生效才跳到
+     -244px——带了过渡就会看到顶栏从左往右闪一下。定义在 :root 上，
+     从第一帧起就解析得出，挂载时不再产生这次变化。 */
+  --sk-rail-w: 244px;
+  --sk-lead-w: 244px;
+
+  /* 主色 */
+  --sk-accent: #2f6bff;
+  --sk-accent-deep: #1f56e0;
+  --sk-accent-soft: #e8efff;
+  --sk-accent-light: #f4f7ff;
+  --sk-primary: #0f172a;
+
+  /* 圆角 */
+  --sk-radius-sm: 8px;
+  --sk-radius-md: 10px;
+  --sk-radius-lg: 14px;
+  --sk-radius-xl: 18px;
+  --sk-radius-pill: 999px;
+
+  /* 阴影 */
+  --sk-shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 10px 28px rgba(15, 23, 42, 0.06);
+  --sk-shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.04), 0 6px 18px rgba(15, 23, 42, 0.05);
+  --sk-shadow-hover: 0 12px 32px rgba(47, 107, 255, 0.18);
+
+  /* 侧栏（两种主题下都是深色） */
+  --sk-sidebar-bg: linear-gradient(180deg, #121f38 0%, #0c1628 100%);
+  --sk-sidebar-border: rgba(255, 255, 255, 0.07);
+  --sk-sidebar-text: #a9b7d0;
+  --sk-sidebar-text-hover: #ffffff;
+  --sk-sidebar-active-bg: linear-gradient(135deg, #2f6bff 0%, #4d8bff 100%);
+  --sk-sidebar-icon-bg: rgba(255, 255, 255, 0.06);
+
+  /* 语义色 */
+  --sk-success: #12b76a;
+  --sk-success-soft: #e6f7ef;
+  --sk-warning: #f79009;
+  --sk-warning-soft: #fef4e6;
+  --sk-danger: #f04438;
+  --sk-danger-soft: #fdeceb;
+  --sk-info: #2f6bff;
+  --sk-info-soft: #e8efff;
+
+  /* Element Plus 令牌 */
+
+  color-scheme: light;
+}
+html[data-vm-theme='dark'] {
+
+  --sk-bg: #080e1a;
+  --sk-surface: #0f1729;
+  --sk-card-bg: #111a2e;
+  --sk-text: #e8eefb;
+  --sk-text-secondary: #9aa8c2;
+  --sk-text-tertiary: #6b7a99;
+  --sk-border: rgba(255, 255, 255, 0.09);
+  --sk-border-light: rgba(255, 255, 255, 0.06);
+
+  --sk-accent: #4d8bff;
+  --sk-accent-deep: #7fadff;
+  --sk-accent-soft: rgba(77, 139, 255, 0.16);
+  --sk-accent-light: rgba(77, 139, 255, 0.09);
+  --sk-primary: #e8eefb;
+
+  --sk-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 14px 36px rgba(0, 0, 0, 0.35);
+  --sk-shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 22px rgba(0, 0, 0, 0.3);
+  --sk-shadow-hover: 0 16px 40px rgba(77, 139, 255, 0.28);
+
+  --sk-sidebar-bg: linear-gradient(180deg, #0c1526 0%, #070c16 100%);
+  --sk-sidebar-border: rgba(255, 255, 255, 0.06);
+  --sk-sidebar-text: #93a2bd;
+  --sk-sidebar-text-hover: #ffffff;
+  --sk-sidebar-active-bg: linear-gradient(135deg, #3f7dff 0%, #5f9bff 100%);
+  --sk-sidebar-icon-bg: rgba(255, 255, 255, 0.05);
+
+  --sk-success: #32d583;
+  --sk-success-soft: rgba(50, 213, 131, 0.14);
+  --sk-warning: #fdb022;
+  --sk-warning-soft: rgba(253, 176, 34, 0.14);
+  --sk-danger: #ff6b6b;
+  --sk-danger-soft: rgba(255, 107, 107, 0.14);
+  --sk-info: #4d8bff;
+  --sk-info-soft: rgba(77, 139, 255, 0.14);
+
+  color-scheme: dark;
+}
+/* 启动屏（index.html 里的内联骨架）：深浅两套主题下都不能是白卡片 */
+.vm-startup {
+
+  color: var(--sk-text) !important;
+}
+.vm-startup__card {
+
+  border: 1px solid var(--sk-border) !important;
+  background: var(--sk-card-bg) !important;
+  box-shadow: var(--sk-shadow-card) !important;
+}
+.vm-startup__brand {
+
+  background: linear-gradient(120deg, var(--sk-text) 0%, var(--sk-accent) 130%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.vm-startup__hint {
+
+  color: var(--sk-text-secondary) !important;
+}
+.vm-startup__bar {
+
+  background: var(--sk-border-light) !important;
+}
+.vm-startup__bar::after {
+
+  background: linear-gradient(90deg, var(--sk-accent), #7ab8ff) !important;
+}
+/* ---------- 3. 外壳：侧栏 / 顶栏 / 内容区 ---------- */
+.app-layout {
+
+  --app-sidebar-gap: 18px;
+  --app-sidebar-inner-w: 224px;
+  --app-sidebar-inner-collapsed: 76px;
+}
+.app-layout__main {
+
+  padding: 0 26px 44px 0 !important;
+}
+.app-header {
+
+  box-sizing: border-box;
+  height: 62px !important;
+  margin: 0 0 20px !important;
+  padding: 0 18px 0 24px !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius-xl) !important;
+  background: var(--sk-card-bg) !important;
+  box-shadow: var(--sk-shadow-soft) !important;
+  backdrop-filter: blur(18px) saturate(1.4);
+}
+.app-header__name {
+
+  color: var(--sk-text) !important;
+  background: none !important;
+  -webkit-text-fill-color: currentColor !important;
+  font-size: 1.32rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.01em !important;
+}
+.app-header__user {
+
+  gap: 8px !important;
+  /* 左边原来是给 30px 圆形头像留的位置，头像去掉后左右对称 */
+  padding: 4px 12px !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius-pill) !important;
+  background: var(--sk-surface) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.app-header__user:hover {
+
+  border-color: var(--sk-accent) !important;
+  box-shadow: 0 6px 18px rgba(47, 107, 255, 0.16) !important;
+  transform: translateY(-1px);
+}
+/* 顶栏用户胶囊前面那个纯色圆块（客户端写死的渐变 div，里面没有字母/头像图），
+   客户要求去掉。胶囊里只留"欢迎登录"和版本号。 */
+html[data-vm-theme] .app-header__avatar {
+
+  display: none !important;
+}
+.app-header__user-label {
+
+  color: var(--sk-text-secondary) !important;
+  font-weight: 600 !important;
+}
+.app-header__version {
+
+  padding: 4px 9px !important;
+  border: 1px solid var(--sk-accent-soft) !important;
+  border-radius: var(--sk-radius-pill) !important;
+  background: var(--sk-accent-soft) !important;
+  color: var(--sk-accent-deep) !important;
+  font-weight: 700 !important;
+}
+/* 侧栏 */
+.app-sidebar__logo {
+
+  height: 64px !important;
+  padding: 6px 10px !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  border-radius: var(--sk-radius-lg) !important;
+  /* 品牌字标是深蓝字，底衬得是亮的，白天/暗黑两种主题下观感才一致 */
+  background: linear-gradient(135deg, #f4f8ff 0%, #ffffff 100%) !important;
+  box-shadow: 0 10px 26px rgba(6, 12, 24, 0.32), inset 0 1px rgba(255, 255, 255, 0.9) !important;
+}
+.app-sidebar__logo-img {
+
+  max-width: 94% !important;
+  max-height: 42px !important;
+  border-radius: 10px !important;
+}
+.app-sidebar__pill {
+
+  border: 1px solid var(--sk-sidebar-border) !important;
+  border-radius: var(--sk-radius-xl) !important;
+  background: var(--sk-sidebar-bg) !important;
+  box-shadow: 0 18px 44px rgba(6, 12, 24, 0.42), inset 0 1px rgba(255, 255, 255, 0.06) !important;
+  backdrop-filter: blur(18px) saturate(1.3) !important;
+}
+.app-sidebar__pill--main {
+
+  padding: 14px 12px !important;
+}
+.app-sidebar__nav {
+
+  gap: 4px !important;
+}
+.app-sidebar__link {
+
+  gap: 12px !important;
+  height: 44px !important;
+  padding: 0 12px !important;
+  border-radius: var(--sk-radius-md) !important;
+  color: var(--sk-sidebar-text) !important;
+  font-size: 0.9rem !important;
+  font-weight: 400 !important;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+.app-sidebar__link:hover {
+
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: var(--sk-sidebar-text-hover) !important;
+}
+.app-sidebar__link--active {
+
+  background: var(--sk-sidebar-active-bg) !important;
+  color: #fff !important;
+  box-shadow: 0 10px 24px rgba(47, 107, 255, 0.38) !important;
+}
+.app-sidebar__link--active .app-sidebar__icon-wrap {
+
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #fff !important;
+}
+.app-sidebar__icon-wrap {
+
+  display: grid !important;
+  place-items: center !important;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 9px !important;
+  background: var(--sk-sidebar-icon-bg) !important;
+  transition: background 0.18s ease;
+}
+.app-sidebar__link:hover .app-sidebar__icon-wrap {
+
+  background: rgba(255, 255, 255, 0.14) !important;
+}
+.app-sidebar__toggle {
+
+  width: 34px !important;
+  height: 34px !important;
+  margin: 0 0 10px 6px !important;
+  border-radius: 10px !important;
+  background: var(--sk-sidebar-icon-bg) !important;
+  color: var(--sk-sidebar-text) !important;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.app-sidebar__toggle:hover {
+
+  background: rgba(255, 255, 255, 0.14) !important;
+  color: #fff !important;
+}
+.app-sidebar__logout, .app-sidebar__link.app-sidebar__logout {
+
+  border-radius: var(--sk-radius-md) !important;
+  color: var(--sk-sidebar-text) !important;
+}
+.app-sidebar__logout:hover {
+
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: var(--sk-sidebar-text-hover) !important;
+}
+/* ---------- 7. 登录 / 激活页 ---------- */
+.page-login {
+
+  background:
+    radial-gradient(900px 520px at 14% 8%, rgba(47, 107, 255, 0.16), transparent 60%),
+    radial-gradient(760px 460px at 88% 92%, rgba(111, 155, 255, 0.14), transparent 58%),
+    var(--sk-bg) !important;
+}
+.login-card {
+
+  width: 440px !important;
+  padding: 40px 38px 34px !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: 24px !important;
+  background: var(--sk-card-bg) !important;
+  box-shadow: 0 28px 70px rgba(15, 23, 42, 0.16) !important;
+}
+.device-id {
+
+  margin: 0 0 18px !important;
+  padding: 11px 13px !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius-md) !important;
+  background: var(--sk-surface) !important;
+}
+.device-id__label {
+
+  color: var(--sk-text-secondary) !important;
+}
+.device-id__value {
+
+  color: var(--sk-text) !important;
+  font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+  letter-spacing: 0.02em;
+}
+.service-status {
+
+  border: 1px solid var(--sk-accent-soft) !important;
+  border-radius: var(--sk-radius-md) !important;
+  background: var(--sk-accent-light) !important;
+}
+.service-status--error {
+
+  border-color: var(--sk-danger-soft) !important;
+  background: var(--sk-danger-soft) !important;
+}
+.service-status__title, .service-status--error .service-status__title {
+
+  color: var(--sk-text) !important;
+}
+.service-status p {
+
+  color: var(--sk-text-secondary) !important;
+}
+.service-status button {
+
+  height: 32px !important;
+  border: 1px solid var(--sk-accent-soft) !important;
+  border-radius: var(--sk-radius-sm) !important;
+  background: var(--sk-card-bg) !important;
+  color: var(--sk-accent-deep) !important;
+  font-weight: 700 !important;
+}
+.activation-code-field input {
+
+  height: 52px !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius-md) !important;
+  background: var(--sk-surface) !important;
+  color: var(--sk-text) !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 0.04em;
+}
+.activation-code-field input:focus {
+
+  border-color: var(--sk-accent) !important;
+  box-shadow: 0 0 0 4px var(--sk-accent-soft) !important;
+}
+.activation-code-field__toggle {
+
+  color: var(--sk-text-tertiary) !important;
+  border-radius: 9px !important;
+}
+.activation-code-field__toggle:hover {
+
+  background: var(--sk-accent-soft) !important;
+  color: var(--sk-accent-deep) !important;
+}
+.form__submit {
+
+  height: 52px !important;
+  border: none !important;
+  border-radius: var(--sk-radius-md) !important;
+  background: linear-gradient(135deg, #2f6bff 0%, #4d8bff 100%) !important;
+  box-shadow: 0 14px 28px rgba(47, 107, 255, 0.32) !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em;
+}
+.form__submit:hover {
+
+  transform: translateY(-2px) !important;
+  box-shadow: 0 18px 34px rgba(47, 107, 255, 0.4) !important;
+}
+/* 主内容区与卡片间距放宽一点，页面不再挤在一起 */
+html[data-vm-theme] .app-layout__main {
+
+  padding-bottom: 48px !important;
+}
+/* ---------- 8. 主题切换按钮 ---------- */
+.vm-theme-toggle {
+
+  display: grid;
+  place-items: center;
+  flex: none;
+  /* 顶栏 .app-header 是窗口拖拽区（-webkit-app-region: drag），
+     不声明 no-drag 的话真实鼠标点击会被系统当成拖窗口吃掉，按钮就"没反应" */
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  padding: 0;
+  border: 1px solid var(--sk-border);
+  border-radius: 12px;
+  background: var(--sk-accent-light);
+  color: var(--sk-accent-deep);
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease,
+    transform 0.18s ease;
+}
+.vm-theme-toggle:hover {
+
+  border-color: var(--sk-accent);
+  background: var(--sk-accent-soft);
+  color: var(--sk-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(47, 107, 255, 0.2);
+}
+.vm-theme-toggle svg {
+
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* 登录页没有顶栏，按钮浮在右上角 */
+.page-login > .vm-theme-toggle {
+
+  position: fixed;
+  top: 20px;
+  right: 22px;
+  margin: 0;
+  background: var(--sk-card-bg);
+  box-shadow: var(--sk-shadow-soft);
+}
+/* ---------- 10.1 顶栏 ---------- */
+.app-header {
+
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  position: relative !important;
+  z-index: 40 !important;
+  height: 68px !important;
+  padding: 0 16px 0 22px !important;
+  margin: 0 0 22px !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius-xl) !important;
+  background: var(--sk-card-bg) !important;
+  box-shadow: var(--sk-shadow-soft) !important;
+}
+.app-header__brand {
+
+  flex: 0 0 auto !important;
+  min-width: 0 !important;
+}
+.app-header__titles {
+
+  min-width: 0 !important;
+}
+.app-header__name {
+
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  color: var(--sk-text) !important;
+  background: none !important;
+  -webkit-text-fill-color: currentColor !important;
+  font-size: 1.02rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.02em !important;
+  white-space: nowrap !important;
+}
+.app-header__name::before {
+
+  content: '' !important;
+  display: block !important;
+  flex: none !important;
+  width: 7px !important;
+  height: 18px !important;
+  border-radius: 4px !important;
+  background: linear-gradient(180deg, var(--sk-accent) 0%, #7ab8ff 100%) !important;
+  box-shadow: 0 4px 12px rgba(47, 107, 255, 0.45) !important;
+}
+.vm-crumb {
+
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex: 0 0 auto !important;
+  margin-left: 4px !important;
+  padding-left: 14px !important;
+  border-left: 1px solid var(--sk-border) !important;
+  color: var(--sk-text-tertiary) !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  -webkit-app-region: no-drag !important;
+  app-region: no-drag !important;
+}
+.vm-crumb__sep {
+
+  opacity: 0.65 !important;
+}
+.vm-crumb__cur {
+
+  color: var(--sk-text) !important;
+  font-weight: 700 !important;
+}
+/* 快速跳转 */
+.vm-quicknav {
+
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex: 0 1 220px !important;
+  min-width: 132px !important;
+  height: 38px !important;
+  margin-left: auto !important;
+  padding: 0 13px !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: 12px !important;
+  background: var(--sk-surface) !important;
+  -webkit-app-region: no-drag !important;
+  app-region: no-drag !important;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease,
+    background 0.18s ease !important;
+}
+.vm-quicknav:focus-within {
+
+  border-color: var(--sk-accent) !important;
+  background: var(--sk-card-bg) !important;
+  box-shadow: 0 0 0 3px var(--sk-accent-soft) !important;
+}
+.vm-quicknav__icon {
+
+  display: flex !important;
+  align-items: center !important;
+  flex: none !important;
+  color: var(--sk-text-tertiary) !important;
+}
+.vm-quicknav__icon svg {
+
+  width: 15px !important;
+  height: 15px !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 2 !important;
+  stroke-linecap: round !important;
+}
+.vm-quicknav__input {
+
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  padding: 0 !important;
+  border: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  color: var(--sk-text) !important;
+  font-family: inherit !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+}
+.vm-quicknav__input::placeholder {
+
+  color: var(--sk-text-tertiary) !important;
+  font-weight: 500 !important;
+}
+.vm-quicknav__panel {
+
+  position: absolute !important;
+  top: calc(100% + 10px) !important;
+  right: 0 !important;
+  display: none !important;
+  width: 100% !important;
+  min-width: 248px !important;
+  max-height: 326px !important;
+  overflow: auto !important;
+  padding: 6px !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius-lg) !important;
+  background: var(--el-bg-color-overlay, var(--sk-card-bg)) !important;
+  box-shadow: var(--sk-shadow-card) !important;
+  z-index: 200 !important;
+  -webkit-app-region: no-drag !important;
+  app-region: no-drag !important;
+}
+.vm-quicknav--open .vm-quicknav__panel {
+
+  display: block !important;
+}
+.vm-quicknav__item {
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  padding: 9px 10px !important;
+  border-radius: 9px !important;
+  color: var(--sk-text-secondary) !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+}
+.vm-quicknav__item:hover, .vm-quicknav__item--active {
+
+  background: var(--sk-accent-light) !important;
+  color: var(--sk-accent-deep) !important;
+}
+.vm-quicknav__go {
+
+  color: var(--sk-text-tertiary) !important;
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+}
+.vm-quicknav__empty {
+
+  padding: 12px !important;
+  color: var(--sk-text-tertiary) !important;
+  font-size: 0.82rem !important;
+  text-align: center !important;
+}
+/* 图标按钮（刷新 / 主题） */
+.vm-icon-btn {
+
+  display: grid !important;
+  place-items: center !important;
+  flex: 0 0 auto !important;
+  width: 40px !important;
+  height: 40px !important;
+  padding: 0 !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: 12px !important;
+  background: var(--sk-surface) !important;
+  color: var(--sk-text-secondary) !important;
+  cursor: pointer !important;
+  -webkit-app-region: no-drag !important;
+  app-region: no-drag !important;
+  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease,
+    transform 0.18s ease !important;
+}
+.vm-icon-btn:hover {
+
+  border-color: var(--sk-accent) !important;
+  background: var(--sk-accent-soft) !important;
+  color: var(--sk-accent) !important;
+  transform: translateY(-1px) !important;
+}
+.vm-icon-btn svg {
+
+  width: 18px !important;
+  height: 18px !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.8 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+.vm-theme-toggle {
+
+  margin-right: 0 !important;
+}
+/* ---------- 10.2 侧栏 ---------- */
+.app-layout {
+
+  --app-sidebar-inner-w: 244px !important;
+}
+.vm-nav-label {
+
+  margin: 14px 4px 6px !important;
+  padding: 0 8px !important;
+  color: rgba(255, 255, 255, 0.34) !important;
+  font-size: 0.7rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.16em !important;
+  white-space: nowrap !important;
+}
+.vm-nav-label:first-child {
+
+  margin-top: 2px !important;
+}
+.app-sidebar__link {
+
+  position: relative !important;
+}
+.app-sidebar__link--active {
+
+  background: linear-gradient(
+    90deg,
+    rgba(47, 107, 255, 0.5) 0%,
+    rgba(47, 107, 255, 0.14) 100%
+  ) !important;
+  color: #fff !important;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.12) !important;
+}
+.app-sidebar__link--active::after {
+
+  content: '' !important;
+  position: absolute !important;
+  left: -12px !important;
+  top: 50% !important;
+  width: 3px !important;
+  height: 22px !important;
+  border-radius: 0 3px 3px 0 !important;
+  background: var(--sk-accent) !important;
+  box-shadow: 0 0 12px rgba(77, 139, 255, 0.85) !important;
+  transform: translateY(-50%) !important;
+}
+.app-sidebar__link--active .app-sidebar__icon-wrap {
+
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #fff !important;
+}
+.vm-side-card {
+
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 12px 0 6px !important;
+  padding: 10px !important;
+  border: 1px solid var(--sk-sidebar-border) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+.vm-side-card__avatar {
+
+  display: grid !important;
+  place-items: center !important;
+  flex: none !important;
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 11px !important;
+  background: linear-gradient(135deg, var(--sk-accent) 0%, #7ab8ff 100%) !important;
+  color: #fff !important;
+  font-size: 0.9rem !important;
+  font-weight: 900 !important;
+  box-shadow: 0 6px 16px rgba(47, 107, 255, 0.42) !important;
+}
+.vm-side-card__meta {
+
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  min-width: 0 !important;
+}
+.vm-side-card__title {
+
+  color: #fff !important;
+  font-size: 0.84rem !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+}
+.vm-side-card__sub {
+
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  color: var(--sk-sidebar-text) !important;
+  font-size: 0.72rem !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+}
+.vm-dot {
+
+  display: block !important;
+  flex: none !important;
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: #33d6a6 !important;
+  box-shadow: 0 0 8px rgba(51, 214, 166, 0.9) !important;
+}
+/* 侧栏折起来时，附加件一起收 */
+html[data-vm-nav='mini'] .vm-nav-label, html[data-vm-nav='mini'] .vm-side-card__meta {
+
+  display: none !important;
+}
+html[data-vm-nav='mini'] .app-sidebar__link--active::after {
+
+  display: none !important;
+}
+html[data-vm-nav='mini'] .vm-side-card {
+
+  justify-content: center !important;
+  padding: 8px !important;
+}
+html[data-vm-nav='mini'] .app-sidebar__pill--main {
+
+  padding: 14px 10px 10px !important;
+}
+html[data-vm-nav='mini'] .app-sidebar__link, html[data-vm-nav='mini'] .app-sidebar__tool {
+
+  padding: 0 6px !important;
+}
+html[data-vm-nav='mini'] .app-sidebar__toggle {
+
+  margin-left: 2px !important;
+}
+/* ---------- 10.4 页面骨架 ---------- */
+html[data-vm-theme] .app-layout__main {
+
+  padding: 0 30px 48px 0 !important;
+}
+/* 其余几页的指标行也统一成"一条数据条"，不再是外面套一层灰底 */
+@media (max-width: 1240px) {
+  .vm-crumb {
+
+    display: none !important;
+  
+  }
+}
+@media (max-width: 1060px) {
+  .vm-quicknav {
+
+    flex-basis: 150px !important;
+  
+  }
+}
+@media (max-width: 900px) {
+  .vm-quicknav {
+
+    display: none !important;
+  
+  }
+}
+/* ==========================================================================
+   12. 外壳结构改造 v5 —— 通栏品牌条 + 通高侧栏
+   --------------------------------------------------------------------------
+   改之前是三块互不相干的悬浮卡片：
+       左上角一个白底 logo 卡  +  右边一条圆角顶栏  +  下面一块内容区
+   连系统自带的白色标题栏，屏幕左上角一共叠了三层品牌信息。
+
+   这一节把结构换成"一条通栏品牌条 + 一条通高侧栏"：
+
+       ┌──────────────────────────────────────────────────────────┐
+       │ [logo] 极速混剪智能体 │ 首页 / 素材中心   [搜索][⟳][☾][用户] │ ← 通栏 64px
+       ├──────────┬───────────────────────────────────────────────┤
+       │ 侧栏 244 │  内容区（左右各 24px 内边距）                  │
+       │  创作    │                                               │
+       │   ...    │                                               │
+       └──────────┴───────────────────────────────────────────────┘
+
+   logo 从侧栏搬到品牌条最左边（侧栏顶部那个白底卡片整个去掉），
+   侧栏不再是悬浮圆角块，而是贴着窗口左边、从品牌条下沿一直落到窗口底部的通高深色栏。
+   ========================================================================== */
+.app-layout {
+
+  --sk-topbar-h: 64px;
+  --sk-rail-w: 244px;
+  /* 顶栏品牌位的固定宽度：恒等于侧栏展开时的宽度。
+     侧栏收起只收侧栏本身，顶栏这条"logo + 页面标题"的起点不动。 */
+  --sk-lead-w: 244px;
+}
+/* 折叠状态认客户端自己的类。不要改成"按量出来的宽度反推"——
+   那样会死循环：一折叠就把侧栏宽度也锁成窄的，之后再也展不开。 */
+.app-layout--sidebar-collapsed {
+
+  --sk-rail-w: 72px;
+}
+/* 主列让出侧栏宽度；自身不裁切，通栏顶栏才能往左伸出整窗宽 */
+.app-layout__main-column {
+
+  margin-left: var(--sk-rail-w) !important;
+  padding-right: 0 !important;
+  overflow: visible !important;
+}
+/* 品牌条：贴窗口左上右三边，只留一条下边框 */
+.app-header {
+
+  height: var(--sk-topbar-h) !important;
+  margin: 0 0 22px calc(-1 * var(--sk-rail-w)) !important;
+  padding: 0 22px 0 20px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--sk-border) !important;
+  border-radius: 0 !important;
+  background: var(--sk-card-bg) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  /* 通栏顶栏往左伸出的负边距取的是侧栏宽度。侧栏收起时这个值（自定义属性）
+     是瞬间变的，而内容区是 .28s 缓动过去的——不同步的话顶栏会先往右弹出去
+     172px、再被移动中的内容区拉回窗口左边，看起来就是收起的一瞬间"闪"一下。
+     这里挂上和 .app-layout__main-column 完全一样的过渡：
+     顶栏左边缘 = 内容区左边缘 + 顶栏负边距，两个量同曲线一起走，和恒为 0。 */
+  transition: margin-left 0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.app-header__brand {
+
+  display: flex !important;
+  align-items: center !important;
+  gap: 11px !important;
+  flex: 0 0 auto !important;
+  min-width: 0 !important;
+}
+.vm-brand__mark {
+
+  display: block !important;
+  flex: none !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 10px !important;
+  object-fit: contain !important;
+}
+/* 万一 app-icon.png 取不到，退回侧栏那张字标，别留个破图 */
+.vm-brand__mark--wide {
+
+  width: auto !important;
+  max-width: 150px !important;
+  height: 30px !important;
+}
+/* 系统自带的标题栏已经写着软件名了，品牌条里再写一遍就是叠两层，这里只留 logo */
+.app-header__titles {
+
+  display: none !important;
+}
+/* 侧栏：贴左、贴底、通高，不再是悬浮卡片 */
+.app-sidebar {
+
+  top: var(--sk-topbar-h) !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  gap: 0 !important;
+  border-radius: 0 !important;
+  border-right: 1px solid var(--sk-sidebar-border) !important;
+  background: var(--sk-sidebar-bg) !important;
+  box-shadow: none !important;
+}
+.app-sidebar {
+
+  width: var(--sk-rail-w) !important;
+}
+/* logo 已经搬到品牌条，侧栏顶部不再占位 */
+.app-sidebar__logo {
+
+  display: none !important;
+}
+.app-sidebar__pill, .app-sidebar__pill--main {
+
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+.app-sidebar__pill--main {
+
+  padding: 18px 14px 12px 16px !important;
+}
+.app-sidebar__link--active::after {
+
+  left: -16px !important;
+}
+/* 侧栏底部的"本地授权 / 已验证"状态块整体去掉：
+   授权状态在激活页和系统设置里都能看到，侧栏常驻反而占地方。
+   vm-theme.js 已经不再插入这个节点，这里再兜一层，老缓存里的 DOM 也盖得住。 */
+.vm-side-card {
+
+  display: none !important;
+  margin: 10px 0 0 !important;
+  padding: 12px 4px !important;
+  border: 0 !important;
+  border-top: 1px solid var(--sk-sidebar-border) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+/* 内容区左右对称留白：原版左边是 0，页面标题直接贴着侧栏 */
+html[data-vm-theme] .app-layout__main {
+
+  padding: 0 24px 44px 24px !important;
+}
+/* 面包屑最左边那个"首页"用了最浅一档灰，压在浅色画布上只有 2.5:1 */
+html[data-vm-theme='light'] .vm-crumb__root {
+
+  color: var(--sk-text-secondary) !important;
+}
+
+/* ---------- 兜底：只在"非内容页"给 body 上底色 ----------
+   主界面里 body 的底色会被内容区继承，所以这里用 :has() 把范围锁死在
+   登录/激活页和启动屏，主界面一律走客户端自己的底色。
+   -------------------------------------------------------------------------- */
+html[data-vm-theme] body:has(.page-login),
+html[data-vm-theme] body:has(.vm-startup) {
+  background: var(--sk-bg) !important;
+  color: var(--sk-text) !important;
+}
+
+/* ---------- A. 客户端自己的设计令牌：暗黑下翻深色 ----------
+   内容是客户端自己画的，但它整套颜色都走 --vm-*（var(--vm-text,#1a1d21) 这种）。
+   在这里把这批令牌换成深色值，客户端的内容区就自动变黑，版式一行都不动。
+   白天模式下这段不生效，内容区仍是客户端原样。 */
+html[data-vm-theme='dark'] {
+  --vm-bg: #0a1120;
+  --vm-surface: #0f1729;
+  --vm-card-bg: #111a2e;
+  --vm-text: #e8eefb;
+  --vm-text-secondary: #9aa8c2;
+  --vm-border: rgba(255, 255, 255, 0.09);
+  --vm-accent: #4d8bff;
+  --vm-accent-deep: #7fadff;
+  --vm-accent-soft: rgba(77, 139, 255, 0.16);
+  --vm-accent-light: rgba(77, 139, 255, 0.09);
+  --vm-radius-card: 20px;
+  --vm-radius-lg: 16px;
+  --vm-radius-md: 12px;
+  --vm-radius-pill: 999px;
+  --vm-radius-xl: 20px;
+  --vm-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 14px 36px rgba(0, 0, 0, 0.35);
+  --vm-shadow-hover: 0 16px 40px rgba(77, 139, 255, 0.28);
+  --vm-shadow-pill: 0 4px 20px rgba(0, 0, 0, 0.45);
+  --vm-shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 22px rgba(0, 0, 0, 0.3);
+}
+
+/* ---------- B. Element Plus 令牌（暗黑） ---------- */
+html[data-vm-theme='dark'] {
+  --el-color-primary: var(--sk-accent);
+  --el-color-primary-light-3: #7fadff;
+  --el-color-primary-light-5: #6f95d8;
+  --el-color-primary-light-7: #2b3f63;
+  --el-color-primary-light-8: #22314f;
+  --el-color-primary-light-9: #1a2740;
+  --el-color-primary-dark-2: #9cc0ff;
+  --el-color-success: var(--sk-success);
+  --el-color-success-light-9: rgba(50, 213, 131, 0.14);
+  --el-color-warning: var(--sk-warning);
+  --el-color-warning-light-9: rgba(253, 176, 34, 0.14);
+  --el-color-danger: var(--sk-danger);
+  --el-color-danger-light-9: rgba(255, 107, 107, 0.14);
+  --el-color-error: var(--sk-danger);
+  --el-text-color-primary: var(--sk-text);
+  --el-text-color-regular: var(--sk-text);
+  --el-text-color-secondary: var(--sk-text-secondary);
+  --el-text-color-placeholder: var(--sk-text-tertiary);
+  --el-text-color-disabled: var(--sk-text-tertiary);
+  --el-border-color: var(--sk-border);
+  --el-border-color-light: var(--sk-border);
+  --el-border-color-lighter: var(--sk-border-light);
+  --el-border-color-extra-light: var(--sk-border-light);
+  --el-bg-color: var(--sk-card-bg);
+  --el-bg-color-page: var(--sk-bg);
+  --el-bg-color-overlay: #16203a;
+  --el-fill-color: #182444;
+  --el-fill-color-light: #16203a;
+  --el-fill-color-lighter: #141d33;
+  --el-fill-color-blank: var(--sk-card-bg);
+  --el-disabled-bg-color: #16203a;
+  --el-mask-color: rgba(8, 14, 26, 0.8);
+  --el-overlay-color-lighter: rgba(3, 6, 14, 0.6);
+  --el-box-shadow-light: var(--sk-shadow-soft);
+  --el-box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  --el-table-border-color: var(--sk-border-light);
+  --el-table-header-bg-color: #16203a;
+  --el-table-header-text-color: var(--sk-text-secondary);
+  --el-table-text-color: var(--sk-text);
+  --el-table-row-hover-bg-color: rgba(77, 139, 255, 0.1);
+  --el-table-bg-color: var(--sk-card-bg);
+  --el-table-tr-bg-color: var(--sk-card-bg);
+  --el-table-expanded-cell-bg-color: var(--sk-card-bg);
+}
+
+/* ---------- 5. Element Plus（暗黑） ---------- */
+html[data-vm-theme='dark'] .el-button {
+
+  border-radius: var(--sk-radius-sm) !important;
+  font-weight: 600 !important;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease,
+    border-color 0.16s ease, color 0.16s ease !important;
+}
+
+html[data-vm-theme='dark'] .el-button:not(.is-text):not(.is-link):hover {
+
+  transform: translateY(-1px);
+}
+
+html[data-vm-theme='dark'] .el-button--primary {
+
+  border: none !important;
+  background: linear-gradient(135deg, #2f6bff 0%, #4d8bff 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 18px rgba(47, 107, 255, 0.28) !important;
+}
+
+html[data-vm-theme='dark'] .el-button--primary:hover, html[data-vm-theme='dark'] .el-button--primary:focus {
+
+  background: linear-gradient(135deg, #2a61ec 0%, #3f7dff 100%) !important;
+  box-shadow: 0 12px 24px rgba(47, 107, 255, 0.34) !important;
+}
+
+html[data-vm-theme='dark'] .el-button--primary.is-plain, html[data-vm-theme='dark'] .el-button--primary.is-text {
+
+  background: var(--sk-accent-light) !important;
+  color: var(--sk-accent-deep) !important;
+  box-shadow: none !important;
+}
+
+html[data-vm-theme='dark'] .el-button--success {
+
+  border: none !important;
+  background: linear-gradient(135deg, #12b76a 0%, #32d583 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 18px rgba(18, 183, 106, 0.26) !important;
+}
+
+html[data-vm-theme='dark'] .el-button--danger {
+
+  border: none !important;
+  background: linear-gradient(135deg, #f04438 0%, #ff6f63 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 18px rgba(240, 68, 56, 0.24) !important;
+}
+
+html[data-vm-theme='dark'] .el-button--danger.is-plain, html[data-vm-theme='dark'] .el-button--danger.is-text {
+
+  background: var(--sk-danger-soft) !important;
+  color: var(--sk-danger) !important;
+  box-shadow: none !important;
+}
+
+html[data-vm-theme='dark'] .el-button--default, html[data-vm-theme='dark'] .el-button:not([class*='el-button--']) {
+
+  border: 1px solid var(--sk-border) !important;
+  background: var(--sk-surface) !important;
+  color: var(--sk-text) !important;
+}
+
+html[data-vm-theme='dark'] .el-button--default:hover, html[data-vm-theme='dark'] .el-button:not([class*='el-button--']):hover {
+
+  border-color: var(--sk-accent) !important;
+  background: var(--sk-accent-light) !important;
+  color: var(--sk-accent-deep) !important;
+}
+
+html[data-vm-theme='dark'] .el-button.is-text, html[data-vm-theme='dark'] .el-button.is-link {
+
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html[data-vm-theme='dark'] .el-button.is-text:hover, html[data-vm-theme='dark'] .el-button.is-link:hover {
+
+  color: var(--sk-accent) !important;
+}
+
+html[data-vm-theme='dark'] .el-button.is-disabled, html[data-vm-theme='dark'] .el-button.is-disabled:hover {
+
+  opacity: 0.55 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+html[data-vm-theme='dark'] .el-input__wrapper, html[data-vm-theme='dark'] .el-select__wrapper, html[data-vm-theme='dark'] .el-textarea__inner {
+
+  border-radius: var(--sk-radius-sm) !important;
+  background: var(--sk-surface) !important;
+  box-shadow: 0 0 0 1px var(--sk-border) inset !important;
+  transition: box-shadow 0.16s ease, background 0.16s ease !important;
+}
+
+html[data-vm-theme='dark'] .el-input__wrapper:hover, html[data-vm-theme='dark'] .el-select__wrapper:hover, html[data-vm-theme='dark'] .el-textarea__inner:hover {
+
+  box-shadow: 0 0 0 1px var(--sk-accent) inset !important;
+}
+
+html[data-vm-theme='dark'] .el-input__wrapper.is-focus, html[data-vm-theme='dark'] .el-select__wrapper.is-focused, html[data-vm-theme='dark'] .el-textarea__inner:focus {
+
+  background: var(--sk-surface) !important;
+  box-shadow: 0 0 0 1px var(--sk-accent) inset, 0 0 0 3px var(--sk-accent-soft) !important;
+}
+
+html[data-vm-theme='dark'] .el-input__inner, html[data-vm-theme='dark'] .el-textarea__inner, html[data-vm-theme='dark'] .el-select__placeholder {
+
+  color: var(--sk-text) !important;
+}
+
+html[data-vm-theme='dark'] .el-input__inner::placeholder, html[data-vm-theme='dark'] .el-textarea__inner::placeholder {
+
+  color: var(--sk-text-tertiary) !important;
+}
+
+html[data-vm-theme='dark'] .el-input-group__append, html[data-vm-theme='dark'] .el-input-group__prepend {
+
+  border: 1px solid var(--sk-border) !important;
+  background: var(--el-fill-color-light) !important;
+  color: var(--sk-text-secondary) !important;
+  border-radius: var(--sk-radius-sm) !important;
+}
+
+html[data-vm-theme='dark'] .el-popper, html[data-vm-theme='dark'] .el-select-dropdown, html[data-vm-theme='dark'] .el-dropdown__popper, html[data-vm-theme='dark'] .el-picker__popper {
+
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius-md) !important;
+  background: var(--el-bg-color-overlay) !important;
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.18) !important;
+  color: var(--sk-text) !important;
+}
+
+html[data-vm-theme='dark'] .el-select-dropdown__item, html[data-vm-theme='dark'] .el-dropdown-menu__item {
+
+  border-radius: 7px !important;
+  margin: 2px 6px !important;
+  color: var(--sk-text) !important;
+}
+
+html[data-vm-theme='dark'] .el-select-dropdown__item.is-hovering, html[data-vm-theme='dark'] .el-select-dropdown__item:hover, html[data-vm-theme='dark'] .el-dropdown-menu__item:not(.is-disabled):hover {
+
+  background: var(--sk-accent-light) !important;
+  color: var(--sk-accent-deep) !important;
+}
+
+html[data-vm-theme='dark'] .el-select-dropdown__item.is-selected, html[data-vm-theme='dark'] .el-select-dropdown__item.is-selected:hover {
+
+  background: var(--sk-accent-soft) !important;
+  color: var(--sk-accent-deep) !important;
+  font-weight: 700 !important;
+}
+
+html[data-vm-theme='dark'] .el-form-item__label {
+
+  color: var(--sk-text-secondary) !important;
+  font-weight: 600 !important;
+}
+
+html[data-vm-theme='dark'] .el-table {
+
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius-md) !important;
+  overflow: hidden !important;
+  background: var(--sk-card-bg) !important;
+}
+
+html[data-vm-theme='dark'] .el-table th.el-table__cell {
+
+  height: 44px !important;
+  border-bottom: 1px solid var(--sk-border) !important;
+  background: var(--el-table-header-bg-color) !important;
+  color: var(--sk-text-secondary) !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+}
+
+html[data-vm-theme='dark'] .el-table td.el-table__cell {
+
+  padding: 10px 0 !important;
+  border-bottom: 1px solid var(--sk-border-light) !important;
+  color: var(--sk-text) !important;
+}
+
+html[data-vm-theme='dark'] .el-table__row:hover > td.el-table__cell {
+
+  background: var(--el-table-row-hover-bg-color) !important;
+}
+
+html[data-vm-theme='dark'] .el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+
+  background: var(--el-fill-color-lighter) !important;
+}
+
+html[data-vm-theme='dark'] .el-table--border, html[data-vm-theme='dark'] .el-table--border .el-table__cell {
+
+  border-color: var(--sk-border-light) !important;
+}
+
+html[data-vm-theme='dark'] .el-table::before, html[data-vm-theme='dark'] .el-table__inner-wrapper::before {
+
+  background-color: transparent !important;
+}
+
+html[data-vm-theme='dark'] .el-table__empty-text {
+
+  color: var(--sk-text-tertiary) !important;
+}
+
+html[data-vm-theme='dark'] .el-pagination {
+
+  gap: 4px !important;
+  --el-pagination-button-bg-color: transparent;
+  --el-pagination-hover-color: var(--sk-accent);
+}
+
+html[data-vm-theme='dark'] .el-pagination button, html[data-vm-theme='dark'] .el-pagination .el-pager li {
+
+  border-radius: 8px !important;
+  background: transparent !important;
+  color: var(--sk-text-secondary) !important;
+  font-weight: 600 !important;
+}
+
+html[data-vm-theme='dark'] .el-pagination .el-pager li:hover {
+
+  background: var(--sk-accent-light) !important;
+  color: var(--sk-accent-deep) !important;
+}
+
+html[data-vm-theme='dark'] .el-pagination .el-pager li.is-active {
+
+  background: var(--sk-accent) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 14px rgba(47, 107, 255, 0.28);
+}
+
+html[data-vm-theme='dark'] .el-tag {
+
+  height: 24px !important;
+  padding: 0 10px !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--sk-radius-pill) !important;
+  font-weight: 600 !important;
+  font-size: 0.76rem !important;
+}
+
+html[data-vm-theme='dark'] .el-tag--primary, html[data-vm-theme='dark'] .el-tag--info {
+
+  border-color: var(--sk-accent-soft) !important;
+  background: var(--sk-accent-soft) !important;
+  color: var(--sk-accent-deep) !important;
+}
+
+html[data-vm-theme='dark'] .el-tag--success {
+
+  border-color: var(--sk-success-soft) !important;
+  background: var(--sk-success-soft) !important;
+  color: var(--sk-success) !important;
+}
+
+html[data-vm-theme='dark'] .el-tag--warning {
+
+  border-color: var(--sk-warning-soft) !important;
+  background: var(--sk-warning-soft) !important;
+  color: var(--sk-warning) !important;
+}
+
+html[data-vm-theme='dark'] .el-tag--danger {
+
+  border-color: var(--sk-danger-soft) !important;
+  background: var(--sk-danger-soft) !important;
+  color: var(--sk-danger) !important;
+}
+
+html[data-vm-theme='dark'] .el-card {
+
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius-lg) !important;
+  background: var(--sk-card-bg) !important;
+  box-shadow: var(--sk-shadow-soft) !important;
+  overflow: hidden;
+}
+
+html[data-vm-theme='dark'] .el-card__header {
+
+  border-bottom: 1px solid var(--sk-border-light) !important;
+  background: var(--el-fill-color-lighter) !important;
+  color: var(--sk-text) !important;
+  font-weight: 700 !important;
+}
+
+html[data-vm-theme='dark'] .el-collapse, html[data-vm-theme='dark'] .el-collapse-item__header, html[data-vm-theme='dark'] .el-collapse-item__wrap {
+
+  border: none !important;
+  background: transparent !important;
+}
+
+html[data-vm-theme='dark'] .el-collapse-item {
+
+  margin-bottom: 10px;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius-lg) !important;
+  background: var(--sk-surface) !important;
+  overflow: hidden;
+}
+
+html[data-vm-theme='dark'] .el-collapse-item__header {
+
+  height: 48px !important;
+  padding: 0 16px !important;
+  color: var(--sk-text) !important;
+  font-weight: 700 !important;
+}
+
+html[data-vm-theme='dark'] .el-collapse-item__header:hover {
+
+  background: var(--sk-accent-light) !important;
+}
+
+html[data-vm-theme='dark'] .el-collapse-item__content {
+
+  padding: 4px 16px 16px !important;
+  color: var(--sk-text) !important;
+}
+
+html[data-vm-theme='dark'] .el-overlay {
+
+  backdrop-filter: blur(3px);
+  background: var(--el-overlay-color-lighter) !important;
+}
+
+html[data-vm-theme='dark'] .el-dialog, html[data-vm-theme='dark'] .el-modal-dialog {
+
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius-xl) !important;
+  background: var(--el-bg-color-overlay) !important;
+  box-shadow: 0 28px 70px rgba(8, 14, 26, 0.35) !important;
+  overflow: hidden;
+}
+
+html[data-vm-theme='dark'] .el-dialog__header {
+
+  margin: 0 !important;
+  padding: 18px 22px 12px !important;
+  border-bottom: 1px solid var(--sk-border-light);
+}
+
+html[data-vm-theme='dark'] .el-dialog__title {
+
+  color: var(--sk-text) !important;
+  font-size: 1.02rem !important;
+  font-weight: 700 !important;
+}
+
+html[data-vm-theme='dark'] .el-dialog__body {
+
+  padding: 18px 22px !important;
+  color: var(--sk-text) !important;
+}
+
+html[data-vm-theme='dark'] .el-dialog__footer {
+
+  padding: 12px 22px 18px !important;
+  border-top: 1px solid var(--sk-border-light);
+}
+
+html[data-vm-theme='dark'] .el-dialog__headerbtn .el-dialog__close {
+
+  color: var(--sk-text-tertiary) !important;
+}
+
+html[data-vm-theme='dark'] .el-dialog__headerbtn:hover .el-dialog__close {
+
+  color: var(--sk-accent) !important;
+}
+
+html[data-vm-theme='dark'] .el-tabs__item {
+
+  color: var(--sk-text-secondary) !important;
+  font-weight: 600 !important;
+}
+
+html[data-vm-theme='dark'] .el-tabs__item.is-active, html[data-vm-theme='dark'] .el-tabs__item:hover {
+
+  color: var(--sk-accent) !important;
+}
+
+html[data-vm-theme='dark'] .el-tabs__active-bar {
+
+  border-radius: 999px !important;
+  background: var(--sk-accent) !important;
+}
+
+html[data-vm-theme='dark'] .el-tabs__nav-wrap::after {
+
+  background-color: var(--sk-border-light) !important;
+}
+
+html[data-vm-theme='dark'] .el-switch.is-checked .el-switch__core {
+
+  background: var(--sk-accent) !important;
+  border-color: var(--sk-accent) !important;
+}
+
+html[data-vm-theme='dark'] .el-link.el-link--primary {
+
+  color: var(--sk-accent) !important;
+  font-weight: 600 !important;
+}
+
+html[data-vm-theme='dark'] .el-message {
+
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius-md) !important;
+  background: var(--el-bg-color-overlay) !important;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18) !important;
+}
+
+html[data-vm-theme='dark'] .el-tooltip__popper, html[data-vm-theme='dark'] .el-popper.is-dark {
+
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: #131c30 !important;
+  color: #e8eefb !important;
+}
+
+html[data-vm-theme='dark'] .el-popper.is-dark .el-popper__arrow::before {
+
+  background: #131c30 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ---------- 6. 写死的浅色容器（暗黑） ---------- */
+html[data-vm-theme='dark'] .el-picker-panel, html[data-vm-theme='dark'] .el-date-range-picker, html[data-vm-theme='dark'] .el-date-picker, html[data-vm-theme='dark'] .el-color-picker__panel, html[data-vm-theme='dark'] .el-table-filter, html[data-vm-theme='dark'] .el-upload-cover__title, html[data-vm-theme='dark'] .el-select-dropdown__wrap, html[data-vm-theme='dark'] .el-dropdown-menu, html[data-vm-theme='dark'] .el-message-box {
+
+  border-color: var(--sk-border) !important;
+  background: var(--el-bg-color-overlay) !important;
+  color: var(--sk-text) !important;
+}
+
+html[data-vm-theme='dark'] :is(
+  .assets-stats, html[data-vm-theme='dark'] .assets-stats__item, html[data-vm-theme='dark'] .assets-center__path-value, html[data-vm-theme='dark'] .assets-card, html[data-vm-theme='dark'] .settings-card, html[data-vm-theme='dark'] .settings-voice-list__item, html[data-vm-theme='dark'] .rel-sched__publish-mode, html[data-vm-theme='dark'] .rel-sched__schedule-input, html[data-vm-theme='dark'] .rel-sched__calendar-placeholder, html[data-vm-theme='dark'] .rel-sched-item, html[data-vm-theme='dark'] .rel-sched__stat, html[data-vm-theme='dark'] .rel-sched-preview, html[data-vm-theme='dark'] .pub-acct__stat, html[data-vm-theme='dark'] .pub-acct__toolbar, html[data-vm-theme='dark'] .pub-acct-card, html[data-vm-theme='dark'] .shot-card, html[data-vm-theme='dark'] .shot-card__category-readonly, html[data-vm-theme='dark'] .shot-tpl-panel__sub-card, html[data-vm-theme='dark'] .shot-tpl-create-dialog__intro, html[data-vm-theme='dark'] .shot-edit-flow__head, html[data-vm-theme='dark'] .shot-edit-workspace, html[data-vm-theme='dark'] .shot-edit-unified__card, html[data-vm-theme='dark'] .create-actions-card, html[data-vm-theme='dark'] .loading-content, html[data-vm-theme='dark'] .tsm-section, html[data-vm-theme='dark'] .mix-task-panel__preview-inner, html[data-vm-theme='dark'] .workbench-quick__item, html[data-vm-theme='dark'] .workbench-alert, html[data-vm-theme='dark'] .workbench-account-status--danger, html[data-vm-theme='dark'] .workbench-account-status--checking, html[data-vm-theme='dark'] .workbench-account-status--ok, html[data-vm-theme='dark'] .workbench-account-status__item, html[data-vm-theme='dark'] .auto-update-dialog__version
+) {
+
+  background: var(--sk-card-bg) !important;
+  background-image: none !important;
+  color: var(--sk-text) !important;
+  border-color: var(--sk-border) !important;
+}
+
+html[data-vm-theme='dark'] .storage-settings-card.settings-card, html[data-vm-theme='dark'] .shot-card__textarea--readonly .el-textarea__inner, html[data-vm-theme='dark'] .shot-tpl-create-dialog .el-dialog__footer, html[data-vm-theme='dark'] .system-settings-page__update-grid > div {
+
+  background: var(--sk-card-bg) !important;
+  background-image: none !important;
+  color: var(--sk-text) !important;
+  border-color: var(--sk-border) !important;
+}
+
+html[data-vm-theme='dark'] :is(
+  .account-page__editor, html[data-vm-theme='dark'] .account-page__profiles, html[data-vm-theme='dark'] .account-page__profile-item, html[data-vm-theme='dark'] .account-page__preview
+) {
+
+  background-image: none !important;
+  color: var(--sk-text) !important;
+}
+
+html[data-vm-theme='dark'] .workbench-account-status--danger {
+
+  background: var(--sk-danger-soft) !important;
+  border-color: var(--sk-danger) !important;
+}
+
+html[data-vm-theme='dark'] .workbench-account-status--checking {
+
+  background: var(--sk-warning-soft) !important;
+  border-color: var(--sk-warning) !important;
+}
+
+html[data-vm-theme='dark'] .workbench-account-status--ok {
+
+  background: var(--sk-success-soft) !important;
+  border-color: var(--sk-success) !important;
+}
+
+html[data-vm-theme='dark'] .account-page__profile-item--active {
+
+  background: var(--sk-accent-soft) !important;
+  border-color: var(--sk-accent) !important;
+}
+
+html[data-vm-theme='dark'] :is(.account-page__profile-item:hover, html[data-vm-theme='dark'] .workbench-quick__item:hover) {
+
+  background: var(--sk-accent-light) !important;
+}
+
+html[data-vm-theme='dark'] .rel-sched__calendar-placeholder {
+
+  background: var(--sk-accent-light) !important;
+}
+
+html[data-vm-theme='dark'] .pub-acct-card__status-pill--connected {
+
+  background: var(--sk-success-soft) !important;
+  color: var(--sk-success) !important;
+}
+
+html[data-vm-theme='dark'] .pub-acct-card__status-pill--checking {
+
+  background: var(--sk-warning-soft) !important;
+  color: var(--sk-warning) !important;
+}
+
+html[data-vm-theme='dark'] :is(.el-table__header-wrapper, html[data-vm-theme='dark'] .el-table__body-wrapper) tr td.el-table-fixed-column--right, html[data-vm-theme='dark'] .el-table-fixed-column--right {
+
+  background: inherit !important;
+}
+
+/* ---------- 13.8 写死的深色文字（暗黑） ---------- */
+html[data-vm-theme='dark'] :is(
+  [style*='color: rgba(26, html[data-vm-theme='dark'] 26, html[data-vm-theme='dark'] 26'], html[data-vm-theme='dark'] [style*='color: rgba(0, html[data-vm-theme='dark'] 0, html[data-vm-theme='dark'] 0'], html[data-vm-theme='dark'] [style*='color: rgb(26, html[data-vm-theme='dark'] 26, html[data-vm-theme='dark'] 26'], html[data-vm-theme='dark'] [style*='color: #1a1a1a'], html[data-vm-theme='dark'] [style*='color: #333'], html[data-vm-theme='dark'] [style*='color: #666']
+) {
+
+  color: var(--sk-text-secondary) !important;
+}
+
+html[data-vm-theme='dark'] :is(
+  .settings-panel__collapse-sub, html[data-vm-theme='dark'] .system-settings-page__logs-sub, html[data-vm-theme='dark'] .settings-clone-entry__hint
+) {
+
+  color: var(--sk-text-tertiary) !important;
+}
+
+html[data-vm-theme='dark'] .shot-tpl-panel__cat--custom {
+
+  color: #b3a4ff !important;
+}
+
+/* ==========================================================================
+   暗黑模式：内容区补丁（手工维护）
+   --------------------------------------------------------------------------
+   上面 dark-content.css 是从整层皮肤里抽出来的通用部分；这里放"客户端把浅色
+   写死在 CSS 里、连 !important 都上了"的那几处，必须逐条点名覆盖。
+   判定方法：跑 probe\dark-audit.py，它会列出暗黑下仍然发白的节点。
+   这些规则全部带 html[data-vm-theme='dark']，白天模式一个字节都不碰。
+   ========================================================================== */
+
+/* ---------- 账号档案：左栏卡片 / 右栏编辑器 / 预览盒 ----------
+   客户端给这三块写死了白底和浅蓝底，不走 --vm-* 令牌，只能点名。 */
+html[data-vm-theme='dark'] .account-page__profiles,
+html[data-vm-theme='dark'] .account-page__editor {
+  background: var(--sk-card-bg) !important;
+  border-color: var(--sk-border) !important;
+  color: var(--sk-text) !important;
+}
+
+html[data-vm-theme='dark'] .account-page__profiles-head {
+  background: var(--sk-card-bg) !important;
+}
+
+html[data-vm-theme='dark'] .account-page__preview {
+  background: var(--sk-surface) !important;
+  border-color: var(--sk-border) !important;
+  color: var(--sk-text) !important;
+}
+
+html[data-vm-theme='dark'] .account-page__preview-text,
+html[data-vm-theme='dark'] .account-page__preview-title {
+  color: var(--sk-text-secondary) !important;
+}
+
+/* 列表条目：客户端是"浅色卡片 + 选中态浅蓝"，暗黑下换成深底 + 蓝色主调 */
+html[data-vm-theme='dark'] .account-page__profile-item {
+  background: var(--sk-surface) !important;
+  border-color: var(--sk-border) !important;
+  color: var(--sk-text) !important;
+}
+
+html[data-vm-theme='dark'] .account-page__profile-meta {
+  color: var(--sk-text-tertiary) !important;
+}
+
+/* ---------- 工作台：那颗按钮客户端写死了白底 + !important ---------- */
+html[data-vm-theme='dark'] .workbench-actions__secondary {
+  background: var(--sk-card-bg) !important;
+  border-color: var(--sk-border) !important;
+  color: var(--sk-accent-deep) !important;
+}
+
+html[data-vm-theme='dark'] .workbench-actions__secondary:hover {
+  background: var(--sk-accent-soft) !important;
+  border-color: var(--sk-accent) !important;
+}
+
+/* ---------- 工作台：四张指标卡：客户端写死了浅色渐变（linear-gradient(135deg,#f5f8ff…)），
+   连 !important 都用上了，而且颜色是 rgb() 形式。暗黑下换成同色相的深色微渐变，
+   保留蓝/绿/黄/红四种语义色，但整体压黑。 */
+html[data-vm-theme='dark'] .workbench-stat {
+  background: var(--sk-card-bg) !important;
+}
+
+html[data-vm-theme='dark'] .workbench-stat--blue {
+  background-image: linear-gradient(135deg, rgba(77, 139, 255, 0.16) 0%, rgba(77, 139, 255, 0.05) 100%) !important;
+}
+
+html[data-vm-theme='dark'] .workbench-stat--green {
+  background-image: linear-gradient(135deg, rgba(50, 213, 131, 0.16) 0%, rgba(50, 213, 131, 0.05) 100%) !important;
+}
+
+html[data-vm-theme='dark'] .workbench-stat--amber {
+  background-image: linear-gradient(135deg, rgba(253, 176, 34, 0.16) 0%, rgba(253, 176, 34, 0.05) 100%) !important;
+}
+
+html[data-vm-theme='dark'] .workbench-stat--rose {
+  background-image: linear-gradient(135deg, rgba(255, 107, 107, 0.16) 0%, rgba(255, 107, 107, 0.05) 100%) !important;
+}
+
+html[data-vm-theme='dark'] .workbench-stat__value {
+  color: var(--sk-text) !important;
+}
+
+html[data-vm-theme='dark'] .workbench-stat__label {
+  color: var(--sk-text-secondary) !important;
+}
+
+/* ---------- 空状态插画：Element Plus 的 el-empty 是一张白色线描 SVG，
+   压在深底上太亮。暗黑下调暗不透明度，保留形状又不抢眼。 */
+html[data-vm-theme='dark'] .el-empty__image {
+  opacity: 0.5 !important;
+}
+
+/* ---------- 通用兜底：暗黑下任何"白底 + 深字"的写死组合 ----------
+   这几条是客户端里用内联 style 写死浅色的地方（结构一样的提示条 / 标签）。 */
+html[data-vm-theme='dark'] [style*='background: #fff'],
+html[data-vm-theme='dark'] [style*='background:#fff'],
+html[data-vm-theme='dark'] [style*='background: rgb(255, 255, 255)'],
+html[data-vm-theme='dark'] [style*='background-color: #fff'],
+html[data-vm-theme='dark'] [style*='background-color:#fff'] {
+  background: var(--sk-card-bg) !important;
+  color: var(--sk-text) !important;
+}
+
+/* ---------- AI 帮写弹窗：它自己是一张浅色卡片，别把里面的输入框也刷黑 ----------
+   dark-content.css 里那条 `html[data-vm-theme='dark'] .el-input__wrapper ...`
+   是给内容区输入框用的，但它连弹窗里的输入框一起命中了 —— 白卡上被挖出几个
+   深色窟窿，边框只剩 9% 白，点进去也没有焦点光圈（就是"选中表单边框像没了"）。
+   这里把弹窗内部还原成客户端原本的浅色输入框，配色跟弹窗自带的那套一致。 */
+html[data-vm-theme='dark'] .vmx-ai-mask .el-input__wrapper,
+html[data-vm-theme='dark'] .vmx-ai-mask .el-textarea__inner {
+  background: #ffffff !important;
+  box-shadow: 0 0 0 1px #dcdfe6 inset !important;
+  color: #303133 !important;
+}
+
+html[data-vm-theme='dark'] .vmx-ai-mask .el-input__wrapper:hover,
+html[data-vm-theme='dark'] .vmx-ai-mask .el-textarea__inner:hover {
+  box-shadow: 0 0 0 1px #c0c4cc inset !important;
+}
+
+html[data-vm-theme='dark'] .vmx-ai-mask .el-input__wrapper.is-focus,
+html[data-vm-theme='dark'] .vmx-ai-mask .el-input__wrapper:focus-within,
+html[data-vm-theme='dark'] .vmx-ai-mask .el-textarea__inner:focus {
+  background: #ffffff !important;
+  box-shadow: 0 0 0 1px #409eff inset, 0 0 0 3px rgba(64, 158, 255, 0.18) !important;
+}
+
+html[data-vm-theme='dark'] .vmx-ai-mask .el-input__inner,
+html[data-vm-theme='dark'] .vmx-ai-mask .el-textarea__inner {
+  color: #303133 !important;
+}
+
+html[data-vm-theme='dark'] .vmx-ai-mask .el-input__inner::placeholder,
+html[data-vm-theme='dark'] .vmx-ai-mask .el-textarea__inner::placeholder {
+  color: #a8abb2 !important;
+}
+
+/* ==========================================================================
+   侧栏配色（按主题分开）
+   --------------------------------------------------------------------------
+   整层皮肤里侧栏只有一套"深色"配色，白天/暗黑都一样；这里把侧栏拆成两套：
+   白天模式用浅色（白）侧栏，暗黑模式保持原来的深藏青。
+   命名沿用外壳的 --sk-* 令牌；本文件在 make-shell-skin.py 里拼在最后，
+   所以同名 !important 规则会盖掉整层皮肤里的写死值。
+   ========================================================================== */
+
+/* ---------- 白天（含未指定主题时的默认）---------- */
+html:not([data-vm-theme='dark']) {
+  --sk-sidebar-bg: linear-gradient(180deg, #ffffff 0%, #f7f9fd 100%);
+  --sk-sidebar-border: rgba(15, 23, 42, 0.08);
+  --sk-sidebar-text: #4a5a76;
+  --sk-sidebar-text-hover: #0f172a;
+  --sk-sidebar-active-bg: linear-gradient(135deg, #2f6bff 0%, #4d8bff 100%);
+  --sk-sidebar-icon-bg: rgba(15, 23, 42, 0.05);
+  --sk-sidebar-hover-bg: rgba(15, 23, 42, 0.05);
+  --sk-sidebar-hover-icon-bg: rgba(15, 23, 42, 0.09);
+  --sk-sidebar-pill-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  --sk-sidebar-logo-border: rgba(15, 23, 42, 0.08);
+  --sk-sidebar-logo-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  --sk-sidebar-label: rgba(15, 23, 42, 0.45);
+  --sk-sidebar-icon: #3f4e6d;
+  --sk-sidebar-icon-hover: var(--sk-accent);
+}
+
+/* ---------- 暗黑：保持原来的深色侧栏 ---------- */
+html[data-vm-theme='dark'] {
+  --sk-sidebar-bg: linear-gradient(180deg, #121f38 0%, #0c1628 100%);
+  --sk-sidebar-border: rgba(255, 255, 255, 0.07);
+  --sk-sidebar-text: #a9b7d0;
+  --sk-sidebar-text-hover: #ffffff;
+  --sk-sidebar-active-bg: linear-gradient(135deg, #2f6bff 0%, #4d8bff 100%);
+  --sk-sidebar-icon-bg: rgba(255, 255, 255, 0.06);
+  --sk-sidebar-hover-bg: rgba(255, 255, 255, 0.07);
+  --sk-sidebar-hover-icon-bg: rgba(255, 255, 255, 0.14);
+  --sk-sidebar-pill-shadow: 0 18px 44px rgba(6, 12, 24, 0.42);
+  --sk-sidebar-logo-border: rgba(255, 255, 255, 0.5);
+  --sk-sidebar-logo-shadow: 0 10px 26px rgba(6, 12, 24, 0.32);
+  --sk-sidebar-label: rgba(255, 255, 255, 0.34);
+  --sk-sidebar-icon: #ffffff;
+  --sk-sidebar-icon-hover: #9cc0ff;
+}
+
+/* ---------- 把令牌接回具体元素（盖掉写死的白色/深色）---------- */
+.app-sidebar {
+  border-right-color: var(--sk-sidebar-border) !important;
+  background: var(--sk-sidebar-bg) !important;
+}
+
+.app-sidebar__pill {
+  border-color: var(--sk-sidebar-border) !important;
+  background: var(--sk-sidebar-bg) !important;
+  box-shadow: var(--sk-sidebar-pill-shadow) !important;
+}
+
+.app-sidebar__logo {
+  border-color: var(--sk-sidebar-logo-border) !important;
+  box-shadow: var(--sk-sidebar-logo-shadow), inset 0 1px rgba(255, 255, 255, 0.9) !important;
+}
+
+.app-sidebar__link {
+  color: var(--sk-sidebar-text) !important;
+}
+
+/* 分组小标题（创作 / 发布 / 系统）：原来写死白色透明，白侧栏上会看不见 */
+.vm-nav-label {
+  color: var(--sk-sidebar-label) !important;
+}
+
+/* 悬停只给"没选中"的行换浅色底。选中那行本来就是蓝底 + 白图标，
+   如果也套上浅色悬停底，白图标就糊在浅底上看不见了（就是"指向还是白色"的原因）。 */
+.app-sidebar__link:not(.app-sidebar__link--active):hover {
+  background: var(--sk-sidebar-hover-bg) !important;
+  color: var(--sk-sidebar-text-hover) !important;
+}
+
+.app-sidebar__icon-wrap {
+  color: var(--sk-sidebar-icon) !important;
+}
+
+.app-sidebar__link:not(.app-sidebar__link--active):hover .app-sidebar__icon-wrap {
+  background: var(--sk-sidebar-hover-icon-bg) !important;
+  color: var(--sk-sidebar-icon-hover) !important;
+}
+
+/* ---------- 白天：选中项 = 浅蓝底 + 蓝色图标/文字 ----------
+   整层皮肤里选中项的底色是"半透明蓝"，压在白色侧栏上只剩很浅的淡蓝，
+   而图标是写死的白色 —— 白图标糊在淡蓝上当然看不清（用户反馈的
+   "白天模式鼠标指过去 icon 还是白的"）。这里换成浅蓝底 + 主题蓝图标，
+   让图标颜色真的跟着白天主题走。 */
+html:not([data-vm-theme='dark']) .app-sidebar__link--active,
+html:not([data-vm-theme='dark']) .app-sidebar__link.router-link-exact-active {
+  background: linear-gradient(
+    135deg,
+    rgba(47, 107, 255, 0.18) 0%,
+    rgba(47, 107, 255, 0.08) 100%
+  ) !important;
+  box-shadow: 0 8px 20px rgba(47, 107, 255, 0.14) !important;
+}
+
+html:not([data-vm-theme='dark']) .app-sidebar__link--active .app-sidebar__icon-wrap,
+html:not([data-vm-theme='dark'])
+  .app-sidebar__link.router-link-exact-active
+  .app-sidebar__icon-wrap {
+  background: rgba(47, 107, 255, 0.14) !important;
+  color: var(--sk-accent) !important;
+}
+
+html:not([data-vm-theme='dark']) .app-sidebar__link--active .app-sidebar__label,
+html:not([data-vm-theme='dark'])
+  .app-sidebar__link.router-link-exact-active
+  .app-sidebar__label {
+  color: var(--sk-accent) !important;
+}
+
+/* 白天选中项悬停：稍微加深一点当反馈 */
+html:not([data-vm-theme='dark']) .app-sidebar__link--active:hover,
+html:not([data-vm-theme='dark'])
+  .app-sidebar__link.router-link-exact-active:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(47, 107, 255, 0.24) 0%,
+    rgba(47, 107, 255, 0.11) 100%
+  ) !important;
+}
+
+/* ---------- 暗黑：保持原来的深色侧栏，选中项是蓝底 + 白图标 ---------- */
+html[data-vm-theme='dark'] .app-sidebar__link--active,
+html[data-vm-theme='dark'] .app-sidebar__link.router-link-exact-active {
+  background: linear-gradient(
+    90deg,
+    rgba(47, 107, 255, 0.5) 0%,
+    rgba(47, 107, 255, 0.14) 100%
+  ) !important;
+}
+
+html[data-vm-theme='dark'] .app-sidebar__link--active:hover,
+html[data-vm-theme='dark'] .app-sidebar__link.router-link-exact-active:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(47, 107, 255, 0.62) 0%,
+    rgba(47, 107, 255, 0.24) 100%
+  ) !important;
+}
+
+html[data-vm-theme='dark'] .app-sidebar__link--active .app-sidebar__icon-wrap,
+html[data-vm-theme='dark']
+  .app-sidebar__link.router-link-exact-active
+  .app-sidebar__icon-wrap {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #fff !important;
+}
+
+.app-sidebar__toggle {
+  background: var(--sk-sidebar-icon-bg) !important;
+  color: var(--sk-sidebar-text) !important;
+}
+
+.app-sidebar__toggle:hover {
+  background: var(--sk-sidebar-hover-icon-bg) !important;
+  color: var(--sk-sidebar-text-hover) !important;
+}
+
+.app-sidebar__logout,
+.app-sidebar__link.app-sidebar__logout {
+  color: var(--sk-sidebar-icon) !important;
+}
+
+.app-sidebar__logout:hover {
+  background: var(--sk-sidebar-hover-bg) !important;
+  color: var(--sk-sidebar-icon-hover) !important;
+}
+
+/* 上面给"退出登录"设的是图标色，文字标签仍跟其他菜单项同色 */
+.app-sidebar__logout .app-sidebar__label {
+  color: var(--sk-sidebar-text) !important;
+}
+
+/* ==========================================================================
+   顶栏品牌位（左上角那块）
+   --------------------------------------------------------------------------
+ vm-theme.js 把顶栏的品牌位换成了"横版字标"（长方形 logo），
+   这里负责它的尺寸：两种主题都是透明底，白天沿用字标本来的深蓝，
+   暗黑把字标整张刷成白色（原文是深蓝，在深色顶栏上看不见）。
+   ========================================================================== */
+
+/* ---------- 品牌位与左侧菜单居中对齐 ----------
+   顶栏是通栏的（margin-left 负值把主列让出的侧栏宽度又拉回来），左内边距 20px。
+   把品牌位做成一整条"和侧栏同宽"的条，内容居中，logo 的中心就落在侧栏中线上了；
+   宽度取 --sk-lead-w（不取 --sk-rail-w）：侧栏收起时 logo 和后面的页面标题
+   一律不动，收起按钮只收侧栏，不跟面包屑联动。
+   -20px 是为了抵消顶栏的左内边距（顶栏 padding 左边是 20px，见整层皮肤里的 .app-header）。 */
+.app-header__brand {
+  box-sizing: border-box !important;
+  width: var(--sk-lead-w) !important;
+  margin-left: -20px !important;
+  padding: 0 !important;
+  justify-content: center !important;
+}
+
+.vm-brand__mark--wide {
+  width: auto !important;
+  max-width: 180px !important;
+  height: 32px !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+
+html[data-vm-theme='dark'] .vm-brand__mark--wide {
+  /* 暗黑：不要浅色卡片，透明底 + 白色字标。
+     brightness(0) 先把整张图压成纯黑（alpha 保留），invert(1) 再翻成纯白，
+     这样深蓝的字标在深色顶栏上就变成白色，形状不变。 */
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  filter: brightness(0) invert(1) !important;
+}

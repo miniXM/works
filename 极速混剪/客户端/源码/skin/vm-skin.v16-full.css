@@ -1,0 +1,2824 @@
+/* ==========================================================================
+   极速VideoMix 客户端皮肤 v2
+   --------------------------------------------------------------------------
+   - 白天 / 暗黑两套配色，靠 <html data-vm-theme="light|dark"> 切换
+   - 只改外观与交互反馈：颜色、圆角、层级、阴影、间距、悬停/聚焦状态
+   - 令牌优先（--vm-* / --el-*），组件规则只做必要的兜底
+   ========================================================================== */
+
+/* ---------- 1. 设计令牌 ---------- */
+
+:root {
+  /* 页面与容器 */
+  --vm-bg: #eceff7;
+  --vm-surface: #ffffff;
+  --vm-card-bg: #ffffff;
+  --vm-text: #0f172a;
+  --vm-text-secondary: #5a6780;
+  --vm-text-tertiary: #94a3b8;
+  --vm-border: rgba(15, 23, 42, 0.10);
+  --vm-border-light: rgba(15, 23, 42, 0.05);
+
+  /* 主色 */
+  --vm-accent: #2f6bff;
+  --vm-accent-deep: #1f56e0;
+  --vm-accent-soft: #e8efff;
+  --vm-accent-light: #f4f7ff;
+  --vm-primary: #0f172a;
+
+  /* 圆角 */
+  --vm-radius-sm: 8px;
+  --vm-radius-md: 10px;
+  --vm-radius-lg: 14px;
+  --vm-radius-xl: 18px;
+  --vm-radius-pill: 999px;
+
+  /* 阴影 */
+  --vm-shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 10px 28px rgba(15, 23, 42, 0.06);
+  --vm-shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.04), 0 6px 18px rgba(15, 23, 42, 0.05);
+  --vm-shadow-hover: 0 12px 32px rgba(47, 107, 255, 0.18);
+
+  /* 侧栏（两种主题下都是深色） */
+  --vm-sidebar-bg: linear-gradient(180deg, #121f38 0%, #0c1628 100%);
+  --vm-sidebar-border: rgba(255, 255, 255, 0.07);
+  --vm-sidebar-text: #a9b7d0;
+  --vm-sidebar-text-hover: #ffffff;
+  --vm-sidebar-active-bg: linear-gradient(135deg, #2f6bff 0%, #4d8bff 100%);
+  --vm-sidebar-icon-bg: rgba(255, 255, 255, 0.06);
+
+  /* 语义色 */
+  --vm-success: #12b76a;
+  --vm-success-soft: #e6f7ef;
+  --vm-warning: #f79009;
+  --vm-warning-soft: #fef4e6;
+  --vm-danger: #f04438;
+  --vm-danger-soft: #fdeceb;
+  --vm-info: #2f6bff;
+  --vm-info-soft: #e8efff;
+
+  /* Element Plus 令牌 */
+  --el-color-primary: var(--vm-accent);
+  --el-color-primary-light-3: #6f9bff;
+  --el-color-primary-light-5: #9fbcff;
+  --el-color-primary-light-7: #cddcff;
+  --el-color-primary-light-8: #e1eaff;
+  --el-color-primary-light-9: #f0f5ff;
+  --el-color-primary-dark-2: #2656cc;
+  --el-color-success: var(--vm-success);
+  --el-color-success-light-9: #eafaf1;
+  --el-color-warning: var(--vm-warning);
+  --el-color-warning-light-9: #fff7ea;
+  --el-color-danger: var(--vm-danger);
+  --el-color-danger-light-9: #fdeeed;
+  --el-color-error: var(--vm-danger);
+  --el-text-color-primary: var(--vm-text);
+  --el-text-color-regular: var(--vm-text);
+  --el-text-color-secondary: var(--vm-text-secondary);
+  --el-text-color-placeholder: var(--vm-text-tertiary);
+  --el-text-color-disabled: var(--vm-text-tertiary);
+  --el-border-color: var(--vm-border);
+  --el-border-color-light: var(--vm-border);
+  --el-border-color-lighter: var(--vm-border-light);
+  --el-border-color-extra-light: var(--vm-border-light);
+  --el-border-radius-base: 9px;
+  --el-border-radius-small: 7px;
+  --el-bg-color: var(--vm-card-bg);
+  --el-bg-color-page: var(--vm-bg);
+  --el-bg-color-overlay: var(--vm-card-bg);
+  --el-fill-color: #f4f6fb;
+  --el-fill-color-light: #f7f9fc;
+  --el-fill-color-lighter: #fafbfe;
+  --el-fill-color-blank: var(--vm-card-bg);
+  --el-disabled-bg-color: #f4f6fb;
+  --el-mask-color: rgba(247, 249, 252, 0.82);
+  --el-overlay-color-lighter: rgba(15, 23, 42, 0.4);
+  --el-box-shadow-light: var(--vm-shadow-soft);
+  --el-box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+  --el-table-border-color: var(--vm-border-light);
+  --el-table-header-bg-color: #eef3ff;
+  --el-table-header-text-color: var(--vm-text-secondary);
+  --el-table-text-color: var(--vm-text);
+  --el-table-row-hover-bg-color: var(--vm-accent-light);
+  --el-table-bg-color: var(--vm-card-bg);
+  --el-table-tr-bg-color: var(--vm-card-bg);
+  --el-table-expanded-cell-bg-color: var(--vm-card-bg);
+
+  color-scheme: light;
+}
+
+html[data-vm-theme='dark'] {
+  --vm-bg: #080e1a;
+  --vm-surface: #0f1729;
+  --vm-card-bg: #111a2e;
+  --vm-text: #e8eefb;
+  --vm-text-secondary: #9aa8c2;
+  --vm-text-tertiary: #6b7a99;
+  --vm-border: rgba(255, 255, 255, 0.09);
+  --vm-border-light: rgba(255, 255, 255, 0.06);
+
+  --vm-accent: #4d8bff;
+  --vm-accent-deep: #7fadff;
+  --vm-accent-soft: rgba(77, 139, 255, 0.16);
+  --vm-accent-light: rgba(77, 139, 255, 0.09);
+  --vm-primary: #e8eefb;
+
+  --vm-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 14px 36px rgba(0, 0, 0, 0.35);
+  --vm-shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 22px rgba(0, 0, 0, 0.3);
+  --vm-shadow-hover: 0 16px 40px rgba(77, 139, 255, 0.28);
+
+  --vm-sidebar-bg: linear-gradient(180deg, #0c1526 0%, #070c16 100%);
+  --vm-sidebar-border: rgba(255, 255, 255, 0.06);
+  --vm-sidebar-text: #93a2bd;
+  --vm-sidebar-text-hover: #ffffff;
+  --vm-sidebar-active-bg: linear-gradient(135deg, #3f7dff 0%, #5f9bff 100%);
+  --vm-sidebar-icon-bg: rgba(255, 255, 255, 0.05);
+
+  --vm-success: #32d583;
+  --vm-success-soft: rgba(50, 213, 131, 0.14);
+  --vm-warning: #fdb022;
+  --vm-warning-soft: rgba(253, 176, 34, 0.14);
+  --vm-danger: #ff6b6b;
+  --vm-danger-soft: rgba(255, 107, 107, 0.14);
+  --vm-info: #4d8bff;
+  --vm-info-soft: rgba(77, 139, 255, 0.14);
+
+  --el-color-primary: var(--vm-accent);
+  --el-color-primary-light-3: #7fadff;
+  --el-color-primary-light-5: #6f95d8;
+  --el-color-primary-light-7: #2b3f63;
+  --el-color-primary-light-8: #22314f;
+  --el-color-primary-light-9: #1a2740;
+  --el-color-primary-dark-2: #9cc0ff;
+  --el-color-success: var(--vm-success);
+  --el-color-success-light-9: rgba(50, 213, 131, 0.14);
+  --el-color-warning: var(--vm-warning);
+  --el-color-warning-light-9: rgba(253, 176, 34, 0.14);
+  --el-color-danger: var(--vm-danger);
+  --el-color-danger-light-9: rgba(255, 107, 107, 0.14);
+  --el-color-error: var(--vm-danger);
+  --el-text-color-primary: var(--vm-text);
+  --el-text-color-regular: var(--vm-text);
+  --el-text-color-secondary: var(--vm-text-secondary);
+  --el-text-color-placeholder: var(--vm-text-tertiary);
+  --el-text-color-disabled: var(--vm-text-tertiary);
+  --el-border-color: var(--vm-border);
+  --el-border-color-light: var(--vm-border);
+  --el-border-color-lighter: var(--vm-border-light);
+  --el-border-color-extra-light: var(--vm-border-light);
+  --el-bg-color: var(--vm-card-bg);
+  --el-bg-color-page: var(--vm-bg);
+  --el-bg-color-overlay: #16203a;
+  --el-fill-color: #182444;
+  --el-fill-color-light: #16203a;
+  --el-fill-color-lighter: #141d33;
+  --el-fill-color-blank: var(--vm-card-bg);
+  --el-disabled-bg-color: #16203a;
+  --el-mask-color: rgba(8, 14, 26, 0.8);
+  --el-overlay-color-lighter: rgba(3, 6, 14, 0.6);
+  --el-box-shadow-light: var(--vm-shadow-soft);
+  --el-box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  --el-table-border-color: var(--vm-border-light);
+  --el-table-header-bg-color: #16203a;
+  --el-table-header-text-color: var(--vm-text-secondary);
+  --el-table-text-color: var(--vm-text);
+  --el-table-row-hover-bg-color: rgba(77, 139, 255, 0.1);
+  --el-table-bg-color: var(--vm-card-bg);
+  --el-table-tr-bg-color: var(--vm-card-bg);
+  --el-table-expanded-cell-bg-color: var(--vm-card-bg);
+
+  color-scheme: dark;
+}
+
+/* ---------- 2. 基础 ---------- */
+
+html,
+body {
+  background: var(--vm-bg) !important;
+  color: var(--vm-text) !important;
+}
+
+html[data-vm-theme='light'] body {
+  background:
+    radial-gradient(1200px 620px at 10% -12%, rgba(47, 107, 255, 0.16), transparent 62%),
+    radial-gradient(900px 520px at 100% -6%, rgba(91, 139, 255, 0.12), transparent 58%),
+    linear-gradient(180deg, #eef3fc 0%, #e8eef8 100%),
+    var(--vm-bg) !important;
+}
+
+html[data-vm-theme='dark'] body {
+  background:
+    radial-gradient(1100px 580px at 8% -14%, rgba(63, 125, 255, 0.18), transparent 62%),
+    radial-gradient(900px 520px at 100% -8%, rgba(120, 90, 255, 0.12), transparent 58%),
+    var(--vm-bg) !important;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei",
+    "PingFang SC", "Hiragino Sans GB", sans-serif !important;
+}
+
+/* 细腻的滚动条 */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--vm-border);
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--vm-text-tertiary);
+  background-clip: content-box;
+}
+
+::selection {
+  background: var(--vm-accent-soft);
+  color: var(--vm-text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--vm-accent);
+  outline-offset: 2px;
+}
+
+/* 启动屏（index.html 里的内联骨架）：深浅两套主题下都不能是白卡片 */
+.vm-startup {
+  color: var(--vm-text) !important;
+}
+
+.vm-startup__card {
+  border: 1px solid var(--vm-border) !important;
+  background: var(--vm-card-bg) !important;
+  box-shadow: var(--vm-shadow-card) !important;
+}
+
+.vm-startup__brand {
+  background: linear-gradient(120deg, var(--vm-text) 0%, var(--vm-accent) 130%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.vm-startup__hint {
+  color: var(--vm-text-secondary) !important;
+}
+
+.vm-startup__bar {
+  background: var(--vm-border-light) !important;
+}
+
+.vm-startup__bar::after {
+  background: linear-gradient(90deg, var(--vm-accent), #7ab8ff) !important;
+}
+
+/* ---------- 3. 外壳：侧栏 / 顶栏 / 内容区 ---------- */
+
+.app-layout {
+  --app-sidebar-gap: 18px;
+  --app-sidebar-inner-w: 224px;
+  --app-sidebar-inner-collapsed: 76px;
+}
+
+.app-layout__main {
+  padding: 0 26px 44px 0 !important;
+}
+
+.app-header {
+  box-sizing: border-box;
+  height: 62px !important;
+  margin: 0 0 20px !important;
+  padding: 0 18px 0 24px !important;
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-xl) !important;
+  background: var(--vm-card-bg) !important;
+  box-shadow: var(--vm-shadow-soft) !important;
+  backdrop-filter: blur(18px) saturate(1.4);
+}
+
+.app-header__name {
+  color: var(--vm-text) !important;
+  background: none !important;
+  -webkit-text-fill-color: currentColor !important;
+  font-size: 1.32rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.01em !important;
+}
+
+.app-header__user {
+  gap: 8px !important;
+  /* 左边原来是给 30px 圆形头像留的位置，头像去掉后左右对称 */
+  padding: 4px 12px !important;
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-pill) !important;
+  background: var(--vm-surface) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.app-header__user:hover {
+  border-color: var(--vm-accent) !important;
+  box-shadow: 0 6px 18px rgba(47, 107, 255, 0.16) !important;
+  transform: translateY(-1px);
+}
+
+/* 顶栏用户胶囊前面那个纯色圆块（客户端写死的渐变 div，里面没有字母/头像图），
+   客户要求去掉。胶囊里只留"欢迎登录"和版本号。 */
+html[data-vm-theme] .app-header__avatar {
+  display: none !important;
+}
+
+.app-header__user-label {
+  color: var(--vm-text-secondary) !important;
+  font-weight: 600 !important;
+}
+
+.app-header__version {
+  padding: 4px 9px !important;
+  border: 1px solid var(--vm-accent-soft) !important;
+  border-radius: var(--vm-radius-pill) !important;
+  background: var(--vm-accent-soft) !important;
+  color: var(--vm-accent-deep) !important;
+  font-weight: 700 !important;
+}
+
+/* 侧栏 */
+.app-sidebar__logo {
+  height: 64px !important;
+  padding: 6px 10px !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  border-radius: var(--vm-radius-lg) !important;
+  /* 品牌字标是深蓝字，底衬得是亮的，白天/暗黑两种主题下观感才一致 */
+  background: linear-gradient(135deg, #f4f8ff 0%, #ffffff 100%) !important;
+  box-shadow: 0 10px 26px rgba(6, 12, 24, 0.32), inset 0 1px rgba(255, 255, 255, 0.9) !important;
+}
+
+.app-sidebar__logo-img {
+  max-width: 94% !important;
+  max-height: 42px !important;
+  border-radius: 10px !important;
+}
+
+.app-sidebar__pill {
+  border: 1px solid var(--vm-sidebar-border) !important;
+  border-radius: var(--vm-radius-xl) !important;
+  background: var(--vm-sidebar-bg) !important;
+  box-shadow: 0 18px 44px rgba(6, 12, 24, 0.42), inset 0 1px rgba(255, 255, 255, 0.06) !important;
+  backdrop-filter: blur(18px) saturate(1.3) !important;
+}
+
+.app-sidebar__pill--main {
+  padding: 14px 12px !important;
+}
+
+.app-sidebar__nav {
+  gap: 4px !important;
+}
+
+.app-sidebar__link {
+  gap: 12px !important;
+  height: 44px !important;
+  padding: 0 12px !important;
+  border-radius: var(--vm-radius-md) !important;
+  color: var(--vm-sidebar-text) !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.app-sidebar__link:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: var(--vm-sidebar-text-hover) !important;
+}
+
+.app-sidebar__link--active,
+.app-sidebar__link.router-link-exact-active {
+  background: var(--vm-sidebar-active-bg) !important;
+  color: #fff !important;
+  box-shadow: 0 10px 24px rgba(47, 107, 255, 0.38) !important;
+}
+
+.app-sidebar__link--active .app-sidebar__icon-wrap,
+.app-sidebar__link.router-link-exact-active .app-sidebar__icon-wrap {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #fff !important;
+}
+
+.app-sidebar__icon-wrap {
+  display: grid !important;
+  place-items: center !important;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 9px !important;
+  background: var(--vm-sidebar-icon-bg) !important;
+  transition: background 0.18s ease;
+}
+
+.app-sidebar__link:hover .app-sidebar__icon-wrap {
+  background: rgba(255, 255, 255, 0.14) !important;
+}
+
+.app-sidebar__toggle {
+  width: 34px !important;
+  height: 34px !important;
+  margin: 0 0 10px 6px !important;
+  border-radius: 10px !important;
+  background: var(--vm-sidebar-icon-bg) !important;
+  color: var(--vm-sidebar-text) !important;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.app-sidebar__toggle:hover {
+  background: rgba(255, 255, 255, 0.14) !important;
+  color: #fff !important;
+}
+
+.app-sidebar__logout,
+.app-sidebar__link.app-sidebar__logout {
+  border-radius: var(--vm-radius-md) !important;
+  color: var(--vm-sidebar-text) !important;
+}
+
+.app-sidebar__logout:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: var(--vm-sidebar-text-hover) !important;
+}
+
+/* ---------- 4. 页面骨架 ---------- */
+
+.page-shell {
+  max-width: 1560px !important;
+}
+
+.page-shell__title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin: 2px 0 18px !important;
+  color: var(--vm-text) !important;
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.page-shell__title::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 22px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--vm-accent) 0%, #6f9bff 100%);
+  box-shadow: 0 4px 12px rgba(47, 107, 255, 0.4);
+}
+
+.page-shell__body {
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-xl) !important;
+  background: var(--vm-card-bg) !important;
+  box-shadow: var(--vm-shadow-card) !important;
+  padding: 24px !important;
+}
+
+.vm-intro-banner {
+  position: relative;
+  margin: 0 0 18px !important;
+  padding: 12px 16px 12px 42px !important;
+  border: 1px solid var(--vm-accent-soft) !important;
+  border-radius: var(--vm-radius-md) !important;
+  background: var(--vm-accent-light) !important;
+  color: var(--vm-text-secondary) !important;
+  font-size: 0.86rem !important;
+  line-height: 1.7 !important;
+}
+
+.vm-intro-banner::before {
+  content: 'i';
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--vm-accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  font-style: italic;
+  line-height: 1;
+}
+
+.vm-intro-banner code {
+  border-radius: 6px !important;
+  background: var(--vm-accent-soft) !important;
+  color: var(--vm-accent-deep) !important;
+  padding: 2px 6px !important;
+}
+
+/* 通用卡片 */
+.settings-card,
+.assets-section,
+.mix-task-panel,
+.batch-generation-page__storage,
+.storage-settings-card,
+.settings-panel,
+.system-settings-page__collapse,
+.system-settings-page__logs,
+.system-settings-page__update,
+.rel-sched-preview,
+.rel-sched__section {
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-lg) !important;
+  background: var(--vm-card-bg) !important;
+  box-shadow: var(--vm-shadow-soft) !important;
+}
+
+.settings-card__title,
+.assets-section__title,
+.mix-task-panel__preview-title,
+.rel-sched__section-title,
+.account-page__profiles-title,
+.account-page__preview-title,
+.settings-rewrite-config__head {
+  color: var(--vm-text) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.01em;
+}
+
+/* 指标卡：图标块 + 大数字 + 说明 */
+.workbench-stat,
+.assets-stats__item,
+.rel-sched__stat,
+.pub-acct__stat {
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-lg) !important;
+  background: var(--vm-card-bg) !important;
+  box-shadow: var(--vm-shadow-soft) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.workbench-stat:hover,
+.assets-stats__item:hover,
+.rel-sched__stat:hover,
+.pub-acct__stat:hover {
+  border-color: var(--vm-accent-soft) !important;
+  box-shadow: var(--vm-shadow-hover) !important;
+  transform: translateY(-2px);
+}
+
+.workbench-stat__value,
+.assets-stats__value,
+.rel-sched__stat-val,
+.pub-acct__stat-val {
+  color: var(--vm-text) !important;
+  font-size: 1.7rem !important;
+  font-weight: 750 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.workbench-stat__label,
+.assets-stats__label,
+.rel-sched__stat-label,
+.pub-acct__stat-label {
+  color: var(--vm-text-secondary) !important;
+  font-size: 0.82rem !important;
+}
+
+.workbench-stat__icon,
+.workbench-quick__icon,
+.workbench-account-status__icon,
+.mix-task-panel__preview-icon {
+  border-radius: 11px !important;
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08) !important;
+}
+
+.workbench-quick__item {
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-md) !important;
+  background: var(--vm-surface) !important;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.workbench-quick__item:hover {
+  border-color: var(--vm-accent) !important;
+  box-shadow: var(--vm-shadow-hover) !important;
+  transform: translateY(-2px);
+}
+
+.workbench-quick__label {
+  color: var(--vm-text) !important;
+  font-weight: 600 !important;
+}
+
+/* 账号档案 / 发布排期 / 素材中心 的条目 */
+.account-page__profile-item,
+.rel-sched-item,
+.assets-card,
+.pub-acct__toolbar,
+.pub-acct__stats {
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-lg) !important;
+  background: var(--vm-card-bg) !important;
+  box-shadow: var(--vm-shadow-soft) !important;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.account-page__profile-item:hover,
+.rel-sched-item:hover,
+.assets-card:hover {
+  border-color: var(--vm-accent-soft) !important;
+  box-shadow: var(--vm-shadow-hover) !important;
+}
+
+.account-page__profile-item--active {
+  border-color: var(--vm-accent) !important;
+  background: var(--vm-accent-light) !important;
+  box-shadow: 0 0 0 3px var(--vm-accent-soft) !important;
+}
+
+.account-page__preview,
+.mix-task-panel__preview-inner,
+.rel-sched-preview__box,
+.assets-center__path-row {
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-md) !important;
+  background: var(--vm-surface) !important;
+}
+
+.account-page__label,
+.rel-sched-item__field label,
+.assets-center__path-label {
+  color: var(--vm-text-secondary) !important;
+  font-weight: 600 !important;
+  font-size: 0.8rem !important;
+}
+
+/* 工具栏与分区标题 */
+.rel-sched__toolbar,
+.pub-acct__toolbar,
+.assets-center__toolbar,
+.mix-task-panel__toolbar,
+.account-page__head,
+.account-page__head-actions {
+  gap: 10px !important;
+}
+
+.rel-sched__section-head,
+.assets-section__head,
+.workbench-panel__head {
+  border-bottom: 1px solid var(--vm-border-light) !important;
+  padding-bottom: 12px !important;
+  margin-bottom: 14px !important;
+}
+
+.workbench-panel,
+.workbench-account-status {
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-lg) !important;
+  background: var(--vm-card-bg) !important;
+  box-shadow: var(--vm-shadow-soft) !important;
+}
+
+/* 「最近任务」的条目回到"列表行 + 发丝分隔线"：
+   不再给每一条套一圈边框，左边缩略图、中间标题、右边状态纵向居中。 */
+.workbench-task {
+  align-items: center !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--vm-border-light) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transition: background 0.18s ease;
+}
+
+.workbench-task:hover {
+  border-bottom-color: var(--vm-accent-soft) !important;
+  background: var(--vm-accent-light) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.workbench-task:last-child {
+  border-bottom: 0 !important;
+}
+
+/* 中间那一列（任务名 + 标签/失败原因）跟着整行居中 */
+html[data-vm-theme] .workbench-task__main {
+  align-self: center !important;
+  justify-content: center !important;
+}
+
+/* vm-theme.js 会给这一格补上"第一个镜头的首帧"（内联 background-image）。
+   没补上时保持客户端原来的渐变占位，不出现破图或者拉伸。 */
+html[data-vm-theme] .workbench-task__thumb.vm-task-thumb--image {
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+.workbench-panel__link,
+.workbench-link,
+.workbench-task__links {
+  color: var(--vm-accent) !important;
+  font-weight: 600 !important;
+}
+
+/* 工作台的次级操作按钮（"新建任务"旁边那颗）：做成虚线幽灵按钮，
+   暗黑模式下也不能留写死的浅灰底。
+   注意：客户端自己的分页 CSS 里对 .is-disabled 也写了 !important，
+   所以这里用 html[data-vm-theme] 把优先级顶上去。 */
+html[data-vm-theme] :is(.workbench-actions__secondary, .workbench-actions__secondary.is-disabled) {
+  border: 1px dashed var(--vm-border) !important;
+  border-radius: var(--vm-radius-md) !important;
+  background: var(--vm-surface) !important;
+  color: var(--vm-text-secondary) !important;
+  font-weight: 600 !important;
+  transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease !important;
+}
+
+html[data-vm-theme] .workbench-actions__secondary:not(.is-disabled):hover {
+  border-color: var(--vm-accent) !important;
+  border-style: solid !important;
+  background: var(--vm-accent-light) !important;
+  color: var(--vm-accent-deep) !important;
+}
+
+html[data-vm-theme] .workbench-actions__secondary.is-disabled {
+  opacity: 0.7 !important;
+}
+
+/* ---------- 5. Element Plus ---------- */
+
+/* 按钮 */
+.el-button {
+  border-radius: var(--vm-radius-sm) !important;
+  font-weight: 600 !important;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease,
+    border-color 0.16s ease, color 0.16s ease !important;
+}
+
+.el-button:not(.is-text):not(.is-link):hover {
+  transform: translateY(-1px);
+}
+
+.el-button--primary {
+  border: none !important;
+  background: linear-gradient(135deg, #2f6bff 0%, #4d8bff 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 18px rgba(47, 107, 255, 0.28) !important;
+}
+
+.el-button--primary:hover,
+.el-button--primary:focus {
+  background: linear-gradient(135deg, #2a61ec 0%, #3f7dff 100%) !important;
+  box-shadow: 0 12px 24px rgba(47, 107, 255, 0.34) !important;
+}
+
+.el-button--primary.is-plain,
+.el-button--primary.is-text {
+  background: var(--vm-accent-light) !important;
+  color: var(--vm-accent-deep) !important;
+  box-shadow: none !important;
+}
+
+.el-button--success {
+  border: none !important;
+  background: linear-gradient(135deg, #12b76a 0%, #32d583 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 18px rgba(18, 183, 106, 0.26) !important;
+}
+
+.el-button--danger {
+  border: none !important;
+  background: linear-gradient(135deg, #f04438 0%, #ff6f63 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 18px rgba(240, 68, 56, 0.24) !important;
+}
+
+.el-button--danger.is-plain,
+.el-button--danger.is-text {
+  background: var(--vm-danger-soft) !important;
+  color: var(--vm-danger) !important;
+  box-shadow: none !important;
+}
+
+.el-button--default,
+.el-button:not([class*='el-button--']) {
+  border: 1px solid var(--vm-border) !important;
+  background: var(--vm-surface) !important;
+  color: var(--vm-text) !important;
+}
+
+.el-button--default:hover,
+.el-button:not([class*='el-button--']):hover {
+  border-color: var(--vm-accent) !important;
+  background: var(--vm-accent-light) !important;
+  color: var(--vm-accent-deep) !important;
+}
+
+.el-button.is-text,
+.el-button.is-link {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.el-button.is-text:hover,
+.el-button.is-link:hover {
+  color: var(--vm-accent) !important;
+}
+
+.el-button.is-disabled,
+.el-button.is-disabled:hover {
+  opacity: 0.55 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* 输入 / 选择 / 数字 */
+.el-input__wrapper,
+.el-select__wrapper,
+.el-textarea__inner {
+  border-radius: var(--vm-radius-sm) !important;
+  background: var(--vm-surface) !important;
+  box-shadow: 0 0 0 1px var(--vm-border) inset !important;
+  transition: box-shadow 0.16s ease, background 0.16s ease !important;
+}
+
+.el-input__wrapper:hover,
+.el-select__wrapper:hover,
+.el-textarea__inner:hover {
+  box-shadow: 0 0 0 1px var(--vm-accent) inset !important;
+}
+
+.el-input__wrapper.is-focus,
+.el-select__wrapper.is-focused,
+.el-textarea__inner:focus {
+  background: var(--vm-surface) !important;
+  box-shadow: 0 0 0 1px var(--vm-accent) inset, 0 0 0 3px var(--vm-accent-soft) !important;
+}
+
+.el-input__inner,
+.el-textarea__inner,
+.el-select__placeholder {
+  color: var(--vm-text) !important;
+}
+
+.el-input__inner::placeholder,
+.el-textarea__inner::placeholder {
+  color: var(--vm-text-tertiary) !important;
+}
+
+.el-input-group__append,
+.el-input-group__prepend {
+  border: 1px solid var(--vm-border) !important;
+  background: var(--el-fill-color-light) !important;
+  color: var(--vm-text-secondary) !important;
+  border-radius: var(--vm-radius-sm) !important;
+}
+
+/* 下拉 / 弹出层 */
+.el-popper,
+.el-select-dropdown,
+.el-dropdown__popper,
+.el-picker__popper {
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-md) !important;
+  background: var(--el-bg-color-overlay) !important;
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.18) !important;
+  color: var(--vm-text) !important;
+}
+
+.el-select-dropdown__item,
+.el-dropdown-menu__item {
+  border-radius: 7px !important;
+  margin: 2px 6px !important;
+  color: var(--vm-text) !important;
+}
+
+.el-select-dropdown__item.is-hovering,
+.el-select-dropdown__item:hover,
+.el-dropdown-menu__item:not(.is-disabled):hover {
+  background: var(--vm-accent-light) !important;
+  color: var(--vm-accent-deep) !important;
+}
+
+.el-select-dropdown__item.is-selected,
+.el-select-dropdown__item.is-selected:hover {
+  background: var(--vm-accent-soft) !important;
+  color: var(--vm-accent-deep) !important;
+  font-weight: 700 !important;
+}
+
+/* 表单 */
+.el-form-item__label {
+  color: var(--vm-text-secondary) !important;
+  font-weight: 600 !important;
+}
+
+/* 表格 */
+.el-table {
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-md) !important;
+  overflow: hidden !important;
+  background: var(--vm-card-bg) !important;
+}
+
+.el-table th.el-table__cell {
+  height: 44px !important;
+  border-bottom: 1px solid var(--vm-border) !important;
+  background: var(--el-table-header-bg-color) !important;
+  color: var(--vm-text-secondary) !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+}
+
+.el-table td.el-table__cell {
+  padding: 10px 0 !important;
+  border-bottom: 1px solid var(--vm-border-light) !important;
+  color: var(--vm-text) !important;
+}
+
+.el-table__row:hover > td.el-table__cell {
+  background: var(--el-table-row-hover-bg-color) !important;
+}
+
+.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+  background: var(--el-fill-color-lighter) !important;
+}
+
+.el-table--border,
+.el-table--border .el-table__cell {
+  border-color: var(--vm-border-light) !important;
+}
+
+.el-table::before,
+.el-table__inner-wrapper::before {
+  background-color: transparent !important;
+}
+
+.el-table__empty-text {
+  color: var(--vm-text-tertiary) !important;
+}
+
+/* 分页 */
+.el-pagination {
+  gap: 4px !important;
+  --el-pagination-button-bg-color: transparent;
+  --el-pagination-hover-color: var(--vm-accent);
+}
+
+.el-pagination button,
+.el-pagination .el-pager li {
+  border-radius: 8px !important;
+  background: transparent !important;
+  color: var(--vm-text-secondary) !important;
+  font-weight: 600 !important;
+}
+
+.el-pagination .el-pager li:hover {
+  background: var(--vm-accent-light) !important;
+  color: var(--vm-accent-deep) !important;
+}
+
+.el-pagination .el-pager li.is-active {
+  background: var(--vm-accent) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 14px rgba(47, 107, 255, 0.28);
+}
+
+/* 标签 */
+.el-tag {
+  height: 24px !important;
+  padding: 0 10px !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--vm-radius-pill) !important;
+  font-weight: 600 !important;
+  font-size: 0.76rem !important;
+}
+
+.el-tag--primary,
+.el-tag--info {
+  border-color: var(--vm-accent-soft) !important;
+  background: var(--vm-accent-soft) !important;
+  color: var(--vm-accent-deep) !important;
+}
+
+.el-tag--success {
+  border-color: var(--vm-success-soft) !important;
+  background: var(--vm-success-soft) !important;
+  color: var(--vm-success) !important;
+}
+
+.el-tag--warning {
+  border-color: var(--vm-warning-soft) !important;
+  background: var(--vm-warning-soft) !important;
+  color: var(--vm-warning) !important;
+}
+
+.el-tag--danger {
+  border-color: var(--vm-danger-soft) !important;
+  background: var(--vm-danger-soft) !important;
+  color: var(--vm-danger) !important;
+}
+
+/* 卡片 / 折叠面板 */
+.el-card {
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-lg) !important;
+  background: var(--vm-card-bg) !important;
+  box-shadow: var(--vm-shadow-soft) !important;
+  overflow: hidden;
+}
+
+.el-card__header {
+  border-bottom: 1px solid var(--vm-border-light) !important;
+  background: var(--el-fill-color-lighter) !important;
+  color: var(--vm-text) !important;
+  font-weight: 700 !important;
+}
+
+.el-collapse,
+.el-collapse-item__header,
+.el-collapse-item__wrap {
+  border: none !important;
+  background: transparent !important;
+}
+
+.el-collapse-item {
+  margin-bottom: 10px;
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-lg) !important;
+  background: var(--vm-surface) !important;
+  overflow: hidden;
+}
+
+.el-collapse-item__header {
+  height: 48px !important;
+  padding: 0 16px !important;
+  color: var(--vm-text) !important;
+  font-weight: 700 !important;
+}
+
+.el-collapse-item__header:hover {
+  background: var(--vm-accent-light) !important;
+}
+
+.el-collapse-item__content {
+  padding: 4px 16px 16px !important;
+  color: var(--vm-text) !important;
+}
+
+/* 弹窗 */
+.el-overlay {
+  backdrop-filter: blur(3px);
+  background: var(--el-overlay-color-lighter) !important;
+}
+
+.el-dialog,
+.el-modal-dialog {
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-xl) !important;
+  background: var(--el-bg-color-overlay) !important;
+  box-shadow: 0 28px 70px rgba(8, 14, 26, 0.35) !important;
+  overflow: hidden;
+}
+
+.el-dialog__header {
+  margin: 0 !important;
+  padding: 18px 22px 12px !important;
+  border-bottom: 1px solid var(--vm-border-light);
+}
+
+.el-dialog__title {
+  color: var(--vm-text) !important;
+  font-size: 1.02rem !important;
+  font-weight: 700 !important;
+}
+
+.el-dialog__body {
+  padding: 18px 22px !important;
+  color: var(--vm-text) !important;
+}
+
+.el-dialog__footer {
+  padding: 12px 22px 18px !important;
+  border-top: 1px solid var(--vm-border-light);
+}
+
+.el-dialog__headerbtn .el-dialog__close {
+  color: var(--vm-text-tertiary) !important;
+}
+
+.el-dialog__headerbtn:hover .el-dialog__close {
+  color: var(--vm-accent) !important;
+}
+
+/* 标签页 */
+.el-tabs__item {
+  color: var(--vm-text-secondary) !important;
+  font-weight: 600 !important;
+}
+
+.el-tabs__item.is-active,
+.el-tabs__item:hover {
+  color: var(--vm-accent) !important;
+}
+
+.el-tabs__active-bar {
+  border-radius: 999px !important;
+  background: var(--vm-accent) !important;
+}
+
+.el-tabs__nav-wrap::after {
+  background-color: var(--vm-border-light) !important;
+}
+
+/* 其他小件 */
+.el-switch.is-checked .el-switch__core {
+  background: var(--vm-accent) !important;
+  border-color: var(--vm-accent) !important;
+}
+
+.el-link.el-link--primary {
+  color: var(--vm-accent) !important;
+  font-weight: 600 !important;
+}
+
+.el-message {
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-md) !important;
+  background: var(--el-bg-color-overlay) !important;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18) !important;
+}
+
+.el-tooltip__popper,
+.el-popper.is-dark {
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: #131c30 !important;
+  color: #e8eefb !important;
+}
+
+.el-popper.is-dark .el-popper__arrow::before {
+  background: #131c30 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ---------- 6. 写死的浅色容器 ----------
+   下面这些类名在客户端里是硬编码的浅色底（扫描结果见
+   probe\ui\light-surfaces.txt），白天模式本来就是浅色、不用管，
+   暗黑模式下必须把它们拉回设计令牌，否则会白底白字。
+   -------------------------------------------------------------------------- */
+
+/* 弹出面板：两种主题都走 overlay 令牌 */
+.el-picker-panel,
+.el-date-range-picker,
+.el-date-picker,
+.el-color-picker__panel,
+.el-table-filter,
+.el-upload-cover__title,
+.el-select-dropdown__wrap,
+.el-dropdown-menu,
+.el-message-box {
+  border-color: var(--vm-border) !important;
+  background: var(--el-bg-color-overlay) !important;
+  color: var(--vm-text) !important;
+}
+
+html[data-vm-theme='dark'] :is(
+  .assets-stats,
+  .assets-stats__item,
+  .assets-center__path-value,
+  .assets-card,
+  .settings-card,
+  .settings-voice-list__item,
+  .rel-sched__publish-mode,
+  .rel-sched__schedule-input,
+  .rel-sched__calendar-placeholder,
+  .rel-sched-item,
+  .rel-sched__stat,
+  .rel-sched-preview,
+  .pub-acct__stat,
+  .pub-acct__toolbar,
+  .pub-acct-card,
+  .shot-card,
+  .shot-card__category-readonly,
+  .shot-tpl-panel__sub-card,
+  .shot-tpl-create-dialog__intro,
+  .shot-edit-flow__head,
+  .shot-edit-workspace,
+  .shot-edit-unified__card,
+  .create-actions-card,
+  .loading-content,
+  .tsm-section,
+  .mix-task-panel__preview-inner,
+  .workbench-quick__item,
+  .workbench-alert,
+  .workbench-account-status--danger,
+  .workbench-account-status--checking,
+  .workbench-account-status--ok,
+  .workbench-account-status__item,
+  .auto-update-dialog__version
+) {
+  background: var(--vm-card-bg) !important;
+  background-image: none !important;
+  color: var(--vm-text) !important;
+  border-color: var(--vm-border) !important;
+}
+
+/* 下面这几条必须单独写。
+   原因：:is() 的优先级取参数里最高的那条，上面那份列表里只要混进一个
+   双类（.a.b）或者"类 + 标签"（.a > div）的选择器，整份列表的优先级就被抬高，
+   后面第 13 节那些单类规则就再也盖不动它。
+   这里的 .a.b 是 (0,2,0)、.a > div 是 (0,1,1)，两种都会抬高；拆出来之后
+   上面那份回到 (0,2,1)，第 13 节排在后面就能正常覆盖。 */
+html[data-vm-theme='dark'] .storage-settings-card.settings-card,
+html[data-vm-theme='dark'] .shot-card__textarea--readonly .el-textarea__inner,
+html[data-vm-theme='dark'] .shot-tpl-create-dialog .el-dialog__footer,
+html[data-vm-theme='dark'] .system-settings-page__update-grid > div {
+  background: var(--vm-card-bg) !important;
+  background-image: none !important;
+  color: var(--vm-text) !important;
+  border-color: var(--vm-border) !important;
+}
+
+/* 账号档案这三块由第 13 节完全接管（左栏透明 + 右栏透明 + 子面板下沉），
+   不进上面那份列表，否则两边都带 !important、优先级接近，改起来很容易打架。
+   这里只补一条：客户端写死的浅色底要在暗黑下压掉。 */
+html[data-vm-theme='dark'] :is(
+  .account-page__editor,
+  .account-page__profiles,
+  .account-page__profile-item,
+  .account-page__preview
+) {
+  background-image: none !important;
+  color: var(--vm-text) !important;
+}
+
+/* 这几块在客户端里是“浅色渐变 + 语义色”的告警条，暗黑下换成深色底 + 语义边框 */
+html[data-vm-theme='dark'] .workbench-account-status--danger {
+  background: var(--vm-danger-soft) !important;
+  border-color: var(--vm-danger) !important;
+}
+
+html[data-vm-theme='dark'] .workbench-account-status--checking {
+  background: var(--vm-warning-soft) !important;
+  border-color: var(--vm-warning) !important;
+}
+
+html[data-vm-theme='dark'] .workbench-account-status--ok {
+  background: var(--vm-success-soft) !important;
+  border-color: var(--vm-success) !important;
+}
+
+/* 选中态 / 悬停态用主色浅底，别用写死的浅蓝 */
+html[data-vm-theme='dark'] .account-page__profile-item--active {
+  background: var(--vm-accent-soft) !important;
+  border-color: var(--vm-accent) !important;
+}
+
+html[data-vm-theme='dark'] :is(.account-page__profile-item:hover, .workbench-quick__item:hover) {
+  background: var(--vm-accent-light) !important;
+}
+
+html[data-vm-theme='dark'] .rel-sched__calendar-placeholder {
+  background: var(--vm-accent-light) !important;
+}
+
+/* 状态胶囊 */
+html[data-vm-theme='dark'] .pub-acct-card__status-pill--connected {
+  background: var(--vm-success-soft) !important;
+  color: var(--vm-success) !important;
+}
+
+html[data-vm-theme='dark'] .pub-acct-card__status-pill--checking {
+  background: var(--vm-warning-soft) !important;
+  color: var(--vm-warning) !important;
+}
+
+/* 表格上的固定列补丁色块 */
+html[data-vm-theme='dark'] :is(.el-table__header-wrapper, .el-table__body-wrapper) tr td.el-table-fixed-column--right,
+html[data-vm-theme='dark'] .el-table-fixed-column--right {
+  background: inherit !important;
+}
+
+/* ---------- 7. 登录 / 激活页 ---------- */
+
+.page-login {
+  background:
+    radial-gradient(900px 520px at 14% 8%, rgba(47, 107, 255, 0.16), transparent 60%),
+    radial-gradient(760px 460px at 88% 92%, rgba(111, 155, 255, 0.14), transparent 58%),
+    var(--vm-bg) !important;
+}
+
+.login-card {
+  width: 440px !important;
+  padding: 40px 38px 34px !important;
+  border: 1px solid var(--vm-border) !important;
+  border-radius: 24px !important;
+  background: var(--vm-card-bg) !important;
+  box-shadow: 0 28px 70px rgba(15, 23, 42, 0.16) !important;
+}
+
+.login-card .title {
+  margin: 10px 0 6px !important;
+  background: linear-gradient(120deg, var(--vm-text) 0%, var(--vm-accent) 130%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--vm-text) !important;
+  font-size: 1.7rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.02em;
+}
+
+.login-card .subtitle {
+  margin-bottom: 22px !important;
+  color: var(--vm-text-secondary) !important;
+  font-size: 0.86rem !important;
+}
+
+.device-id {
+  margin: 0 0 18px !important;
+  padding: 11px 13px !important;
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-md) !important;
+  background: var(--vm-surface) !important;
+}
+
+.device-id__label {
+  color: var(--vm-text-secondary) !important;
+}
+
+.device-id__value {
+  color: var(--vm-text) !important;
+  font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+  letter-spacing: 0.02em;
+}
+
+.service-status {
+  border: 1px solid var(--vm-accent-soft) !important;
+  border-radius: var(--vm-radius-md) !important;
+  background: var(--vm-accent-light) !important;
+}
+
+.service-status--error {
+  border-color: var(--vm-danger-soft) !important;
+  background: var(--vm-danger-soft) !important;
+}
+
+.service-status__title,
+.service-status--error .service-status__title {
+  color: var(--vm-text) !important;
+}
+
+.service-status p {
+  color: var(--vm-text-secondary) !important;
+}
+
+.service-status button {
+  height: 32px !important;
+  border: 1px solid var(--vm-accent-soft) !important;
+  border-radius: var(--vm-radius-sm) !important;
+  background: var(--vm-card-bg) !important;
+  color: var(--vm-accent-deep) !important;
+  font-weight: 700 !important;
+}
+
+.activation-code-field input {
+  height: 52px !important;
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-md) !important;
+  background: var(--vm-surface) !important;
+  color: var(--vm-text) !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 0.04em;
+}
+
+.activation-code-field input:focus {
+  border-color: var(--vm-accent) !important;
+  box-shadow: 0 0 0 4px var(--vm-accent-soft) !important;
+}
+
+.activation-code-field__toggle {
+  color: var(--vm-text-tertiary) !important;
+  border-radius: 9px !important;
+}
+
+.activation-code-field__toggle:hover {
+  background: var(--vm-accent-soft) !important;
+  color: var(--vm-accent-deep) !important;
+}
+
+.form__submit {
+  height: 52px !important;
+  border: none !important;
+  border-radius: var(--vm-radius-md) !important;
+  background: linear-gradient(135deg, #2f6bff 0%, #4d8bff 100%) !important;
+  box-shadow: 0 14px 28px rgba(47, 107, 255, 0.32) !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em;
+}
+
+.form__submit:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 18px 34px rgba(47, 107, 255, 0.4) !important;
+}
+
+.login-card .hint {
+  color: var(--vm-text-tertiary) !important;
+}
+
+/* ---------- 7.5 观感强化 ----------
+   上面几节是"把颜色对齐到设计令牌"，这一节专门做"让人一眼看出改过"：
+   页面主标题的竖条、指标卡的彩色标识条、卡片悬浮反馈、表头底色。
+   -------------------------------------------------------------------------- */
+
+/* 页面主标题：4px 渐变竖条 + 大字号 */
+:is(.workbench-page__title, .account-page__title, .page-shell__title) {
+  position: relative !important;
+  padding-left: 15px !important;
+  color: var(--vm-text) !important;
+  font-size: 1.48rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.01em !important;
+}
+
+:is(.workbench-page__title, .account-page__title, .page-shell__title)::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 50% !important;
+  width: 4px !important;
+  height: 1.1em !important;
+  border-radius: 999px !important;
+  background: linear-gradient(180deg, var(--vm-accent) 0%, #7ab8ff 100%) !important;
+  transform: translateY(-50%) !important;
+}
+
+/* 指标卡：左侧彩色标识条 + 悬浮抬起 */
+html[data-vm-theme] .workbench-stat {
+  position: relative !important;
+  overflow: hidden !important;
+  border: 1px solid var(--vm-border) !important;
+  border-radius: 16px !important;
+  box-shadow: var(--vm-shadow-soft) !important;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease !important;
+}
+
+html[data-vm-theme] .workbench-stat:hover {
+  border-color: var(--vm-accent-soft) !important;
+  box-shadow: var(--vm-shadow-hover) !important;
+  transform: translateY(-2px) !important;
+}
+
+html[data-vm-theme] .workbench-stat::after {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 16px !important;
+  bottom: 16px !important;
+  width: 4px !important;
+  border-radius: 0 6px 6px 0 !important;
+  background: var(--vm-accent) !important;
+}
+
+html[data-vm-theme] .workbench-stat--green::after {
+  background: var(--vm-success) !important;
+}
+
+html[data-vm-theme] .workbench-stat--amber::after {
+  background: var(--vm-warning) !important;
+}
+
+html[data-vm-theme] .workbench-stat--rose::after {
+  background: var(--vm-danger) !important;
+}
+
+html[data-vm-theme] .workbench-stat__icon {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 13px !important;
+}
+
+html[data-vm-theme] .workbench-stat__value {
+  color: var(--vm-text) !important;
+  font-size: 1.85rem !important;
+  font-weight: 800 !important;
+}
+
+html[data-vm-theme] .workbench-stat__label {
+  color: var(--vm-text-secondary) !important;
+  font-weight: 600 !important;
+}
+
+/* 卡片内的小标题统一加粗 */
+:is(.workbench-panel__title,
+    .workbench-quick__title,
+    .workbench-account-status__title,
+    .assets-section__title,
+    .assets-card__title,
+    .settings-card__title,
+    .shot-tpl-panel__title,
+    .template-workspace__title,
+    .rel-sched-preview__title) {
+  color: var(--vm-text) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* 表头带一点主色底，更像数据后台 */
+html[data-vm-theme] .el-table th.el-table__cell {
+  background: var(--el-table-header-bg-color) !important;
+}
+
+html[data-vm-theme='dark'] .el-table th.el-table__cell {
+  color: var(--vm-text-secondary) !important;
+}
+
+/* 主内容区与卡片间距放宽一点，页面不再挤在一起 */
+html[data-vm-theme] .app-layout__main {
+  padding-bottom: 48px !important;
+}
+
+/* ---------- 8. 主题切换按钮 ---------- */
+
+.vm-theme-toggle {
+  display: grid;
+  place-items: center;
+  flex: none;
+  /* 顶栏 .app-header 是窗口拖拽区（-webkit-app-region: drag），
+     不声明 no-drag 的话真实鼠标点击会被系统当成拖窗口吃掉，按钮就"没反应" */
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  padding: 0;
+  border: 1px solid var(--vm-border);
+  border-radius: 12px;
+  background: var(--vm-accent-light);
+  color: var(--vm-accent-deep);
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.vm-theme-toggle:hover {
+  border-color: var(--vm-accent);
+  background: var(--vm-accent-soft);
+  color: var(--vm-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(47, 107, 255, 0.2);
+}
+
+.vm-theme-toggle svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* 登录页没有顶栏，按钮浮在右上角 */
+.page-login > .vm-theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 22px;
+  margin: 0;
+  background: var(--vm-card-bg);
+  box-shadow: var(--vm-shadow-soft);
+}
+
+/* ---------- 9. 动效与可访问性 ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ==========================================================================
+   10. 布局改造 v4 —— 改的是"结构"，不只是颜色
+   --------------------------------------------------------------------------
+   这一节由 vm-theme.js 配合完成，做四件事：
+     · 顶栏：品牌 + 面包屑 + 快速跳转搜索 + 刷新/主题图标按钮 + 用户胶囊
+     · 侧栏：菜单分区小标题、左侧竖条选中态、底部授权状态卡
+     · 工作台：四张指标卡合并成一条带分隔线的数据条
+     · 页面：主标题变成带下边框的页头，内容区留白统一
+   ========================================================================== */
+
+/* ---------- 10.1 顶栏 ---------- */
+
+.app-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  position: relative !important;
+  z-index: 40 !important;
+  height: 68px !important;
+  padding: 0 16px 0 22px !important;
+  margin: 0 0 22px !important;
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-xl) !important;
+  background: var(--vm-card-bg) !important;
+  box-shadow: var(--vm-shadow-soft) !important;
+}
+
+.app-header__brand {
+  flex: 0 0 auto !important;
+  min-width: 0 !important;
+}
+
+.app-header__titles {
+  min-width: 0 !important;
+}
+
+.app-header__name {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  color: var(--vm-text) !important;
+  background: none !important;
+  -webkit-text-fill-color: currentColor !important;
+  font-size: 1.02rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.02em !important;
+  white-space: nowrap !important;
+}
+
+.app-header__name::before {
+  content: '' !important;
+  display: block !important;
+  flex: none !important;
+  width: 7px !important;
+  height: 18px !important;
+  border-radius: 4px !important;
+  background: linear-gradient(180deg, var(--vm-accent) 0%, #7ab8ff 100%) !important;
+  box-shadow: 0 4px 12px rgba(47, 107, 255, 0.45) !important;
+}
+
+.vm-crumb {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex: 0 0 auto !important;
+  margin-left: 4px !important;
+  padding-left: 14px !important;
+  border-left: 1px solid var(--vm-border) !important;
+  color: var(--vm-text-tertiary) !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  -webkit-app-region: no-drag !important;
+  app-region: no-drag !important;
+}
+
+.vm-crumb__sep {
+  opacity: 0.65 !important;
+}
+
+.vm-crumb__cur {
+  color: var(--vm-text) !important;
+  font-weight: 700 !important;
+}
+
+/* 快速跳转 */
+.vm-quicknav {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex: 0 1 220px !important;
+  min-width: 132px !important;
+  height: 38px !important;
+  margin-left: auto !important;
+  padding: 0 13px !important;
+  border: 1px solid var(--vm-border) !important;
+  border-radius: 12px !important;
+  background: var(--vm-surface) !important;
+  -webkit-app-region: no-drag !important;
+  app-region: no-drag !important;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease,
+    background 0.18s ease !important;
+}
+
+.vm-quicknav:focus-within {
+  border-color: var(--vm-accent) !important;
+  background: var(--vm-card-bg) !important;
+  box-shadow: 0 0 0 3px var(--vm-accent-soft) !important;
+}
+
+.vm-quicknav__icon {
+  display: flex !important;
+  align-items: center !important;
+  flex: none !important;
+  color: var(--vm-text-tertiary) !important;
+}
+
+.vm-quicknav__icon svg {
+  width: 15px !important;
+  height: 15px !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 2 !important;
+  stroke-linecap: round !important;
+}
+
+.vm-quicknav__input {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  padding: 0 !important;
+  border: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  color: var(--vm-text) !important;
+  font-family: inherit !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+}
+
+.vm-quicknav__input::placeholder {
+  color: var(--vm-text-tertiary) !important;
+  font-weight: 500 !important;
+}
+
+.vm-quicknav__panel {
+  position: absolute !important;
+  top: calc(100% + 10px) !important;
+  right: 0 !important;
+  display: none !important;
+  width: 100% !important;
+  min-width: 248px !important;
+  max-height: 326px !important;
+  overflow: auto !important;
+  padding: 6px !important;
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-lg) !important;
+  background: var(--el-bg-color-overlay, var(--vm-card-bg)) !important;
+  box-shadow: var(--vm-shadow-card) !important;
+  z-index: 200 !important;
+  -webkit-app-region: no-drag !important;
+  app-region: no-drag !important;
+}
+
+.vm-quicknav--open .vm-quicknav__panel {
+  display: block !important;
+}
+
+.vm-quicknav__item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  padding: 9px 10px !important;
+  border-radius: 9px !important;
+  color: var(--vm-text-secondary) !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+}
+
+.vm-quicknav__item:hover,
+.vm-quicknav__item--active {
+  background: var(--vm-accent-light) !important;
+  color: var(--vm-accent-deep) !important;
+}
+
+.vm-quicknav__go {
+  color: var(--vm-text-tertiary) !important;
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+}
+
+.vm-quicknav__empty {
+  padding: 12px !important;
+  color: var(--vm-text-tertiary) !important;
+  font-size: 0.82rem !important;
+  text-align: center !important;
+}
+
+/* 图标按钮（刷新 / 主题） */
+.vm-icon-btn {
+  display: grid !important;
+  place-items: center !important;
+  flex: 0 0 auto !important;
+  width: 40px !important;
+  height: 40px !important;
+  padding: 0 !important;
+  border: 1px solid var(--vm-border) !important;
+  border-radius: 12px !important;
+  background: var(--vm-surface) !important;
+  color: var(--vm-text-secondary) !important;
+  cursor: pointer !important;
+  -webkit-app-region: no-drag !important;
+  app-region: no-drag !important;
+  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease,
+    transform 0.18s ease !important;
+}
+
+.vm-icon-btn:hover {
+  border-color: var(--vm-accent) !important;
+  background: var(--vm-accent-soft) !important;
+  color: var(--vm-accent) !important;
+  transform: translateY(-1px) !important;
+}
+
+.vm-icon-btn svg {
+  width: 18px !important;
+  height: 18px !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.8 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+.vm-theme-toggle {
+  margin-right: 0 !important;
+}
+
+/* ---------- 10.2 侧栏 ---------- */
+
+.app-layout {
+  --app-sidebar-inner-w: 244px !important;
+}
+
+.vm-nav-label {
+  margin: 14px 4px 6px !important;
+  padding: 0 8px !important;
+  color: rgba(255, 255, 255, 0.34) !important;
+  font-size: 0.7rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.16em !important;
+  white-space: nowrap !important;
+}
+
+.vm-nav-label:first-child {
+  margin-top: 2px !important;
+}
+
+.app-sidebar__link {
+  position: relative !important;
+}
+
+.app-sidebar__link--active,
+.app-sidebar__link.router-link-exact-active {
+  background: linear-gradient(
+    90deg,
+    rgba(47, 107, 255, 0.5) 0%,
+    rgba(47, 107, 255, 0.14) 100%
+  ) !important;
+  color: #fff !important;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.12) !important;
+}
+
+.app-sidebar__link--active::after,
+.app-sidebar__link.router-link-exact-active::after {
+  content: '' !important;
+  position: absolute !important;
+  left: -12px !important;
+  top: 50% !important;
+  width: 3px !important;
+  height: 22px !important;
+  border-radius: 0 3px 3px 0 !important;
+  background: var(--vm-accent) !important;
+  box-shadow: 0 0 12px rgba(77, 139, 255, 0.85) !important;
+  transform: translateY(-50%) !important;
+}
+
+.app-sidebar__link--active .app-sidebar__icon-wrap,
+.app-sidebar__link.router-link-exact-active .app-sidebar__icon-wrap {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #fff !important;
+}
+
+.vm-side-card {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 12px 0 6px !important;
+  padding: 10px !important;
+  border: 1px solid var(--vm-sidebar-border) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.vm-side-card__avatar {
+  display: grid !important;
+  place-items: center !important;
+  flex: none !important;
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 11px !important;
+  background: linear-gradient(135deg, var(--vm-accent) 0%, #7ab8ff 100%) !important;
+  color: #fff !important;
+  font-size: 0.9rem !important;
+  font-weight: 900 !important;
+  box-shadow: 0 6px 16px rgba(47, 107, 255, 0.42) !important;
+}
+
+.vm-side-card__meta {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  min-width: 0 !important;
+}
+
+.vm-side-card__title {
+  color: #fff !important;
+  font-size: 0.84rem !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+}
+
+.vm-side-card__sub {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  color: var(--vm-sidebar-text) !important;
+  font-size: 0.72rem !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+}
+
+.vm-dot {
+  display: block !important;
+  flex: none !important;
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: #33d6a6 !important;
+  box-shadow: 0 0 8px rgba(51, 214, 166, 0.9) !important;
+}
+
+/* 侧栏折起来时，附加件一起收 */
+html[data-vm-nav='mini'] .vm-nav-label,
+html[data-vm-nav='mini'] .vm-side-card__meta {
+  display: none !important;
+}
+
+html[data-vm-nav='mini'] .app-sidebar__link--active::after,
+html[data-vm-nav='mini'] .app-sidebar__link.router-link-exact-active::after {
+  display: none !important;
+}
+
+html[data-vm-nav='mini'] .vm-side-card {
+  justify-content: center !important;
+  padding: 8px !important;
+}
+
+html[data-vm-nav='mini'] .app-sidebar__pill--main {
+  padding: 14px 10px 10px !important;
+}
+
+html[data-vm-nav='mini'] .app-sidebar__link,
+html[data-vm-nav='mini'] .app-sidebar__tool {
+  padding: 0 6px !important;
+}
+
+html[data-vm-nav='mini'] .app-sidebar__toggle {
+  margin-left: 2px !important;
+}
+
+/* ---------- 10.3 工作台数据条 ---------- */
+
+.workbench-overview {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 0 !important;
+  margin-bottom: 22px !important;
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-xl) !important;
+  background: var(--vm-card-bg) !important;
+  box-shadow: var(--vm-shadow-card) !important;
+  overflow: hidden !important;
+}
+
+html[data-vm-theme] .workbench-stat {
+  position: relative !important;
+  overflow: hidden !important;
+  padding: 22px 22px 20px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+  transition: background 0.18s ease !important;
+}
+
+html[data-vm-theme] .workbench-stat:hover {
+  border: 0 !important;
+  background: var(--vm-accent-light) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+html[data-vm-theme] .workbench-stat + .workbench-stat {
+  border-left: 1px solid var(--vm-border) !important;
+}
+
+/* 每条顶部一条语义色细线，代替原来的左侧竖条 */
+html[data-vm-theme] .workbench-stat::after {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+  bottom: auto !important;
+  width: auto !important;
+  height: 3px !important;
+  border-radius: 0 !important;
+  background: var(--vm-accent) !important;
+  opacity: 0.9 !important;
+}
+
+html[data-vm-theme] .workbench-stat--green::after {
+  background: var(--vm-success) !important;
+}
+
+html[data-vm-theme] .workbench-stat--amber::after {
+  background: var(--vm-warning) !important;
+}
+
+html[data-vm-theme] .workbench-stat--rose::after {
+  background: var(--vm-danger) !important;
+}
+
+/* ---------- 10.4 页面骨架 ---------- */
+
+:is(.workbench-page__title, .account-page__title, .page-shell__title) {
+  width: 100% !important;
+  margin: 0 0 20px !important;
+  padding-bottom: 16px !important;
+  border-bottom: 1px solid var(--vm-border) !important;
+}
+
+:is(.workbench-page__title, .account-page__title, .page-shell__title)::before {
+  top: calc(50% - 8px) !important;
+}
+
+html[data-vm-theme] .app-layout__main {
+  padding: 0 30px 48px 0 !important;
+}
+
+/* ---------- 10.5 窄窗口 ---------- */
+
+/* 其余几页的指标行也统一成"一条数据条"，不再是外面套一层灰底 */
+html[data-vm-theme] :is(.assets-stats, .rel-sched__stats, .pub-acct__stats) {
+  gap: 0 !important;
+  padding: 0 !important;
+  border: 1px solid var(--vm-border) !important;
+  border-radius: var(--vm-radius-xl) !important;
+  background: var(--vm-card-bg) !important;
+  box-shadow: var(--vm-shadow-card) !important;
+  overflow: hidden !important;
+}
+
+html[data-vm-theme] :is(.assets-stats__item, .rel-sched__stat, .pub-acct__stat) {
+  padding: 22px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+  transition: background 0.18s ease !important;
+}
+
+html[data-vm-theme] :is(.assets-stats__item, .rel-sched__stat, .pub-acct__stat):hover {
+  border: 0 !important;
+  background: var(--vm-accent-light) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+html[data-vm-theme]
+  :is(.assets-stats__item, .rel-sched__stat, .pub-acct__stat)
+  + :is(.assets-stats__item, .rel-sched__stat, .pub-acct__stat) {
+  border-left: 1px solid var(--vm-border) !important;
+}
+
+@media (max-width: 1240px) {
+  .vm-crumb {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1060px) {
+  .vm-quicknav {
+    flex-basis: 150px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .vm-quicknav {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   12. 外壳结构改造 v5 —— 通栏品牌条 + 通高侧栏
+   --------------------------------------------------------------------------
+   改之前是三块互不相干的悬浮卡片：
+       左上角一个白底 logo 卡  +  右边一条圆角顶栏  +  下面一块内容区
+   连系统自带的白色标题栏，屏幕左上角一共叠了三层品牌信息。
+
+   这一节把结构换成"一条通栏品牌条 + 一条通高侧栏"：
+
+       ┌──────────────────────────────────────────────────────────┐
+       │ [logo] 极速混剪智能体 │ 首页 / 素材中心   [搜索][⟳][☾][用户] │ ← 通栏 64px
+       ├──────────┬───────────────────────────────────────────────┤
+       │ 侧栏 244 │  内容区（左右各 24px 内边距）                  │
+       │  创作    │                                               │
+       │   ...    │                                               │
+       └──────────┴───────────────────────────────────────────────┘
+
+   logo 从侧栏搬到品牌条最左边（侧栏顶部那个白底卡片整个去掉），
+   侧栏不再是悬浮圆角块，而是贴着窗口左边、从品牌条下沿一直落到窗口底部的通高深色栏。
+   ========================================================================== */
+
+.app-layout {
+  --vm-topbar-h: 64px;
+  --vm-rail-w: 244px;
+}
+
+/* 折叠状态认客户端自己的类。不要改成"按量出来的宽度反推"——
+   那样会死循环：一折叠就把侧栏宽度也锁成窄的，之后再也展不开。 */
+.app-layout--sidebar-collapsed {
+  --vm-rail-w: 72px;
+}
+
+/* 主列让出侧栏宽度；自身不裁切，通栏顶栏才能往左伸出整窗宽 */
+.app-layout__main-column {
+  margin-left: var(--vm-rail-w) !important;
+  padding-right: 0 !important;
+  overflow: visible !important;
+}
+
+/* 品牌条：贴窗口左上右三边，只留一条下边框 */
+.app-header {
+  height: var(--vm-topbar-h) !important;
+  margin: 0 0 22px calc(-1 * var(--vm-rail-w)) !important;
+  padding: 0 22px 0 20px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--vm-border) !important;
+  border-radius: 0 !important;
+  background: var(--vm-card-bg) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.app-header__brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 11px !important;
+  flex: 0 0 auto !important;
+  min-width: 0 !important;
+}
+
+.vm-brand__mark {
+  display: block !important;
+  flex: none !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 10px !important;
+  object-fit: contain !important;
+}
+
+/* 万一 app-icon.png 取不到，退回侧栏那张字标，别留个破图 */
+.vm-brand__mark--wide {
+  width: auto !important;
+  max-width: 150px !important;
+  height: 30px !important;
+}
+
+/* 系统自带的标题栏已经写着软件名了，品牌条里再写一遍就是叠两层，这里只留 logo */
+.app-header__titles {
+  display: none !important;
+}
+
+/* 侧栏：贴左、贴底、通高，不再是悬浮卡片 */
+.app-sidebar {
+  top: var(--vm-topbar-h) !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  gap: 0 !important;
+  border-radius: 0 !important;
+  border-right: 1px solid var(--vm-sidebar-border) !important;
+  background: var(--vm-sidebar-bg) !important;
+  box-shadow: none !important;
+}
+
+.app-sidebar {
+  width: var(--vm-rail-w) !important;
+}
+
+/* logo 已经搬到品牌条，侧栏顶部不再占位 */
+.app-sidebar__logo {
+  display: none !important;
+}
+
+.app-sidebar__pill,
+.app-sidebar__pill--main {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.app-sidebar__pill--main {
+  padding: 18px 14px 12px 16px !important;
+}
+
+.app-sidebar__link--active::after,
+.app-sidebar__link.router-link-exact-active::after {
+  left: -16px !important;
+}
+
+/* 侧栏底部的"本地授权 / 已验证"状态块整体去掉：
+   授权状态在激活页和系统设置里都能看到，侧栏常驻反而占地方。
+   vm-theme.js 已经不再插入这个节点，这里再兜一层，老缓存里的 DOM 也盖得住。 */
+.vm-side-card {
+  display: none !important;
+  margin: 10px 0 0 !important;
+  padding: 12px 4px !important;
+  border: 0 !important;
+  border-top: 1px solid var(--vm-sidebar-border) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+/* 内容区左右对称留白：原版左边是 0，页面标题直接贴着侧栏 */
+html[data-vm-theme] .app-layout__main {
+  padding: 0 24px 44px 24px !important;
+}
+
+/* ==========================================================================
+   13. 内容区重排（v6）
+   --------------------------------------------------------------------------
+   侧栏和顶栏已经定了，这一节只动"内容区"。
+
+   v5 的问题是内容区仍然是"一个大盒子（.page-shell__body）里装若干小盒子"：
+   页头在盒子外面、盒子自带 24px 内边距和圆角，于是每一页都是三层嵌套
+   （外壳 → 区块 → 子区块），区块头的字号/高度/底色各不相同。
+
+   v6 做四件事：
+     13.1  拆掉外壳盒子，页面区块直接排在画布上
+     13.2  页头改成通栏、随滚动粘顶的一条，全站统一
+     13.3  区块卡片统一成 12px 圆角 / 1px 边框 / 无阴影 / 48px 卡头
+     13.4  说明条从"蓝底卡片"降级成"左侧竖线的引用行"
+     13.5  多栏页面重排（账号档案、发布排期、镜头剪辑）
+   ========================================================================== */
+
+/* ---------- 13.1 拆掉外壳盒子 ---------- */
+
+html[data-vm-theme] :is(.page-shell, .workbench-page, .video-mix-page) {
+  max-width: none !important;
+  width: 100% !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+html[data-vm-theme] .page-shell__body {
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* 内容区从"堆盒子"改成"竖直流 + 统一 18px 节奏"：
+   原本每个区块各带各的 margin（有 18 有 22 有 30），这里一次性拉平。 */
+html[data-vm-theme] :is(
+  .page-shell__body,
+  .batch-generation-page,
+  .assets-center,
+  .system-settings-page,
+  .settings-panel,
+  .pub-acct
+) {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 18px !important;
+}
+
+html[data-vm-theme] :is(
+  .page-shell__body,
+  .batch-generation-page,
+  .assets-center,
+  .system-settings-page,
+  .settings-panel,
+  .pub-acct
+) > * {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* ---------- 13.2 通栏页头，随滚动粘顶 ---------- */
+
+html[data-vm-theme] :is(.page-shell__title, .workbench-page__head) {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 30 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-height: 56px !important;
+  /* 左右各拉出内容区那 24px 内边距，发丝线顶到侧栏和窗口右边缘 */
+  margin: 0 -24px 26px !important;
+  padding: 15px 24px 13px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--vm-border) !important;
+  background: var(--vm-bg) !important;
+  box-shadow: none !important;
+}
+
+html[data-vm-theme] :is(.page-shell__title, .workbench-page__title) {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  border: 0 !important;
+  color: var(--vm-text) !important;
+  font-size: 1.4rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.2 !important;
+}
+
+/* 注意：这里不能再写 margin: 0 / padding: 0。
+   .page-shell__title 既是"页头"又是"标题文字"，两边都会命中；
+   这一条排在 13.2 后面、优先级还一样，一写就把页头那 26px 下边距和
+   24px 左右内边距清零了 —— 表现就是"页头底下贴着内容"，
+   而且只有工作台（页头是 .workbench-page__head、文字在里层）看着正常。 */
+html[data-vm-theme] .workbench-page__title {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* 页头那根渐变竖条是绝对定位的，改成 flex 子项，跟着文字垂直居中 */
+html[data-vm-theme] :is(.page-shell__title, .workbench-page__title)::before {
+  position: static !important;
+  flex: 0 0 auto !important;
+  width: 4px !important;
+  height: 20px !important;
+  transform: none !important;
+}
+
+/* 页头右侧可以挂一行灰色副标题或页面级操作 */
+html[data-vm-theme] :is(.page-shell__title, .workbench-page__head) > .vm-pagehead__meta {
+  margin-left: auto !important;
+  color: var(--vm-text-tertiary) !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+}
+
+/* ---------- 13.3 区块卡片统一 ---------- */
+
+/* 一处定义、一处取值：12px 圆角、1px 边框、无阴影。
+   注意不要把这些类再互相嵌套（.settings-panel 这类纯容器保持透明）。 */
+html[data-vm-theme] :is(
+  .el-card,
+  .settings-card,
+  .assets-section,
+  .mix-task-panel,
+  .storage-settings-card,
+  .batch-generation-page__storage,
+  .rel-sched__section,
+  .rel-sched-preview,
+  .account-page__editor,
+  .shot-edit-unified__card,
+  .shot-edit-unified__side-config,
+  .workbench-panel,
+  .workbench-quick,
+  .workbench-account-status
+) {
+  border: 1px solid var(--vm-border) !important;
+  border-radius: 12px !important;
+  background: var(--vm-card-bg) !important;
+  box-shadow: none !important;
+}
+
+/* 纯布局容器不再自己画一层卡片，避免"盒子里再套盒子" */
+html[data-vm-theme] :is(.settings-panel, .account-page__profiles, .rel-sched, .batch-generation-page) {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* 卡头：统一 48px、标题 0.92rem、发丝线压底 */
+html[data-vm-theme] :is(.el-card__header, .assets-section__head, .account-page__head, .rel-sched__section-head) {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  min-height: 48px !important;
+  margin: 0 !important;
+  padding: 0 18px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--vm-border-light) !important;
+  background: transparent !important;
+}
+
+html[data-vm-theme] :is(.el-card__body) {
+  padding: 18px !important;
+}
+
+/* 卡片里的分区小标题（快捷入口 / 通用预览 / 成片预览 / 成品预览）：同一种卡头语言 */
+html[data-vm-theme] :is(
+  .workbench-quick__title,
+  .rel-sched-preview__title,
+  .account-page__preview-title,
+  .workbench-panel__head,
+  .assets-section__title,
+  .rel-sched__section-title
+) {
+  margin: 0 !important;
+  padding: 0 0 12px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--vm-border-light) !important;
+  color: var(--vm-text) !important;
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* 「快捷入口」的卡头下面不留压线：这个区块本来就没有可"压下"的内容区，
+   一条线卡在标题和第一排图标之间只会把整块切碎。 */
+html[data-vm-theme] .workbench-quick__title {
+  padding-bottom: 0 !important;
+  border-bottom: 0 !important;
+}
+
+/* 往下沉一层的子区块：比卡片暗一档，用凹陷感代替再加一圈边框 */
+html[data-vm-theme] :is(
+  .account-page__preview,
+  .mix-task-panel__preview,
+  .mix-task-panel__preview-box
+) {
+  border: 1px solid var(--vm-border-light) !important;
+  border-radius: 10px !important;
+  background: var(--vm-surface) !important;
+  box-shadow: none !important;
+}
+
+/* 播放区（通用预览 / 成片预览）是"视频画布"，两种主题下都保持深色。
+   客户端本来就把底色写成 rgb(15,23,42)，里面那行提示是白色半透明——
+   之前把它当普通子面板刷成 var(--vm-surface)，白天模式下变成白底白字，
+   提示直接看不见。 */
+html[data-vm-theme] :is(.rel-sched-preview__box, .mix-task-panel__preview-inner) {
+  border: 1px solid var(--vm-border-light) !important;
+  border-radius: 10px !important;
+  background: #0f172a !important;
+  box-shadow: none !important;
+}
+
+/* 指标数据条：跟卡片同一种圆角，去掉阴影 */
+html[data-vm-theme] :is(.workbench-overview, .assets-stats, .rel-sched__stats, .pub-acct__stats) {
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+
+/* ---------- 13.4 说明条：从"蓝底卡片"改成"引用行" ---------- */
+
+html[data-vm-theme] :is(
+  .vm-intro-banner,
+  .assets-center__intro,
+  .rel-sched__intro,
+  .pub-acct__intro,
+  .batch-generation-page__hint,
+  .video-mix-page__hint
+) {
+  margin: 0 !important;
+  padding: 10px 16px !important;
+  border: 0 !important;
+  border-left: 3px solid var(--vm-accent) !important;
+  border-radius: 0 8px 8px 0 !important;
+  background: var(--vm-accent-light) !important;
+  color: var(--vm-text-secondary) !important;
+  font-size: 0.84rem !important;
+  line-height: 1.7 !important;
+}
+
+/* 左边已经有竖线了，圆形的 i 图标就是多余的 */
+html[data-vm-theme] :is(
+  .vm-intro-banner,
+  .assets-center__intro,
+  .rel-sched__intro,
+  .pub-acct__intro,
+  .batch-generation-page__hint,
+  .video-mix-page__hint
+)::before {
+  display: none !important;
+}
+
+/* ---------- 13.5 多栏页面重排 ---------- */
+
+/* 账号档案：左栏从"一张卡片"变成"贴着分隔线的列表栏"，
+   条目从卡片改成列表行（选中项左侧一根竖条），右边编辑器成为唯一的卡片。 */
+html[data-vm-theme] .account-page {
+  display: grid !important;
+  grid-template-columns: 292px minmax(0, 1fr) !important;
+  gap: 0 !important;
+  align-items: start !important;
+}
+
+html[data-vm-theme] .account-page__profiles {
+  position: sticky !important;
+  top: 74px !important;
+  align-self: start !important;
+  max-height: calc(100vh - 200px) !important;
+  overflow-y: auto !important;
+  padding: 2px 18px 8px 0 !important;
+  /* 只留右边一条分隔线：这里要写死四边的宽度，否则客户端原来的整圈边框还会在 */
+  border-width: 0 1px 0 0 !important;
+  border-style: solid !important;
+  border-color: var(--vm-border) !important;
+  border-radius: 0 !important;
+}
+
+html[data-vm-theme] .account-page__profiles-head {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 2 !important;
+  padding: 2px 0 12px !important;
+  background: var(--vm-bg) !important;
+}
+
+html[data-vm-theme] .account-page__profile-item {
+  width: 100% !important;
+  margin: 0 0 4px !important;
+  padding: 11px 14px !important;
+  border: 0 !important;
+  border-left: 3px solid transparent !important;
+  border-radius: 0 10px 10px 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  text-align: left !important;
+  transition: background 0.16s ease, border-color 0.16s ease !important;
+}
+
+html[data-vm-theme] .account-page__profile-item:hover {
+  background: var(--vm-accent-light) !important;
+}
+
+html[data-vm-theme] .account-page__profile-item--active {
+  border-left-color: var(--vm-accent) !important;
+  background: var(--vm-accent-light) !important;
+}
+
+html[data-vm-theme] .account-page__editor {
+  /* 左边留出和列表栏的间距，卡片自己立起来：白底下表单才看得清 */
+  margin-left: 22px !important;
+  padding: 18px 20px 20px !important;
+  border: 1px solid var(--vm-border) !important;
+  border-radius: 12px !important;
+  background: var(--vm-card-bg) !important;
+  box-shadow: none !important;
+}
+
+html[data-vm-theme] .account-page__editor > :is(.account-page__head, .account-page__name-row, .account-page__hint, .account-page__form, .account-page__preview) {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+html[data-vm-theme] .account-page__head {
+  padding: 0 0 14px !important;
+}
+
+/* 编辑器已经是白卡片了，左栏不用再拉一条竖线：两条线挨着只会显脏 */
+html[data-vm-theme] .account-page__profiles {
+  border-width: 0 !important;
+}
+
+/* 卡头下面那条发丝线就够了。标题自己带的横线、以及「档案名称」上面那条
+   压在说明文字下面的横线，都是多出来的，去掉。 */
+html[data-vm-theme] .account-page__title {
+  border-bottom: 0 !important;
+}
+
+html[data-vm-theme] .account-page__name-row {
+  border-top: 0 !important;
+}
+
+/* 卡片里的预览盒改成"往下沉一档"的内嵌面板，白底套白底看不出层次 */
+html[data-vm-theme] .account-page__preview {
+  border: 1px solid var(--vm-border-light) !important;
+  border-radius: 10px !important;
+  background: var(--vm-bg) !important;
+}
+
+/* 发布排期：右侧预览栏粘住，别跟着列表滚走 */
+html[data-vm-theme] .rel-sched-layout {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 320px !important;
+  gap: 20px !important;
+  align-items: start !important;
+}
+
+html[data-vm-theme] .rel-sched {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 18px !important;
+  width: 100% !important;
+}
+
+html[data-vm-theme] .rel-sched > * {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+html[data-vm-theme] .rel-sched-preview {
+  position: sticky !important;
+  top: 74px !important;
+  /* 宽窗口下客户端把这块做成了"钉在窗口右侧、垂直居中"的悬浮面板
+     （position:fixed; top:50%; right:24px; transform:translateY(-50%)）。
+     这里只盖 position 是不够的——transform: translateY(-50%) 还在，
+     面板会被抬高自身高度的一半，标题直接跑出可视区。四个属性必须一起改。 */
+  right: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  width: 320px !important;
+  max-height: calc(100vh - 150px) !important;
+  overflow: auto !important;
+}
+
+/* 上面那块不再悬浮了，列表也就不需要为它留出 320px 的右边距 */
+html[data-vm-theme] .rel-sched {
+  margin-right: 0 !important;
+}
+
+/* 镜头剪辑：三栏宽度重排，中间栏吃掉剩余空间 */
+html[data-vm-theme] .shot-edit-unified {
+  grid-template-columns: 300px minmax(0, 1fr) 320px !important;
+  gap: 18px !important;
+  align-items: start !important;
+}
+
+html[data-vm-theme] .shot-edit-unified__card {
+  padding: 16px !important;
+}
+
+/* 工作台：左右两栏的间距跟别处统一 */
+html[data-vm-theme] .workbench-layout {
+  gap: 18px !important;
+}
+
+html[data-vm-theme] .workbench-aside {
+  gap: 18px !important;
+}
+
+/* ---------- 13.6 列表条目：往下沉一档，不再和区块抢"卡片" ---------- */
+
+/* 区块卡片里的小条目（素材文件夹、排期条目）：比卡片暗一档 + 细边框，
+   一眼能分出"这是区块里的一条"，而不是又一层卡片。 */
+html[data-vm-theme] :is(.assets-card, .rel-sched-item) {
+  border: 1px solid var(--vm-border-light) !important;
+  border-radius: 10px !important;
+  background: var(--vm-surface) !important;
+  box-shadow: none !important;
+}
+
+html[data-vm-theme] .assets-cards {
+  gap: 16px !important;
+}
+
+/* ---------- 13.7 卡头里的工具条 ---------- */
+
+/* 任务中心的"全部开始合成"原来是裸的，按钮比工具条高，会顶出卡片圆角 */
+html[data-vm-theme] .mix-task-panel__toolbar {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-height: 52px !important;
+  margin: 0 !important;
+  padding: 10px 18px !important;
+  border-bottom: 1px solid var(--vm-border-light) !important;
+}
+
+/* 账号档案左栏的表头：页面标题已经写着"账号档案"，这里只留条数 */
+html[data-vm-theme] .account-page__profiles-title {
+  display: none !important;
+}
+
+html[data-vm-theme] .account-page__profiles-subtitle {
+  margin: 0 !important;
+  color: var(--vm-text-tertiary) !important;
+  font-size: 0.78rem !important;
+}
+
+/* ---------- 13.8 客户端写死的深色文字（暗黑下补对比度） ----------
+   客户端有些提示文字是把颜色写在 style="" 里的（rgba(26,26,26,0.6) 这种），
+   暗黑主题下对比度只有 1:1，等于看不见。属性选择器能直接匹配内联样式，
+   这里用 !important 盖过它；只改 color，不碰任何 background。 */
+
+html[data-vm-theme='dark'] :is(
+  [style*='color: rgba(26, 26, 26'],
+  [style*='color: rgba(0, 0, 0'],
+  [style*='color: rgb(26, 26, 26'],
+  [style*='color: #1a1a1a'],
+  [style*='color: #333'],
+  [style*='color: #666']
+) {
+  color: var(--vm-text-secondary) !important;
+}
+
+/* 同一批提示文字写在客户端 CSS 里的那几个 */
+html[data-vm-theme='dark'] :is(
+  .settings-panel__collapse-sub,
+  .system-settings-page__logs-sub,
+  .settings-clone-entry__hint
+) {
+  color: var(--vm-text-tertiary) !important;
+}
+
+/* 「自定义模板」那个紫色按钮：亮紫色在深色底上只有 2.9:1，暗黑下换浅一档 */
+html[data-vm-theme='dark'] .shot-tpl-panel__cat--custom {
+  color: #b3a4ff !important;
+}
+
+/* ---------- 13.9 白天模式下的几处对比度 ----------
+   这几条是"白天模式下字太浅"的对照，跟客户端原样无关，
+   都是本套皮肤自己引入的颜色，所以放在皮肤里改。 */
+
+/* 面包屑最左边那个"首页"用了最浅一档灰，压在浅色画布上只有 2.5:1 */
+html[data-vm-theme='light'] .vm-crumb__root {
+  color: var(--vm-text-secondary) !important;
+}
+
+/* 账号档案左栏的"共 3 个"和面包屑同理 */
+html[data-vm-theme='light'] .account-page__profiles-subtitle {
+  color: var(--vm-text-secondary) !important;
+}
+
+/* 橙色语义胶囊：白底上用 247,144,9 只有 2.2:1，浅底上换深一档的橙 */
+html[data-vm-theme='light'] :is(.el-tag--warning, .el-tag--warning .el-tag__content) {
+  color: #b54708 !important;
+}
+
+/* 绿色语义胶囊同理，12,183,106 压在自己的浅绿底上只有 2.4:1 */
+html[data-vm-theme='light'] :is(.el-tag--success, .el-tag--success .el-tag__content) {
+  color: #047857 !important;
+}
+
+/* 智能配音那句"还没配 Key"的橙色提示，白底上只有 2.2:1。
+   这里刻意不把提示原文抄进注释：verify-brand.ps1 是靠数这个字符串的出现次数
+   来确认提示确实加到了界面里，注释里抄一份会把计数带偏。 */
+html[data-vm-theme='light'] .create-actions-card__hint {
+  color: #b54708 !important;
+}
+
+/* ---------- 13.10 工作台：卡片里的标题和内容之间留出呼吸位 ---------- */
+
+/* 「最近任务」的卡头下面原来是 0 间距：卡头自己的 margin-bottom 被后面
+   那条"卡片小标题"规则（margin: 0 !important）重置掉了，而客户端的任务行
+   只给第二条起加了 16px 上内边距，第一条没有 —— 所以第一行的"待合成"
+   紧贴着卡头那条发丝线，跟后面的行距也对不齐。
+   这里把间距还给卡头，第一行和后面几行的节奏就一致了。 */
+html[data-vm-theme] .workbench-panel__head {
+  margin-bottom: 16px !important;
+}
+
+/* 「快捷入口」的标题和第一排图标原来贴在一起（标题 margin-bottom 是 0） */
+html[data-vm-theme] .workbench-quick__title {
+  margin-bottom: 14px !important;
+}
+
+/* 同类问题还出现在素材中心 / 发布排期的区块卡上：它们的卡头也是
+   48px 横条 + 底部发丝线（见 13.3），发丝线下面直接就是卡片或列表。
+   统一补 14px，跟「最近任务」一个节奏。 */
+html[data-vm-theme] :is(.assets-section__head, .rel-sched__section-head) {
+  margin-bottom: 14px !important;
+}
+
+/* 卡片里的分区小标题 + 下面的预览框（通用预览 / 成片预览 / 档案预览）
+   原来也是贴着画的，同样留一口气 */
+html[data-vm-theme] :is(
+  .rel-sched-preview__title,
+  .account-page__preview-title,
+  .mix-task-panel__preview-head
+) {
+  margin-bottom: 12px !important;
+}

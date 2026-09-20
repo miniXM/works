@@ -1,0 +1,47 @@
+/* ==========================================================================
+   顶栏品牌位（左上角那块）
+   --------------------------------------------------------------------------
+ vm-theme.js 把顶栏的品牌位换成了"横版字标"（长方形 logo），
+   这里负责它的尺寸：两种主题都是透明底，白天沿用字标本来的深蓝，
+   暗黑把字标整张刷成白色（原文是深蓝，在深色顶栏上看不见）。
+   ========================================================================== */
+
+/* ---------- 品牌位与左侧菜单居中对齐 ----------
+   顶栏是通栏的（margin-left 负值把主列让出的侧栏宽度又拉回来），左内边距 20px。
+   把品牌位做成一整条"和侧栏同宽"的条，内容居中，logo 的中心就落在侧栏中线上了；
+   侧栏折叠时 --sk-rail-w 变 72px，这里会自动跟着变，不用再改。
+   -20px 是为了抵消顶栏的左内边距（顶栏 padding 左边是 20px，见整层皮肤里的 .app-header）。 */
+.app-header__brand {
+  box-sizing: border-box !important;
+  width: var(--sk-rail-w) !important;
+  margin-left: -20px !important;
+  padding: 0 !important;
+  justify-content: center !important;
+}
+
+/* 侧栏折叠成窄条时，logo 跟着收小，免得顶出侧栏 */
+.app-layout--sidebar-collapsed .vm-brand__mark--wide {
+  height: 22px !important;
+  max-width: 68px !important;
+}
+
+.vm-brand__mark--wide {
+  width: auto !important;
+  max-width: 180px !important;
+  height: 32px !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+
+html[data-vm-theme='dark'] .vm-brand__mark--wide {
+  /* 暗黑：不要浅色卡片，透明底 + 白色字标。
+     brightness(0) 先把整张图压成纯黑（alpha 保留），invert(1) 再翻成纯白，
+     这样深蓝的字标在深色顶栏上就变成白色，形状不变。 */
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  filter: brightness(0) invert(1) !important;
+}

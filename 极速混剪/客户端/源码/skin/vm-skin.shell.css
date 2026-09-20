@@ -1,0 +1,1000 @@
+/* ---------- 1. 设计令牌 ---------- */
+:root {
+
+  /* 页面与容器 */
+  --sk-bg: #eceff7;
+  --sk-surface: #ffffff;
+  --sk-card-bg: #ffffff;
+  --sk-text: #0f172a;
+  --sk-text-secondary: #5a6780;
+  --sk-text-tertiary: #94a3b8;
+  --sk-border: rgba(15, 23, 42, 0.10);
+  --sk-border-light: rgba(15, 23, 42, 0.05);
+
+  /* 主色 */
+  --sk-accent: #2f6bff;
+  --sk-accent-deep: #1f56e0;
+  --sk-accent-soft: #e8efff;
+  --sk-accent-light: #f4f7ff;
+  --sk-primary: #0f172a;
+
+  /* 圆角 */
+  --sk-radius-sm: 8px;
+  --sk-radius-md: 10px;
+  --sk-radius-lg: 14px;
+  --sk-radius-xl: 18px;
+  --sk-radius-pill: 999px;
+
+  /* 阴影 */
+  --sk-shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 10px 28px rgba(15, 23, 42, 0.06);
+  --sk-shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.04), 0 6px 18px rgba(15, 23, 42, 0.05);
+  --sk-shadow-hover: 0 12px 32px rgba(47, 107, 255, 0.18);
+
+  /* 侧栏（两种主题下都是深色） */
+  --sk-sidebar-bg: linear-gradient(180deg, #121f38 0%, #0c1628 100%);
+  --sk-sidebar-border: rgba(255, 255, 255, 0.07);
+  --sk-sidebar-text: #a9b7d0;
+  --sk-sidebar-text-hover: #ffffff;
+  --sk-sidebar-active-bg: linear-gradient(135deg, #2f6bff 0%, #4d8bff 100%);
+  --sk-sidebar-icon-bg: rgba(255, 255, 255, 0.06);
+
+  /* 语义色 */
+  --sk-success: #12b76a;
+  --sk-success-soft: #e6f7ef;
+  --sk-warning: #f79009;
+  --sk-warning-soft: #fef4e6;
+  --sk-danger: #f04438;
+  --sk-danger-soft: #fdeceb;
+  --sk-info: #2f6bff;
+  --sk-info-soft: #e8efff;
+
+  /* Element Plus 令牌 */
+
+  color-scheme: light;
+}
+html[data-vm-theme='dark'] {
+
+  --sk-bg: #080e1a;
+  --sk-surface: #0f1729;
+  --sk-card-bg: #111a2e;
+  --sk-text: #e8eefb;
+  --sk-text-secondary: #9aa8c2;
+  --sk-text-tertiary: #6b7a99;
+  --sk-border: rgba(255, 255, 255, 0.09);
+  --sk-border-light: rgba(255, 255, 255, 0.06);
+
+  --sk-accent: #4d8bff;
+  --sk-accent-deep: #7fadff;
+  --sk-accent-soft: rgba(77, 139, 255, 0.16);
+  --sk-accent-light: rgba(77, 139, 255, 0.09);
+  --sk-primary: #e8eefb;
+
+  --sk-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 14px 36px rgba(0, 0, 0, 0.35);
+  --sk-shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 22px rgba(0, 0, 0, 0.3);
+  --sk-shadow-hover: 0 16px 40px rgba(77, 139, 255, 0.28);
+
+  --sk-sidebar-bg: linear-gradient(180deg, #0c1526 0%, #070c16 100%);
+  --sk-sidebar-border: rgba(255, 255, 255, 0.06);
+  --sk-sidebar-text: #93a2bd;
+  --sk-sidebar-text-hover: #ffffff;
+  --sk-sidebar-active-bg: linear-gradient(135deg, #3f7dff 0%, #5f9bff 100%);
+  --sk-sidebar-icon-bg: rgba(255, 255, 255, 0.05);
+
+  --sk-success: #32d583;
+  --sk-success-soft: rgba(50, 213, 131, 0.14);
+  --sk-warning: #fdb022;
+  --sk-warning-soft: rgba(253, 176, 34, 0.14);
+  --sk-danger: #ff6b6b;
+  --sk-danger-soft: rgba(255, 107, 107, 0.14);
+  --sk-info: #4d8bff;
+  --sk-info-soft: rgba(77, 139, 255, 0.14);
+
+  color-scheme: dark;
+}
+/* 启动屏（index.html 里的内联骨架）：深浅两套主题下都不能是白卡片 */
+.vm-startup {
+
+  color: var(--sk-text) !important;
+}
+.vm-startup__card {
+
+  border: 1px solid var(--sk-border) !important;
+  background: var(--sk-card-bg) !important;
+  box-shadow: var(--sk-shadow-card) !important;
+}
+.vm-startup__brand {
+
+  background: linear-gradient(120deg, var(--sk-text) 0%, var(--sk-accent) 130%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.vm-startup__hint {
+
+  color: var(--sk-text-secondary) !important;
+}
+.vm-startup__bar {
+
+  background: var(--sk-border-light) !important;
+}
+.vm-startup__bar::after {
+
+  background: linear-gradient(90deg, var(--sk-accent), #7ab8ff) !important;
+}
+/* ---------- 3. 外壳：侧栏 / 顶栏 / 内容区 ---------- */
+.app-layout {
+
+  --app-sidebar-gap: 18px;
+  --app-sidebar-inner-w: 224px;
+  --app-sidebar-inner-collapsed: 76px;
+}
+.app-layout__main {
+
+  padding: 0 26px 44px 0 !important;
+}
+.app-header {
+
+  box-sizing: border-box;
+  height: 62px !important;
+  margin: 0 0 20px !important;
+  padding: 0 18px 0 24px !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius-xl) !important;
+  background: var(--sk-card-bg) !important;
+  box-shadow: var(--sk-shadow-soft) !important;
+  backdrop-filter: blur(18px) saturate(1.4);
+}
+.app-header__name {
+
+  color: var(--sk-text) !important;
+  background: none !important;
+  -webkit-text-fill-color: currentColor !important;
+  font-size: 1.32rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.01em !important;
+}
+.app-header__user {
+
+  gap: 8px !important;
+  /* 左边原来是给 30px 圆形头像留的位置，头像去掉后左右对称 */
+  padding: 4px 12px !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius-pill) !important;
+  background: var(--sk-surface) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.app-header__user:hover {
+
+  border-color: var(--sk-accent) !important;
+  box-shadow: 0 6px 18px rgba(47, 107, 255, 0.16) !important;
+  transform: translateY(-1px);
+}
+/* 顶栏用户胶囊前面那个纯色圆块（客户端写死的渐变 div，里面没有字母/头像图），
+   客户要求去掉。胶囊里只留"欢迎登录"和版本号。 */
+html[data-vm-theme] .app-header__avatar {
+
+  display: none !important;
+}
+.app-header__user-label {
+
+  color: var(--sk-text-secondary) !important;
+  font-weight: 600 !important;
+}
+.app-header__version {
+
+  padding: 4px 9px !important;
+  border: 1px solid var(--sk-accent-soft) !important;
+  border-radius: var(--sk-radius-pill) !important;
+  background: var(--sk-accent-soft) !important;
+  color: var(--sk-accent-deep) !important;
+  font-weight: 700 !important;
+}
+/* 侧栏 */
+.app-sidebar__logo {
+
+  height: 64px !important;
+  padding: 6px 10px !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  border-radius: var(--sk-radius-lg) !important;
+  /* 品牌字标是深蓝字，底衬得是亮的，白天/暗黑两种主题下观感才一致 */
+  background: linear-gradient(135deg, #f4f8ff 0%, #ffffff 100%) !important;
+  box-shadow: 0 10px 26px rgba(6, 12, 24, 0.32), inset 0 1px rgba(255, 255, 255, 0.9) !important;
+}
+.app-sidebar__logo-img {
+
+  max-width: 94% !important;
+  max-height: 42px !important;
+  border-radius: 10px !important;
+}
+.app-sidebar__pill {
+
+  border: 1px solid var(--sk-sidebar-border) !important;
+  border-radius: var(--sk-radius-xl) !important;
+  background: var(--sk-sidebar-bg) !important;
+  box-shadow: 0 18px 44px rgba(6, 12, 24, 0.42), inset 0 1px rgba(255, 255, 255, 0.06) !important;
+  backdrop-filter: blur(18px) saturate(1.3) !important;
+}
+.app-sidebar__pill--main {
+
+  padding: 14px 12px !important;
+}
+.app-sidebar__nav {
+
+  gap: 4px !important;
+}
+.app-sidebar__link {
+
+  gap: 12px !important;
+  height: 44px !important;
+  padding: 0 12px !important;
+  border-radius: var(--sk-radius-md) !important;
+  color: var(--sk-sidebar-text) !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+.app-sidebar__link:hover {
+
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: var(--sk-sidebar-text-hover) !important;
+}
+.app-sidebar__link--active {
+
+  background: var(--sk-sidebar-active-bg) !important;
+  color: #fff !important;
+  box-shadow: 0 10px 24px rgba(47, 107, 255, 0.38) !important;
+}
+.app-sidebar__link--active .app-sidebar__icon-wrap {
+
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #fff !important;
+}
+.app-sidebar__icon-wrap {
+
+  display: grid !important;
+  place-items: center !important;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 9px !important;
+  background: var(--sk-sidebar-icon-bg) !important;
+  transition: background 0.18s ease;
+}
+.app-sidebar__link:hover .app-sidebar__icon-wrap {
+
+  background: rgba(255, 255, 255, 0.14) !important;
+}
+.app-sidebar__toggle {
+
+  width: 34px !important;
+  height: 34px !important;
+  margin: 0 0 10px 6px !important;
+  border-radius: 10px !important;
+  background: var(--sk-sidebar-icon-bg) !important;
+  color: var(--sk-sidebar-text) !important;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.app-sidebar__toggle:hover {
+
+  background: rgba(255, 255, 255, 0.14) !important;
+  color: #fff !important;
+}
+.app-sidebar__logout, .app-sidebar__link.app-sidebar__logout {
+
+  border-radius: var(--sk-radius-md) !important;
+  color: #f6a5a5 !important;
+}
+.app-sidebar__logout:hover {
+
+  background: rgba(240, 68, 56, 0.16) !important;
+  color: #ffd9d6 !important;
+}
+/* ---------- 7. 登录 / 激活页 ---------- */
+.page-login {
+
+  background:
+    radial-gradient(900px 520px at 14% 8%, rgba(47, 107, 255, 0.16), transparent 60%),
+    radial-gradient(760px 460px at 88% 92%, rgba(111, 155, 255, 0.14), transparent 58%),
+    var(--sk-bg) !important;
+}
+.login-card {
+
+  width: 440px !important;
+  padding: 40px 38px 34px !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: 24px !important;
+  background: var(--sk-card-bg) !important;
+  box-shadow: 0 28px 70px rgba(15, 23, 42, 0.16) !important;
+}
+.device-id {
+
+  margin: 0 0 18px !important;
+  padding: 11px 13px !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius-md) !important;
+  background: var(--sk-surface) !important;
+}
+.device-id__label {
+
+  color: var(--sk-text-secondary) !important;
+}
+.device-id__value {
+
+  color: var(--sk-text) !important;
+  font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+  letter-spacing: 0.02em;
+}
+.service-status {
+
+  border: 1px solid var(--sk-accent-soft) !important;
+  border-radius: var(--sk-radius-md) !important;
+  background: var(--sk-accent-light) !important;
+}
+.service-status--error {
+
+  border-color: var(--sk-danger-soft) !important;
+  background: var(--sk-danger-soft) !important;
+}
+.service-status__title, .service-status--error .service-status__title {
+
+  color: var(--sk-text) !important;
+}
+.service-status p {
+
+  color: var(--sk-text-secondary) !important;
+}
+.service-status button {
+
+  height: 32px !important;
+  border: 1px solid var(--sk-accent-soft) !important;
+  border-radius: var(--sk-radius-sm) !important;
+  background: var(--sk-card-bg) !important;
+  color: var(--sk-accent-deep) !important;
+  font-weight: 700 !important;
+}
+.activation-code-field input {
+
+  height: 52px !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius-md) !important;
+  background: var(--sk-surface) !important;
+  color: var(--sk-text) !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 0.04em;
+}
+.activation-code-field input:focus {
+
+  border-color: var(--sk-accent) !important;
+  box-shadow: 0 0 0 4px var(--sk-accent-soft) !important;
+}
+.activation-code-field__toggle {
+
+  color: var(--sk-text-tertiary) !important;
+  border-radius: 9px !important;
+}
+.activation-code-field__toggle:hover {
+
+  background: var(--sk-accent-soft) !important;
+  color: var(--sk-accent-deep) !important;
+}
+.form__submit {
+
+  height: 52px !important;
+  border: none !important;
+  border-radius: var(--sk-radius-md) !important;
+  background: linear-gradient(135deg, #2f6bff 0%, #4d8bff 100%) !important;
+  box-shadow: 0 14px 28px rgba(47, 107, 255, 0.32) !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em;
+}
+.form__submit:hover {
+
+  transform: translateY(-2px) !important;
+  box-shadow: 0 18px 34px rgba(47, 107, 255, 0.4) !important;
+}
+/* 主内容区与卡片间距放宽一点，页面不再挤在一起 */
+html[data-vm-theme] .app-layout__main {
+
+  padding-bottom: 48px !important;
+}
+/* ---------- 8. 主题切换按钮 ---------- */
+.vm-theme-toggle {
+
+  display: grid;
+  place-items: center;
+  flex: none;
+  /* 顶栏 .app-header 是窗口拖拽区（-webkit-app-region: drag），
+     不声明 no-drag 的话真实鼠标点击会被系统当成拖窗口吃掉，按钮就"没反应" */
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  padding: 0;
+  border: 1px solid var(--sk-border);
+  border-radius: 12px;
+  background: var(--sk-accent-light);
+  color: var(--sk-accent-deep);
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease,
+    transform 0.18s ease;
+}
+.vm-theme-toggle:hover {
+
+  border-color: var(--sk-accent);
+  background: var(--sk-accent-soft);
+  color: var(--sk-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(47, 107, 255, 0.2);
+}
+.vm-theme-toggle svg {
+
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* 登录页没有顶栏，按钮浮在右上角 */
+.page-login > .vm-theme-toggle {
+
+  position: fixed;
+  top: 20px;
+  right: 22px;
+  margin: 0;
+  background: var(--sk-card-bg);
+  box-shadow: var(--sk-shadow-soft);
+}
+/* ---------- 10.1 顶栏 ---------- */
+.app-header {
+
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  position: relative !important;
+  z-index: 40 !important;
+  height: 68px !important;
+  padding: 0 16px 0 22px !important;
+  margin: 0 0 22px !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius-xl) !important;
+  background: var(--sk-card-bg) !important;
+  box-shadow: var(--sk-shadow-soft) !important;
+}
+.app-header__brand {
+
+  flex: 0 0 auto !important;
+  min-width: 0 !important;
+}
+.app-header__titles {
+
+  min-width: 0 !important;
+}
+.app-header__name {
+
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  color: var(--sk-text) !important;
+  background: none !important;
+  -webkit-text-fill-color: currentColor !important;
+  font-size: 1.02rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.02em !important;
+  white-space: nowrap !important;
+}
+.app-header__name::before {
+
+  content: '' !important;
+  display: block !important;
+  flex: none !important;
+  width: 7px !important;
+  height: 18px !important;
+  border-radius: 4px !important;
+  background: linear-gradient(180deg, var(--sk-accent) 0%, #7ab8ff 100%) !important;
+  box-shadow: 0 4px 12px rgba(47, 107, 255, 0.45) !important;
+}
+.vm-crumb {
+
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex: 0 0 auto !important;
+  margin-left: 4px !important;
+  padding-left: 14px !important;
+  border-left: 1px solid var(--sk-border) !important;
+  color: var(--sk-text-tertiary) !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  -webkit-app-region: no-drag !important;
+  app-region: no-drag !important;
+}
+.vm-crumb__sep {
+
+  opacity: 0.65 !important;
+}
+.vm-crumb__cur {
+
+  color: var(--sk-text) !important;
+  font-weight: 700 !important;
+}
+/* 快速跳转 */
+.vm-quicknav {
+
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex: 0 1 220px !important;
+  min-width: 132px !important;
+  height: 38px !important;
+  margin-left: auto !important;
+  padding: 0 13px !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: 12px !important;
+  background: var(--sk-surface) !important;
+  -webkit-app-region: no-drag !important;
+  app-region: no-drag !important;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease,
+    background 0.18s ease !important;
+}
+.vm-quicknav:focus-within {
+
+  border-color: var(--sk-accent) !important;
+  background: var(--sk-card-bg) !important;
+  box-shadow: 0 0 0 3px var(--sk-accent-soft) !important;
+}
+.vm-quicknav__icon {
+
+  display: flex !important;
+  align-items: center !important;
+  flex: none !important;
+  color: var(--sk-text-tertiary) !important;
+}
+.vm-quicknav__icon svg {
+
+  width: 15px !important;
+  height: 15px !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 2 !important;
+  stroke-linecap: round !important;
+}
+.vm-quicknav__input {
+
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  padding: 0 !important;
+  border: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  color: var(--sk-text) !important;
+  font-family: inherit !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+}
+.vm-quicknav__input::placeholder {
+
+  color: var(--sk-text-tertiary) !important;
+  font-weight: 500 !important;
+}
+.vm-quicknav__panel {
+
+  position: absolute !important;
+  top: calc(100% + 10px) !important;
+  right: 0 !important;
+  display: none !important;
+  width: 100% !important;
+  min-width: 248px !important;
+  max-height: 326px !important;
+  overflow: auto !important;
+  padding: 6px !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius-lg) !important;
+  background: var(--el-bg-color-overlay, var(--sk-card-bg)) !important;
+  box-shadow: var(--sk-shadow-card) !important;
+  z-index: 200 !important;
+  -webkit-app-region: no-drag !important;
+  app-region: no-drag !important;
+}
+.vm-quicknav--open .vm-quicknav__panel {
+
+  display: block !important;
+}
+.vm-quicknav__item {
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  padding: 9px 10px !important;
+  border-radius: 9px !important;
+  color: var(--sk-text-secondary) !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+}
+.vm-quicknav__item:hover, .vm-quicknav__item--active {
+
+  background: var(--sk-accent-light) !important;
+  color: var(--sk-accent-deep) !important;
+}
+.vm-quicknav__go {
+
+  color: var(--sk-text-tertiary) !important;
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+}
+.vm-quicknav__empty {
+
+  padding: 12px !important;
+  color: var(--sk-text-tertiary) !important;
+  font-size: 0.82rem !important;
+  text-align: center !important;
+}
+/* 图标按钮（刷新 / 主题） */
+.vm-icon-btn {
+
+  display: grid !important;
+  place-items: center !important;
+  flex: 0 0 auto !important;
+  width: 40px !important;
+  height: 40px !important;
+  padding: 0 !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: 12px !important;
+  background: var(--sk-surface) !important;
+  color: var(--sk-text-secondary) !important;
+  cursor: pointer !important;
+  -webkit-app-region: no-drag !important;
+  app-region: no-drag !important;
+  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease,
+    transform 0.18s ease !important;
+}
+.vm-icon-btn:hover {
+
+  border-color: var(--sk-accent) !important;
+  background: var(--sk-accent-soft) !important;
+  color: var(--sk-accent) !important;
+  transform: translateY(-1px) !important;
+}
+.vm-icon-btn svg {
+
+  width: 18px !important;
+  height: 18px !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.8 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+.vm-theme-toggle {
+
+  margin-right: 0 !important;
+}
+/* ---------- 10.2 侧栏 ---------- */
+.app-layout {
+
+  --app-sidebar-inner-w: 244px !important;
+}
+.vm-nav-label {
+
+  margin: 14px 4px 6px !important;
+  padding: 0 8px !important;
+  color: rgba(255, 255, 255, 0.34) !important;
+  font-size: 0.7rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.16em !important;
+  white-space: nowrap !important;
+}
+.vm-nav-label:first-child {
+
+  margin-top: 2px !important;
+}
+.app-sidebar__link {
+
+  position: relative !important;
+}
+.app-sidebar__link--active {
+
+  background: linear-gradient(
+    90deg,
+    rgba(47, 107, 255, 0.5) 0%,
+    rgba(47, 107, 255, 0.14) 100%
+  ) !important;
+  color: #fff !important;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.12) !important;
+}
+.app-sidebar__link--active::after {
+
+  content: '' !important;
+  position: absolute !important;
+  left: -12px !important;
+  top: 50% !important;
+  width: 3px !important;
+  height: 22px !important;
+  border-radius: 0 3px 3px 0 !important;
+  background: var(--sk-accent) !important;
+  box-shadow: 0 0 12px rgba(77, 139, 255, 0.85) !important;
+  transform: translateY(-50%) !important;
+}
+.app-sidebar__link--active .app-sidebar__icon-wrap {
+
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #fff !important;
+}
+.vm-side-card {
+
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 12px 0 6px !important;
+  padding: 10px !important;
+  border: 1px solid var(--sk-sidebar-border) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+.vm-side-card__avatar {
+
+  display: grid !important;
+  place-items: center !important;
+  flex: none !important;
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 11px !important;
+  background: linear-gradient(135deg, var(--sk-accent) 0%, #7ab8ff 100%) !important;
+  color: #fff !important;
+  font-size: 0.9rem !important;
+  font-weight: 900 !important;
+  box-shadow: 0 6px 16px rgba(47, 107, 255, 0.42) !important;
+}
+.vm-side-card__meta {
+
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  min-width: 0 !important;
+}
+.vm-side-card__title {
+
+  color: #fff !important;
+  font-size: 0.84rem !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+}
+.vm-side-card__sub {
+
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  color: var(--sk-sidebar-text) !important;
+  font-size: 0.72rem !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+}
+.vm-dot {
+
+  display: block !important;
+  flex: none !important;
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: #33d6a6 !important;
+  box-shadow: 0 0 8px rgba(51, 214, 166, 0.9) !important;
+}
+/* 侧栏折起来时，附加件一起收 */
+html[data-vm-nav='mini'] .vm-nav-label, html[data-vm-nav='mini'] .vm-side-card__meta {
+
+  display: none !important;
+}
+html[data-vm-nav='mini'] .app-sidebar__link--active::after {
+
+  display: none !important;
+}
+html[data-vm-nav='mini'] .vm-side-card {
+
+  justify-content: center !important;
+  padding: 8px !important;
+}
+html[data-vm-nav='mini'] .app-sidebar__pill--main {
+
+  padding: 14px 10px 10px !important;
+}
+html[data-vm-nav='mini'] .app-sidebar__link, html[data-vm-nav='mini'] .app-sidebar__tool {
+
+  padding: 0 6px !important;
+}
+html[data-vm-nav='mini'] .app-sidebar__toggle {
+
+  margin-left: 2px !important;
+}
+/* ---------- 10.4 页面骨架 ---------- */
+html[data-vm-theme] .app-layout__main {
+
+  padding: 0 30px 48px 0 !important;
+}
+/* 其余几页的指标行也统一成"一条数据条"，不再是外面套一层灰底 */
+@media (max-width: 1240px) {
+  .vm-crumb {
+
+    display: none !important;
+  
+  
+  
+  }
+}
+@media (max-width: 1060px) {
+  .vm-quicknav {
+
+    flex-basis: 150px !important;
+  
+  
+  
+  }
+}
+@media (max-width: 900px) {
+  .vm-quicknav {
+
+    display: none !important;
+  
+  
+  
+  }
+}
+/* ==========================================================================
+   12. 外壳结构改造 v5 —— 通栏品牌条 + 通高侧栏
+   --------------------------------------------------------------------------
+   改之前是三块互不相干的悬浮卡片：
+       左上角一个白底 logo 卡  +  右边一条圆角顶栏  +  下面一块内容区
+   连系统自带的白色标题栏，屏幕左上角一共叠了三层品牌信息。
+
+   这一节把结构换成"一条通栏品牌条 + 一条通高侧栏"：
+
+       ┌──────────────────────────────────────────────────────────┐
+       │ [logo] 极速混剪智能体 │ 首页 / 素材中心   [搜索][⟳][☾][用户] │ ← 通栏 64px
+       ├──────────┬───────────────────────────────────────────────┤
+       │ 侧栏 244 │  内容区（左右各 24px 内边距）                  │
+       │  创作    │                                               │
+       │   ...    │                                               │
+       └──────────┴───────────────────────────────────────────────┘
+
+   logo 从侧栏搬到品牌条最左边（侧栏顶部那个白底卡片整个去掉），
+   侧栏不再是悬浮圆角块，而是贴着窗口左边、从品牌条下沿一直落到窗口底部的通高深色栏。
+   ========================================================================== */
+.app-layout {
+
+  --sk-topbar-h: 64px;
+  --sk-rail-w: 244px;
+}
+/* 折叠状态认客户端自己的类。不要改成"按量出来的宽度反推"——
+   那样会死循环：一折叠就把侧栏宽度也锁成窄的，之后再也展不开。 */
+.app-layout--sidebar-collapsed {
+
+  --sk-rail-w: 72px;
+}
+/* 主列让出侧栏宽度；自身不裁切，通栏顶栏才能往左伸出整窗宽 */
+.app-layout__main-column {
+
+  margin-left: var(--sk-rail-w) !important;
+  padding-right: 0 !important;
+  overflow: visible !important;
+}
+/* 品牌条：贴窗口左上右三边，只留一条下边框 */
+.app-header {
+
+  height: var(--sk-topbar-h) !important;
+  margin: 0 0 22px calc(-1 * var(--sk-rail-w)) !important;
+  padding: 0 22px 0 20px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--sk-border) !important;
+  border-radius: 0 !important;
+  background: var(--sk-card-bg) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+.app-header__brand {
+
+  display: flex !important;
+  align-items: center !important;
+  gap: 11px !important;
+  flex: 0 0 auto !important;
+  min-width: 0 !important;
+}
+.vm-brand__mark {
+
+  display: block !important;
+  flex: none !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 10px !important;
+  object-fit: contain !important;
+}
+/* 万一 app-icon.png 取不到，退回侧栏那张字标，别留个破图 */
+.vm-brand__mark--wide {
+
+  width: auto !important;
+  max-width: 150px !important;
+  height: 30px !important;
+}
+/* 系统自带的标题栏已经写着软件名了，品牌条里再写一遍就是叠两层，这里只留 logo */
+.app-header__titles {
+
+  display: none !important;
+}
+/* 侧栏：贴左、贴底、通高，不再是悬浮卡片 */
+.app-sidebar {
+
+  top: var(--sk-topbar-h) !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  gap: 0 !important;
+  border-radius: 0 !important;
+  border-right: 1px solid var(--sk-sidebar-border) !important;
+  background: var(--sk-sidebar-bg) !important;
+  box-shadow: none !important;
+}
+.app-sidebar {
+
+  width: var(--sk-rail-w) !important;
+}
+/* logo 已经搬到品牌条，侧栏顶部不再占位 */
+.app-sidebar__logo {
+
+  display: none !important;
+}
+.app-sidebar__pill, .app-sidebar__pill--main {
+
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+.app-sidebar__pill--main {
+
+  padding: 18px 14px 12px 16px !important;
+}
+.app-sidebar__link--active::after {
+
+  left: -16px !important;
+}
+/* 侧栏底部的"本地授权 / 已验证"状态块整体去掉：
+   授权状态在激活页和系统设置里都能看到，侧栏常驻反而占地方。
+   vm-theme.js 已经不再插入这个节点，这里再兜一层，老缓存里的 DOM 也盖得住。 */
+.vm-side-card {
+
+  display: none !important;
+  margin: 10px 0 0 !important;
+  padding: 12px 4px !important;
+  border: 0 !important;
+  border-top: 1px solid var(--sk-sidebar-border) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+/* 内容区左右对称留白：原版左边是 0，页面标题直接贴着侧栏 */
+html[data-vm-theme] .app-layout__main {
+
+  padding: 0 24px 44px 24px !important;
+}
+/* 面包屑最左边那个"首页"用了最浅一档灰，压在浅色画布上只有 2.5:1 */
+html[data-vm-theme='light'] .vm-crumb__root {
+
+  color: var(--sk-text-secondary) !important;
+}
+
+/* ---------- 兜底：只在"非内容页"给 body 上底色 ----------
+   主界面里 body 的底色会被内容区继承，所以这里用 :has() 把范围锁死在
+   登录/激活页和启动屏，主界面一律走客户端自己的底色。
+   -------------------------------------------------------------------------- */
+html[data-vm-theme] body:has(.page-login),
+html[data-vm-theme] body:has(.vm-startup) {
+  background: var(--sk-bg) !important;
+  color: var(--sk-text) !important;
+}

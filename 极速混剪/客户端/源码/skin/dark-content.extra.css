@@ -1,0 +1,137 @@
+/* ==========================================================================
+   暗黑模式：内容区补丁（手工维护）
+   --------------------------------------------------------------------------
+   上面 dark-content.css 是从整层皮肤里抽出来的通用部分；这里放"客户端把浅色
+   写死在 CSS 里、连 !important 都上了"的那几处，必须逐条点名覆盖。
+   判定方法：跑 probe\dark-audit.py，它会列出暗黑下仍然发白的节点。
+   这些规则全部带 html[data-vm-theme='dark']，白天模式一个字节都不碰。
+   ========================================================================== */
+
+/* ---------- 账号档案：左栏卡片 / 右栏编辑器 / 预览盒 ----------
+   客户端给这三块写死了白底和浅蓝底，不走 --vm-* 令牌，只能点名。 */
+html[data-vm-theme='dark'] .account-page__profiles,
+html[data-vm-theme='dark'] .account-page__editor {
+  background: var(--sk-card-bg) !important;
+  border-color: var(--sk-border) !important;
+  color: var(--sk-text) !important;
+}
+
+html[data-vm-theme='dark'] .account-page__profiles-head {
+  background: var(--sk-card-bg) !important;
+}
+
+html[data-vm-theme='dark'] .account-page__preview {
+  background: var(--sk-surface) !important;
+  border-color: var(--sk-border) !important;
+  color: var(--sk-text) !important;
+}
+
+html[data-vm-theme='dark'] .account-page__preview-text,
+html[data-vm-theme='dark'] .account-page__preview-title {
+  color: var(--sk-text-secondary) !important;
+}
+
+/* 列表条目：客户端是"浅色卡片 + 选中态浅蓝"，暗黑下换成深底 + 蓝色主调 */
+html[data-vm-theme='dark'] .account-page__profile-item {
+  background: var(--sk-surface) !important;
+  border-color: var(--sk-border) !important;
+  color: var(--sk-text) !important;
+}
+
+html[data-vm-theme='dark'] .account-page__profile-meta {
+  color: var(--sk-text-tertiary) !important;
+}
+
+/* ---------- 工作台：那颗按钮客户端写死了白底 + !important ---------- */
+html[data-vm-theme='dark'] .workbench-actions__secondary {
+  background: var(--sk-card-bg) !important;
+  border-color: var(--sk-border) !important;
+  color: var(--sk-accent-deep) !important;
+}
+
+html[data-vm-theme='dark'] .workbench-actions__secondary:hover {
+  background: var(--sk-accent-soft) !important;
+  border-color: var(--sk-accent) !important;
+}
+
+/* ---------- 工作台：四张指标卡：客户端写死了浅色渐变（linear-gradient(135deg,#f5f8ff…)），
+   连 !important 都用上了，而且颜色是 rgb() 形式。暗黑下换成同色相的深色微渐变，
+   保留蓝/绿/黄/红四种语义色，但整体压黑。 */
+html[data-vm-theme='dark'] .workbench-stat {
+  background: var(--sk-card-bg) !important;
+}
+
+html[data-vm-theme='dark'] .workbench-stat--blue {
+  background-image: linear-gradient(135deg, rgba(77, 139, 255, 0.16) 0%, rgba(77, 139, 255, 0.05) 100%) !important;
+}
+
+html[data-vm-theme='dark'] .workbench-stat--green {
+  background-image: linear-gradient(135deg, rgba(50, 213, 131, 0.16) 0%, rgba(50, 213, 131, 0.05) 100%) !important;
+}
+
+html[data-vm-theme='dark'] .workbench-stat--amber {
+  background-image: linear-gradient(135deg, rgba(253, 176, 34, 0.16) 0%, rgba(253, 176, 34, 0.05) 100%) !important;
+}
+
+html[data-vm-theme='dark'] .workbench-stat--rose {
+  background-image: linear-gradient(135deg, rgba(255, 107, 107, 0.16) 0%, rgba(255, 107, 107, 0.05) 100%) !important;
+}
+
+html[data-vm-theme='dark'] .workbench-stat__value {
+  color: var(--sk-text) !important;
+}
+
+html[data-vm-theme='dark'] .workbench-stat__label {
+  color: var(--sk-text-secondary) !important;
+}
+
+/* ---------- 空状态插画：Element Plus 的 el-empty 是一张白色线描 SVG，
+   压在深底上太亮。暗黑下调暗不透明度，保留形状又不抢眼。 */
+html[data-vm-theme='dark'] .el-empty__image {
+  opacity: 0.5 !important;
+}
+
+/* ---------- 通用兜底：暗黑下任何"白底 + 深字"的写死组合 ----------
+   这几条是客户端里用内联 style 写死浅色的地方（结构一样的提示条 / 标签）。 */
+html[data-vm-theme='dark'] [style*='background: #fff'],
+html[data-vm-theme='dark'] [style*='background:#fff'],
+html[data-vm-theme='dark'] [style*='background: rgb(255, 255, 255)'],
+html[data-vm-theme='dark'] [style*='background-color: #fff'],
+html[data-vm-theme='dark'] [style*='background-color:#fff'] {
+  background: var(--sk-card-bg) !important;
+  color: var(--sk-text) !important;
+}
+
+/* ---------- AI 帮写弹窗：它自己是一张浅色卡片，别把里面的输入框也刷黑 ----------
+   dark-content.css 里那条 `html[data-vm-theme='dark'] .el-input__wrapper ...`
+   是给内容区输入框用的，但它连弹窗里的输入框一起命中了 —— 白卡上被挖出几个
+   深色窟窿，边框只剩 9% 白，点进去也没有焦点光圈（就是"选中表单边框像没了"）。
+   这里把弹窗内部还原成客户端原本的浅色输入框，配色跟弹窗自带的那套一致。 */
+html[data-vm-theme='dark'] .vmx-ai-mask .el-input__wrapper,
+html[data-vm-theme='dark'] .vmx-ai-mask .el-textarea__inner {
+  background: #ffffff !important;
+  box-shadow: 0 0 0 1px #dcdfe6 inset !important;
+  color: #303133 !important;
+}
+
+html[data-vm-theme='dark'] .vmx-ai-mask .el-input__wrapper:hover,
+html[data-vm-theme='dark'] .vmx-ai-mask .el-textarea__inner:hover {
+  box-shadow: 0 0 0 1px #c0c4cc inset !important;
+}
+
+html[data-vm-theme='dark'] .vmx-ai-mask .el-input__wrapper.is-focus,
+html[data-vm-theme='dark'] .vmx-ai-mask .el-input__wrapper:focus-within,
+html[data-vm-theme='dark'] .vmx-ai-mask .el-textarea__inner:focus {
+  background: #ffffff !important;
+  box-shadow: 0 0 0 1px #409eff inset, 0 0 0 3px rgba(64, 158, 255, 0.18) !important;
+}
+
+html[data-vm-theme='dark'] .vmx-ai-mask .el-input__inner,
+html[data-vm-theme='dark'] .vmx-ai-mask .el-textarea__inner {
+  color: #303133 !important;
+}
+
+html[data-vm-theme='dark'] .vmx-ai-mask .el-input__inner::placeholder,
+html[data-vm-theme='dark'] .vmx-ai-mask .el-textarea__inner::placeholder {
+  color: #a8abb2 !important;
+}

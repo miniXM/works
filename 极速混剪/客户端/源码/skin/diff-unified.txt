@@ -1,0 +1,173 @@
+--- v10
++++ v15
+@@ -13,6 +13,11 @@
+   --vm-bg: #eceff7;
+   --vm-surface: #ffffff;
+   --vm-card-bg: #ffffff;
++  /* 内容区那张面板：原版就是"灰画布 + 一张白面板"，面板里再放白卡。
++     --vm-inset-* 是面板里要"往下沉一档"的盒子（预览框一类），原版用的浅蓝。 */
++  --vm-panel-bg: #ffffff;
++  --vm-inset-bg: #f5f8ff;
++  --vm-inset-border: #dbe7ff;
+   --vm-text: #0f172a;
+   --vm-text-secondary: #5a6780;
+   --vm-text-tertiary: #94a3b8;
+@@ -110,6 +115,9 @@
+   --vm-bg: #080e1a;
+   --vm-surface: #0f1729;
+   --vm-card-bg: #111a2e;
++  --vm-panel-bg: #0d1526;
++  --vm-inset-bg: #0f1729;
++  --vm-inset-border: rgba(255, 255, 255, 0.08);
+   --vm-text: #e8eefb;
+   --vm-text-secondary: #9aa8c2;
+   --vm-text-tertiary: #6b7a99;
+@@ -2302,11 +2310,15 @@
+   overflow: visible !important;
+ }
+ 
++/* 内容区是一张白面板：原版 .page-shell__body 就是
++   白底 + 1px 边框 + 20px 圆角 + 28px 内边距。
++   v6 把它拆成透明之后，页面灰底直接透上来 —— 客户连着两次说"白底全没了"
++   就是指这里（顺带把面板里那些本来就透明的子块也一起染灰了）。 */
+ html[data-vm-theme] .page-shell__body {
+-  padding: 0 !important;
+-  border: 0 !important;
+-  border-radius: 0 !important;
+-  background: transparent !important;
++  padding: 24px !important;
++  border: 1px solid var(--vm-border) !important;
++  border-radius: 20px !important;
++  background: var(--vm-panel-bg) !important;
+   box-shadow: none !important;
+ }
+ 
+@@ -2421,8 +2433,10 @@
+   box-shadow: none !important;
+ }
+ 
+-/* 纯布局容器不再自己画一层卡片，避免"盒子里再套盒子" */
+-html[data-vm-theme] :is(.settings-panel, .account-page__profiles, .rel-sched, .batch-generation-page) {
++/* 纯布局容器不再自己画一层卡片，避免"盒子里再套盒子"。
++   注意：.account-page__profiles 不在这个名单里 —— 原版左栏就是一张白卡，
++   少了它页面灰底就透上来了。 */
++html[data-vm-theme] :is(.settings-panel, .rel-sched, .batch-generation-page) {
+   border: 0 !important;
+   background: transparent !important;
+   box-shadow: none !important;
+@@ -2478,9 +2492,9 @@
+   .mix-task-panel__preview,
+   .mix-task-panel__preview-box
+ ) {
+-  border: 1px solid var(--vm-border-light) !important;
+-  border-radius: 10px !important;
+-  background: var(--vm-surface) !important;
++  border: 1px solid var(--vm-inset-border) !important;
++  border-radius: 12px !important;
++  background: var(--vm-inset-bg) !important;
+   box-shadow: none !important;
+ }
+ 
+@@ -2516,7 +2530,9 @@
+   border: 0 !important;
+   border-left: 3px solid var(--vm-accent) !important;
+   border-radius: 0 8px 8px 0 !important;
+-  background: var(--vm-accent-light) !important;
++  /* 内容面板是白的，--vm-accent-light(#f4f7ff) 在白底上几乎看不见，
++     换成深一档的 --vm-accent-soft 才立得起来 */
++  background: var(--vm-accent-soft) !important;
+   color: var(--vm-text-secondary) !important;
+   font-size: 0.84rem !important;
+   line-height: 1.7 !important;
+@@ -2536,12 +2552,13 @@
+ 
+ /* ---------- 13.5 多栏页面重排 ---------- */
+ 
+-/* 账号档案：左栏从"一张卡片"变成"贴着分隔线的列表栏"，
+-   条目从卡片改成列表行（选中项左侧一根竖条），右边编辑器成为唯一的卡片。 */
++/* 账号档案：左栏自己是一个 div（白卡），右栏编辑器是另一个块，
++   两块之间留 16px 的空白 —— 分隔靠"两个块 + 中间的空隙"，
++   不靠画一条线（客户明确说过"不是做一条线，而是分两个div"）。 */
+ html[data-vm-theme] .account-page {
+   display: grid !important;
+   grid-template-columns: 292px minmax(0, 1fr) !important;
+-  gap: 0 !important;
++  gap: 0 16px !important;
+   align-items: start !important;
+ }
+ 
+@@ -2551,12 +2568,11 @@
+   align-self: start !important;
+   max-height: calc(100vh - 200px) !important;
+   overflow-y: auto !important;
+-  padding: 2px 18px 8px 0 !important;
+-  /* 只留右边一条分隔线：这里要写死四边的宽度，否则客户端原来的整圈边框还会在 */
+-  border-width: 0 1px 0 0 !important;
+-  border-style: solid !important;
+-  border-color: var(--vm-border) !important;
+-  border-radius: 0 !important;
++  padding: 14px !important;
++  border: 1px solid var(--vm-border) !important;
++  border-radius: 16px !important;
++  background: var(--vm-card-bg) !important;
++  box-shadow: var(--vm-shadow-card) !important;
+ }
+ 
+ html[data-vm-theme] .account-page__profiles-head {
+@@ -2564,7 +2580,8 @@
+   top: 0 !important;
+   z-index: 2 !important;
+   padding: 2px 0 12px !important;
+-  background: var(--vm-bg) !important;
++  /* 盖住滚上来的条目：颜色要跟左栏这张卡一致，不能跟面板一致 */
++  background: var(--vm-card-bg) !important;
+ }
+ 
+ html[data-vm-theme] .account-page__profile-item {
+@@ -2590,11 +2607,12 @@
+ }
+ 
+ html[data-vm-theme] .account-page__editor {
+-  /* 左边留出和列表栏的间距，卡片自己立起来：白底下表单才看得清 */
+-  margin-left: 22px !important;
++  /* 右栏也是一张白卡：客户要的"分两个div"就是这个意思 ——
++     左栏一个块、右栏一个块，中间 16px 空隙，谁也不靠画线去分。 */
++  margin-left: 0 !important;
+   padding: 18px 20px 20px !important;
+   border: 1px solid var(--vm-border) !important;
+-  border-radius: 12px !important;
++  border-radius: 16px !important;
+   background: var(--vm-card-bg) !important;
+   box-shadow: none !important;
+ }
+@@ -2608,10 +2626,9 @@
+   padding: 0 0 14px !important;
+ }
+ 
+-/* 编辑器已经是白卡片了，左栏不用再拉一条竖线：两条线挨着只会显脏 */
+-html[data-vm-theme] .account-page__profiles {
+-  border-width: 0 !important;
+-}
++/* 这里原来压掉了左栏的边框（当时指望它透明贴着灰底）。
++   现在内容面板和左栏都是白的，边框就是唯一的边界 —— 不能再压。
++   取整圈 1px 边框在 13.5 里已经写好了。 */
+ 
+ /* 卡头下面那条发丝线就够了。标题自己带的横线、以及「档案名称」上面那条
+    压在说明文字下面的横线，都是多出来的，去掉。 */
+@@ -2623,11 +2640,12 @@
+   border-top: 0 !important;
+ }
+ 
+-/* 卡片里的预览盒改成"往下沉一档"的内嵌面板，白底套白底看不出层次 */
++/* 卡片里的预览盒沿用原版那块浅蓝（#f5f8ff / #dbe7ff）：
++   白卡上再套白盒看不出层次，纯灰又显得脏。 */
+ html[data-vm-theme] .account-page__preview {
+-  border: 1px solid var(--vm-border-light) !important;
+-  border-radius: 10px !important;
+-  background: var(--vm-bg) !important;
++  border: 1px solid var(--vm-inset-border) !important;
++  border-radius: 12px !important;
++  background: var(--vm-inset-bg) !important;
+ }
+ 
+ /* 发布排期：右侧预览栏粘住，别跟着列表滚走 */
