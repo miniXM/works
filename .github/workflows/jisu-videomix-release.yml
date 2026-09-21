@@ -12,40 +12,42 @@ env:
   NODE_VERSION: '22'
   PNPM_VERSION: '11.19.0'
 
-defaults:
-  run:
-    working-directory: 极速混剪/客户端/源码/双平台
-
 jobs:
   test:
     strategy:
       matrix: { os: [windows-latest, macos-13, macos-14] }
     runs-on: ${{ matrix.os }}
+    defaults: { run: { working-directory: client } }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: ${{ env.NODE_VERSION }} }
+        with:
+          node-version: ${{ env.NODE_VERSION }}
       - uses: pnpm/action-setup@v4
-        with: { version: ${{ env.PNPM_VERSION }} }
+        with:
+          version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
       - run: node --test tests/*.test.cjs
 
   build-windows:
     needs: test
     runs-on: windows-latest
+    defaults: { run: { working-directory: client } }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: ${{ env.NODE_VERSION }} }
+        with:
+          node-version: ${{ env.NODE_VERSION }}
       - uses: pnpm/action-setup@v4
-        with: { version: ${{ env.PNPM_VERSION }} }
+        with:
+          version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
       - name: Build Windows x64 installer
         run: pnpm run build:win
       - uses: actions/upload-artifact@v4
         with:
           name: videomix-windows-x64
-          path: 极速混剪/客户端/源码/双平台/release/*
+          path: client/release/*
           if-no-files-found: error
 
   build-macos:
@@ -58,6 +60,7 @@ jobs:
           - runner: macos-14
             arch: arm64
     runs-on: ${{ matrix.runner }}
+    defaults: { run: { working-directory: client } }
     env:
       CSC_LINK: ${{ secrets.MAC_CERT_P12_BASE64 }}
       CSC_KEY_PASSWORD: ${{ secrets.MAC_CERT_PASSWORD }}
@@ -67,9 +70,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: ${{ env.NODE_VERSION }} }
+        with:
+          node-version: ${{ env.NODE_VERSION }}
       - uses: pnpm/action-setup@v4
-        with: { version: ${{ env.PNPM_VERSION }} }
+        with:
+          version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
       - name: Build signed and notarized macOS package
         if: ${{ env.CSC_LINK != '' && env.CSC_KEY_PASSWORD != '' && env.APPLE_ID != '' && env.APPLE_APP_SPECIFIC_PASSWORD != '' && env.APPLE_TEAM_ID != '' }}
@@ -83,7 +88,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: videomix-macos-${{ matrix.arch }}
-          path: 极速混剪/客户端/源码/双平台/release/*
+          path: client/release/*
           if-no-files-found: error
 
   publish-release:
