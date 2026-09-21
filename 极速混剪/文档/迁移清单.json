@@ -1,0 +1,16 @@
+{
+  "created": "2026-09-20",
+  "source": "E:\\GPT Codex\\2026-09-15\\new-chat",
+  "purpose": "VideoMix latest migration workspace",
+  "excluded": [
+    "旧版本安装包",
+    "历史日志和截图",
+    "测试数据库与测试目录",
+    "Python授权后台",
+    "临时探针脚本"
+  ],
+  "latest_client": "最新发布/JSVideoMix-Setup-1.0.3.exe",
+  "latest_update": "最新发布/update-client-1.0.3.zip",
+  "php_backend": "授权后台PHP/部署",
+  "build_source": "客户端重建/work/rebrand"
+}

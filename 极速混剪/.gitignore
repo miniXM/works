@@ -29,3 +29,9 @@ __pycache__/
 *.exe
 *.asar
 *.zip
+
+# Shared Electron client local dependencies and build output
+客户端/源码/双平台/node_modules/
+客户端/源码/双平台/.pnpm-store/
+客户端/源码/双平台/.macos-package-cache/
+客户端/源码/双平台/release/

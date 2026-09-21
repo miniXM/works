@@ -1,0 +1,1 @@
+import{I as e,Wt as t,p as n,u as r,v as i,z as a}from"./runtime-core.esm-bundler-BUgn8yIF.js";var o={class:`page-shell`},s={class:`page-shell__title`},c={class:`page-shell__body`},l=i({__name:`PageShell`,props:{title:{}},setup(i){return(l,u)=>(e(),n(`div`,o,[r(`h2`,s,t(i.title),1),r(`div`,c,[a(l.$slots,`default`)])]))}});export{l as t};

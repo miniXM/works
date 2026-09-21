@@ -1,0 +1,49 @@
+{
+  "name": "videomix-client",
+  "version": "1.2.0",
+  "description": "极速 VideoMix shared Windows and macOS client",
+  "author": "极速 VideoMix",
+  "private": true,
+  "main": "electron/main.cjs",
+  "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0"
+  },
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test tests/*.test.cjs",
+    "build:dir": "electron-builder --dir",
+    "build:win": "electron-builder --win nsis",
+    "build:mac": "electron-builder --mac dmg zip",
+    "build:mac:x64": "electron-builder --mac dmg zip --x64",
+    "build:mac:arm64": "electron-builder --mac dmg zip --arm64",
+    "build:all": "electron-builder --win nsis --mac dmg zip"
+  },
+  "devDependencies": {
+    "electron": "^37.2.6",
+    "electron-builder": "^26.0.12"
+  },
+  "optionalDependencies": {
+    "@ffmpeg-installer/darwin-arm64": "4.1.5",
+    "@ffmpeg-installer/darwin-x64": "4.1.0",
+    "@ffmpeg-installer/win32-x64": "4.1.0"
+  },
+  "build": {
+    "appId": "com.innovessel.videomix",
+    "productName": "极速 VideoMix",
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "asar": true,
+    "npmRebuild": false,
+    "asarUnpack": ["node_modules/@ffmpeg-installer/**/*"],
+    "compression": "normal",
+    "directories": { "output": "release", "buildResources": "build" },
+    "files": ["electron/**/*", "backend/**/*", "renderer/**/*", "package.json"],
+    "extraResources": [
+      { "from": "backend", "to": "backend", "filter": ["**/*"] }
+    ],
+    "win": { "target": [{ "target": "nsis", "arch": ["x64"] }] },
+    "nsis": { "oneClick": false, "perMachine": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true },
+    "mac": { "target": [{ "target": "dmg", "arch": ["x64", "arm64"] }, { "target": "zip", "arch": ["x64", "arm64"] }], "category": "public.app-category.video", "darkModeSupport": true, "hardenedRuntime": true, "entitlements": "build/entitlements.mac.plist", "entitlementsInherit": "build/entitlements.mac.plist", "notarize": true },
+    "dmg": { "sign": false },
+    "publish": null
+  }
+}
