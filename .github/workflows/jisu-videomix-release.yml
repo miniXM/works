@@ -43,7 +43,11 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
-      - run: pnpm install --frozen-lockfile
+      # Electron's postinstall downloads a platform-specific archive.  The
+      # package build below lets electron-builder fetch the same archive with
+      # its own retry/cache handling, so do not make dependency installation
+      # depend on that lifecycle download.
+      - run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Build Windows x64 installer
         run: pnpm run build:win
       - uses: actions/upload-artifact@v4
@@ -76,7 +80,10 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
-      - run: pnpm install --frozen-lockfile
+      # Avoid a second Electron lifecycle download on macOS (especially on
+      # arm64 runners); electron-builder performs the required download when
+      # packaging and reports a useful build error if it cannot do so.
+      - run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Build signed and notarized macOS package
         if: ${{ env.CSC_LINK != '' && env.CSC_KEY_PASSWORD != '' && env.APPLE_ID != '' && env.APPLE_APP_SPECIFIC_PASSWORD != '' && env.APPLE_TEAM_ID != '' }}
         run: pnpm run build:mac:${{ matrix.arch }}
