@@ -12,12 +12,15 @@ env:
   NODE_VERSION: '22'
   PNPM_VERSION: '11.19.0'
 
+defaults:
+  run:
+    working-directory: 极速混剪/客户端/源码/双平台
+
 jobs:
   test:
     strategy:
       matrix: { os: [windows-latest, macos-13, macos-14] }
     runs-on: ${{ matrix.os }}
-    defaults: { run: { working-directory: client } }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -32,7 +35,6 @@ jobs:
   build-windows:
     needs: test
     runs-on: windows-latest
-    defaults: { run: { working-directory: client } }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -47,7 +49,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: videomix-windows-x64
-          path: client/release/*
+          path: 极速混剪/客户端/源码/双平台/release/*
           if-no-files-found: error
 
   build-macos:
@@ -60,7 +62,6 @@ jobs:
           - runner: macos-14
             arch: arm64
     runs-on: ${{ matrix.runner }}
-    defaults: { run: { working-directory: client } }
     env:
       CSC_LINK: ${{ secrets.MAC_CERT_P12_BASE64 }}
       CSC_KEY_PASSWORD: ${{ secrets.MAC_CERT_PASSWORD }}
@@ -88,7 +89,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: videomix-macos-${{ matrix.arch }}
-          path: client/release/*
+          path: 极速混剪/客户端/源码/双平台/release/*
           if-no-files-found: error
 
   publish-release:
